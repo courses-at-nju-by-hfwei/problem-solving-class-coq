@@ -1,0 +1,2033 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="common/css/sf.css" rel="stylesheet" type="text/css"/>
+<title>Basics</title>
+</head>
+<link href="common/jquery-ui/jquery-ui.css" rel="stylesheet">
+<script src="common/jquery-ui/external/jquery/jquery.js"></script>
+<script src="common/jquery-ui/jquery-ui.js"></script>
+<script src="common/toggleproofs.js"></script>
+<link href="common/css/lf.css" rel="stylesheet" type="text/css"/>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Basics</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a name="lab1"></a><h1 class="section">数据类型与自然数 (Data Types and Naturals)</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab2"></a><h1 class="section">引言</h1>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  '程序 = 算法 + 数据结构' by ???
+
+<div class="paragraph"> </div>
+
+  如何说算法是一张食谱，那么数据就是食材。
+  所谓'巧妇难为无米之炊'，没有数据，算法就无用武之地。
+  正如食材各式各样，数据也有各种 _类型_ (在本教材中，我们使用数据类型的说法，而不是数据结构)。
+
+<div class="paragraph"> </div>
+
+  数据类型包含两部分含义： 
+<ul class="doclist">
+<li> 数据 (也称 _值_) 构成的集合； 
+
+</li>
+<li> 定义在这些数据上的操作。
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+  比如自然数是一种数据类型，它的数据集合是 {0, 1, 2, ...}，
+  它允许的操作包括前驱、后继、加法、减法 (受限的减法)、乘法、幂运算等。
+
+<div class="paragraph"> </div>
+
+  同样重要的是，自然数作为一种数据类型，它 _不包括_ -1、0.5、2/3、e 等数据，
+  也_不支持_除法、拼接、旋转等操作。
+
+<div class="paragraph"> </div>
+
+  在程序设计语言里， _类型检查 (Type Checking)_ 的工作就是检查：
+<ul class="doclist">
+<li> 是否使用了无效的 (invalid) 数据； 
+
+</li>
+<li> 是否进行了非法的 (unsupported) 操作。
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+  本章介绍如何在 Coq (内置的 <i>'Gallina'</i> 程序设计语言) 中定义数据类型。
+  同时，本章还将介绍如何在 Coq 中做证明。
+  我们以自然数数据类型为例。
+
+<div class="paragraph"> </div>
+
+    其它常见的函数式语言特性包括<i>'代数数据类型（Algebraic Data Type）'</i>，
+    能让构造和处理丰富数据结构更加简单的<i>'模式匹配（Pattern Matching）'</i>，
+    以及用来支持抽象和代码复用的复杂的<i>'多态类型系统（Polymorphic Type System）'</i>。
+
+<div class="paragraph"> </div>
+
+
+</div>
+<div class="code">
+</div>
+
+<div class="doc">
+<a name="lab3"></a><h1 class="section">数据与函数</h1>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  Coq 的标准库 (Standard Library) 中内置了一些常用的数据类型，
+  比如布尔类型、自然数、列表、散列表等。
+
+<div class="paragraph"> </div>
+
+  要定义一个数据类型，我们需要：
+<ul class="doclist">
+<li> 定义数据集合
+
+</li>
+<li> 定义操作
+
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab4"></a><h2 class="section">枚举类型</h2>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab5"></a><h3 class="section">一周七日</h3>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  以下声明 (Declaration) 定义了一个名为 <span class="inlinecode"><span class="id" title="var">day</span></span> 的数据类型。
+  它的数据构成的集合为 {<span class="inlinecode"><span class="id" title="var">monday</span></span>, <span class="inlinecode"><span class="id" title="var">tuesday</span></span>, <span class="inlinecode"><span class="id" title="var">wednesday</span></span>, <span class="inlinecode"><span class="id" title="var">thursday</span></span>, <span class="inlinecode"><span class="id" title="var">friday</span></span>, <span class="inlinecode"><span class="id" title="var">saturday</span></span>, <span class="inlinecode"><span class="id" title="var">sunday</span></span>}。
+  <span class="inlinecode"><span class="id" title="var">day</span></span> 是 <i>'枚举'(Enumerate)_ 数据类型，因为我们直接在定义中一一列举了它包含的值。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">day</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">monday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">tuesday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">wednesday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">thursday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">friday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">saturday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">sunday</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  下面，我们定义一个名为 <span class="inlinecode"><span class="id" title="var">next_day</span></span> 的操作，也称为函数。
+  该操作接受一个类型为 <span class="inlinecode"><span class="id" title="var">day</span></span> 的数据 <span class="inlinecode"><span class="id" title="var">d</span></span> (称为_参数 (parameter)_)，返回一个类型为 <span class="inlinecode"><span class="id" title="var">day</span></span> 的数据 (称为_返回值_)。 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">next_day</span> (<span class="id" title="var">d</span>:<span class="id" title="var">day</span>) : <span class="id" title="var">day</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">d</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">monday</span>    =&gt; <span class="id" title="var">tuesday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">tuesday</span>   =&gt; <span class="id" title="var">wednesday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">wednesday</span> =&gt; <span class="id" title="var">thursday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">thursday</span>  =&gt; <span class="id" title="var">friday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">friday</span>    =&gt; <span class="id" title="var">saturday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">saturday</span>  =&gt; <span class="id" title="var">sunday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">sunday</span>    =&gt; <span class="id" title="var">monday</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">next_day</span></span> <span class="inlinecode"><span class="id" title="var">saturday</span></span> 的结果应该是 <span class="inlinecode"><span class="id" title="var">sunday</span></span>。
+  我们可以用 <span class="inlinecode"><span class="id" title="keyword">Compute</span></span> 指令查看该结果。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Compute</span> (<span class="id" title="var">next_day</span> <span class="id" title="var">saturday</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  <span class="inlinecode">(<span class="id" title="var">next_day</span></span> <span class="inlinecode">(<span class="id" title="var">next_day</span></span> <span class="inlinecode"><span class="id" title="var">saturday</span>))</span> <span class="inlinecode">=</span> <span class="inlinecode">(<span class="id" title="var">next_day</span></span> <span class="inlinecode"><span class="id" title="var">sunday</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">monday</span>.</span> Sad!
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Compute</span> (<span class="id" title="var">next_day</span> (<span class="id" title="var">next_day</span> <span class="id" title="var">saturday</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+第二，我们可以将<i>'期望'</i>的结果写成 Coq 的示例： 
+<div class="paragraph"> </div>
+
+  我们可以做单元测试 (Unit Test)。
+  下面的 <span class="inlinecode"><span class="id" title="keyword">Example</span></span> 定义了一个断言 (Assertioin)： 
+  <span class="inlinecode"><span class="id" title="var">saturday</span></span> 的明天的明天是 <span class="inlinecode"><span class="id" title="var">monday</span></span>。
+  我们还给这个断言起了个名字： time_files。
+  以后，我们可以使用 time_files 引用该断言。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Example</span> <span class="id" title="var">time_flies</span>:<br/>
+&nbsp;&nbsp;(<span class="id" title="var">next_day</span> (<span class="id" title="var">next_day</span> <span class="id" title="var">saturday</span>)) = <span class="id" title="var">monday</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  我们需要 _证明_ 该断言是真的。
+  证明很简单，分为两步：
+
+<div class="paragraph"> </div>
+
+  证明：
+<ul class="doclist">
+<li> 化简。等号左边的 <span class="inlinecode">(<span class="id" title="var">next_day</span></span> <span class="inlinecode">(<span class="id" title="var">next_day</span></span> <span class="inlinecode"><span class="id" title="var">saturday</span>))</span> 可以化简为 <span class="inlinecode"><span class="id" title="var">monday</span></span>。
+
+</li>
+<li> 相同性判断。等号左边的 <span class="inlinecode"><span class="id" title="var">monday</span></span> 与 等号右边的 <span class="inlinecode"><span class="id" title="var">monday</span></span> 相同。
+
+</li>
+</ul>
+  证毕。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  Coq 是 _交互式定理证明 (Interactive Theorem Proving; ITP)_ 工具，
+  也称为 _证明助手 (Proof Assistant)_。
+
+<div class="paragraph"> </div>
+
+  要想使用 Coq 证明某个定理，你需要：
+<ul class="doclist">
+<li> 清楚该定理的证明过程
+
+</li>
+<li> 清楚 Coq 支持的证明策略 (Proof Tactics)
+
+</li>
+<li> 将证明过程翻译成 Coq 支持的证明策略
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+  比如上例中的 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 表示化简，<span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 判断相同性。
+  <span class="inlinecode"><span class="id" title="keyword">Proof</span></span> 表示证明开始，<span class="inlinecode"><span class="id" title="keyword">Qed</span></span> 表示证毕 (哇，多么美妙的词语)。
+
+</div>
+<div class="code">
+</div>
+
+<div class="doc">
+<a name="lab6"></a><h2 class="section">作业提交指南</h2>
+
+<div class="paragraph"> </div>
+
+ 如果你在课堂中使用《软件基础》，你的讲师可能会用自动化脚本来为你的作业评分。
+    为了让这些脚本能够正常工作（这样你才能拿到全部学分！），请认真遵循以下规则：
+<ul class="doclist">
+<li> 评分脚本在提取你提交的 <span class="inlinecode">.<span class="id" title="var">v</span></span> 文件时会用到其中的特殊标记。因此请勿修改练习的
+        “分隔标记”，如练习的标题、名称、以及末尾的 <span class="inlinecode">[]</span> 等等。
+
+</li>
+<li> 不要删除练习。如果你想要跳过某个练习（例如它标记为可选或你无法解决它），
+        可以在 <span class="inlinecode">.<span class="id" title="var">v</span></span> 文件中留下部分证明，这没关系，不过此时请确认它以 <span class="inlinecode"><span class="id" title="var">Admitted</span></span>
+        结尾（不要用 <span class="inlinecode"><span class="id" title="keyword">Abort</span></span> 之类的东西）。
+
+</li>
+<li> 你也可以在解答中使用附加定义（如辅助函数，需要的引理等）。
+        你可以将它们放在练习的头部和你要证明的定理之间。
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    You will also notice that each chapter (like <span class="inlinecode"><span class="id" title="var">Basics.v</span></span>) is
+    accompanied by a <i>test script</i> (<span class="inlinecode"><span class="id" title="var">BasicsTest.v</span></span>) that automatically
+    calculates points for the finished homework problems in the
+    chapter.  These scripts are mostly for the auto-grading
+    infrastructure that your instructor may use to help process
+    assignments, but you may also like to use them to double-check
+    that your file is well formatted before handing it in.  In a
+    terminal window either type <span class="inlinecode"><span class="id" title="var">make</span></span> <span class="inlinecode"><span class="id" title="var">BasicsTest.vo</span></span> or do the
+    following:
+
+<div class="paragraph"> </div>
+
+       coqc -Q . LF Basics.v
+       coqc -Q . LF BasicsTest.v
+
+<div class="paragraph"> </div>
+
+    There is no need to hand in <span class="inlinecode"><span class="id" title="var">BasicsTest.v</span></span> itself (or <span class="inlinecode"><span class="id" title="var">Preface.v</span></span>).
+
+<div class="paragraph"> </div>
+
+    <i>If your class is using the Canvas system to hand in assignments</i>:
+<ul class="doclist">
+<li> If you submit multiple versions of the assignment, you may
+        notice that they are given different names.  This is fine: The
+        most recent submission is the one that will be graded.
+
+</li>
+<li> To hand in multiple files at the same time (if more than one
+        chapter is assigned in the same week), you need to make a
+        single submission with all the files at once using the button
+        "Add another file" just above the comment box. 
+</li>
+</ul>
+
+</div>
+<div class="code">
+</div>
+
+<div class="doc">
+<a name="lab7"></a><h3 class="section">布尔类型</h3>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  下面的声明定义了布尔类型 <span class="inlinecode"><span class="id" title="var">bool</span></span>，它包含两个值 <span class="inlinecode"><span class="id" title="var">true</span></span> 与 <span class="inlinecode"><span class="id" title="var">false</span></span>。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">bool</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">false</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  常用的布尔函数包括： <span class="inlinecode"><span class="id" title="var">negb</span></span> 取反； <span class="inlinecode"><span class="id" title="var">andb</span></span> 并且； <span class="inlinecode"><span class="id" title="var">orb</span></span> 或者。
+  它们的定义如下所示。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">negb</span> (<span class="id" title="var">b</span>:<span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">true</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">false</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">andb</span> (<span class="id" title="var">b1</span>:<span class="id" title="var">bool</span>) (<span class="id" title="var">b2</span>:<span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">b1</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">true</span> =&gt; <span class="id" title="var">b2</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">false</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">orb</span> (<span class="id" title="var">b1</span>:<span class="id" title="var">bool</span>) (<span class="id" title="var">b2</span>:<span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">b1</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">true</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">false</span> =&gt; <span class="id" title="var">b2</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  我们以 <span class="inlinecode"><span class="id" title="var">orb</span></span> 为例进行“单元测试”与证明。
+  这四个测试用例实际上构成了 <span class="inlinecode"><span class="id" title="var">orb</span></span> 的真值表 (Truth Table)。
+
+<div class="paragraph"> </div>
+
+  注意： <span class="inlinecode"><span class="id" title="var">orb</span></span> 函数接受两个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数。
+  <span class="inlinecode"><span class="id" title="var">orb</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span> 表示将函数 <span class="inlinecode"><span class="id" title="var">orb</span></span> 应用 (Apply) 到参数 <span class="inlinecode"><span class="id" title="var">true</span></span> 与 <span class="inlinecode"><span class="id" title="var">false</span></span> 上。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_orb1</span>:  (<span class="id" title="var">orb</span> <span class="id" title="var">true</span> <span class="id" title="var">false</span>) = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_orb2</span>:  (<span class="id" title="var">orb</span> <span class="id" title="var">false</span> <span class="id" title="var">false</span>) = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_orb3</span>:  (<span class="id" title="var">orb</span> <span class="id" title="var">false</span> <span class="id" title="var">true</span>)  = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_orb4</span>:  (<span class="id" title="var">orb</span> <span class="id" title="var">true</span>  <span class="id" title="var">true</span>)  = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  我们可以使用 <span class="inlinecode"><span class="id" title="var">Natation</span></span> 为布尔函数引入更常见的符号。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x &amp;&amp; y" := (<span class="id" title="var">andb</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+<span class="id" title="keyword">Notation</span> &quot;x || y" := (<span class="id" title="var">orb</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_orb5</span>:  <span class="id" title="var">false</span> || <span class="id" title="var">false</span> || <span class="id" title="var">true</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab8"></a><h4 class="section">练习：1 星, standard (nandb)</h4>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  要想熟练使用 Coq，不做练习是不可能的。
+
+<div class="paragraph"> </div>
+
+  现在，你需要定义一个布尔函数 <span class="inlinecode"><span class="id" title="var">nandb</span></span>：
+  只有当两个参数都是 <span class="inlinecode"><span class="id" title="var">false</span></span> 时，它才返回 <span class="inlinecode"><span class="id" title="var">true</span></span>；
+  否则，它返回 <span class="inlinecode"><span class="id" title="var">false</span></span>。
+  你可以使用之前定义过的布尔函数 <span class="inlinecode"><span class="id" title="var">negb</span></span>、<span class="inlinecode"><span class="id" title="var">andb</span></span>、<span class="inlinecode"><span class="id" title="var">orb</span></span>。
+
+<div class="paragraph"> </div>
+
+  指令 <span class="inlinecode"><span class="id" title="var">Admitted</span></span> 是证明中的占位符。
+  你的任务就是将它替换成真正的证明。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">nandb</span> (<span class="id" title="var">b1</span>:<span class="id" title="var">bool</span>) (<span class="id" title="var">b2</span>:<span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_nandb1</span>:               (<span class="id" title="var">nandb</span> <span class="id" title="var">true</span> <span class="id" title="var">false</span>) = <span class="id" title="var">true</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_nandb2</span>:               (<span class="id" title="var">nandb</span> <span class="id" title="var">false</span> <span class="id" title="var">false</span>) = <span class="id" title="var">true</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_nandb3</span>:               (<span class="id" title="var">nandb</span> <span class="id" title="var">false</span> <span class="id" title="var">true</span>) = <span class="id" title="var">true</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_nandb4</span>:               (<span class="id" title="var">nandb</span> <span class="id" title="var">true</span> <span class="id" title="var">true</span>) = <span class="id" title="var">false</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+</div>
+
+<div class="doc">
+<a name="lab9"></a><h2 class="section">类型</h2>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  Coq 中的每个表达式都有类型。
+  我们可以使用 <span class="inlinecode"><span class="id" title="keyword">Check</span></span> 指令查看表达式的类型。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="var">negb</span> <span class="id" title="var">true</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  Coq (内置的 <i>'Gallina'</i> ) 是 _函数式(Functional)_ 程序设计语言。
+  在函数式程序设计语言中，函数也是数据，也有类型。
+  更多关于函数式程序设计的内容，我们会在后续课程与 Coq 教材中学习。
+
+<div class="paragraph"> </div>
+
+  函数 <span class="inlinecode"><span class="id" title="var">negb</span></span> 的类型是 <i>'函数类型'</i> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>。
+  这是由 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型构成的复合类型，
+  它告诉我们： <span class="inlinecode"><span class="id" title="var">negb</span></span> 是一个函数，它接受一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数，
+  返回一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的值。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">negb</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  类似地，<span class="inlinecode"><span class="id" title="var">andb</span></span> 的类型是 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>，
+  它告诉我们：<span class="inlinecode"><span class="id" title="var">andb</span></span> 是一个函数，它接受两个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数，
+  返回一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的值。
+
+<div class="paragraph"> </div>
+
+  关于 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 的另一种“更函数式的”理解方式，
+  我们将在函数式程序设计章节中介绍。
+  此处仅简单提及。
+  实际上，<span class="inlinecode">-&gt;</span> 运算符是右结合的。
+  也就是说，<span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 实际上是 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span>。
+  它告诉我们：<span class="inlinecode"><span class="id" title="var">andb</span></span> 是一个函数，它接受一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数，
+  返回一个类型为 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 的函数 
+  (没错，在函数式程序设计中，函数可以作为返回值。是不是很优雅？)。
+  这个返回的函数又可以接受一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数，返回一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的值。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <span class="id" title="var">andb</span>.<br/>
+</div>
+
+<div class="doc">
+<a name="lab10"></a><h2 class="section">由旧类型构造新类型</h2>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  在现实生活中，问题层出不穷。
+  不同的问题可能使用不同的数据类型。
+  我们不希望每次都从头构造一个数据类型，而是希望能基于已有的数据类型定义新的数据类型。
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">rgb</span></span> 仍然是简单的枚举类型。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">rgb</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="tactic">red</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">green</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">blue</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  <span class="inlinecode"><span class="id" title="var">color</span></span> 与我们之前定义的数据类型不同。
+  除了我们已经熟悉的 <span class="inlinecode"><span class="id" title="var">black</span></span>、<span class="inlinecode"><span class="id" title="var">white</span></span> 形式之外，
+  它还包含 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">rgb</span>)</span>。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">color</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">black</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">white</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">primary</span> (<span class="id" title="var">p</span> : <span class="id" title="var">rgb</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  这里，我们需要介绍一点理论知识。(很简单，不要害怕。)
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> <span class="inlinecode"><span class="id" title="var">color</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> 告诉 Coq：
+  _归纳(Inductively)_ 地定义 (也称 <i>'构造'</i>) 名为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的数据类型。
+
+<div class="paragraph"> </div>
+
+  在归纳定义中，我们需要给出构造 <span class="inlinecode"><span class="id" title="var">color</span></span> 类型的数据的方法 (也称 <i>'构造函数'</i>)：
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">black</span></span> 是一个构造函数。它表示 <span class="inlinecode"><span class="id" title="var">black</span></span> 是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">white</span></span> 是一个构造函数。它表示 <span class="inlinecode"><span class="id" title="var">white</span></span> 是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">rgb</span>)</span> 是一个构造函数。
+    它表示，如果 <span class="inlinecode"><span class="id" title="var">p</span></span> 是类型为 <span class="inlinecode"><span class="id" title="var">rgb</span></span> 的值，那么 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> 就是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。例如，<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="tactic">red</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">green</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">blue</span></span> 都是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+  同样重要的是，<span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> <span class="inlinecode"><span class="id" title="var">color</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> 还告诉 Coq：
+  类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值有且 _仅有_ 以上三种构造方式。
+  例如，<span class="inlinecode"><span class="id" title="var">sunday</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">saturday</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span> 都不是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  在定义函数时，我们可以针对每个构造函数使用 <i>'模式匹配'。
+  函数 <span class="inlinecode"><span class="id" title="var">monochrome</span></span> 接受一个类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的参数 <span class="inlinecode"><span class="id" title="var">c</span></span>。
+  根据上面的分析，<span class="inlinecode"><span class="id" title="var">c</span></span> 有且仅有三种可能的构造方式。
+  <span class="inlinecode"><span class="id" title="keyword">match</span></span> 分别考虑这三种构造方式：
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">black</span></span> 只可能与 <span class="inlinecode"><span class="id" title="var">black</span></span> 匹配。
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">white</span></span> 只可能与 <span class="inlinecode"><span class="id" title="var">white</span></span> 匹配。
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> 只可能与 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">xxx</span></span> 匹配。
+
+</li>
+</ul>
+  这里，<span class="inlinecode"><span class="id" title="var">q</span></span> 为变量，它的类型是 <span class="inlinecode"><span class="id" title="var">rgb</span></span> (Coq 可以自动推断出这一点)。
+  当 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> 与 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">xxx</span></span> 匹配时，<span class="inlinecode"><span class="id" title="var">q</span></span> 被 <i>'绑定'(bind)_ 到 <span class="inlinecode"><span class="id" title="var">xxx</span></span>。
+  你可以在 <span class="inlinecode">=&gt;</span> 的右边使用 <span class="inlinecode"><span class="id" title="var">q</span></span>。
+  在本例中，我们并没有在 <span class="inlinecode">=&gt;</span> 的右边使用 <span class="inlinecode"><span class="id" title="var">q</span></span>。
+  在这种情况下，我们可以使用通配符 <span class="inlinecode"><span class="id" title="var">_</span></span> 代替 <span class="inlinecode"><span class="id" title="var">q</span></span>。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">monochrome</span> (<span class="id" title="var">c</span> : <span class="id" title="var">color</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">black</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">white</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="var">q</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  我们还可以对 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> 进行更细致的模式匹配。
+  函数 <span class="inlinecode"><span class="id" title="var">isred</span></span> 中的 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">_</span></span> 用于匹配除 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="tactic">red</span></span> 之外的由
+  <span class="inlinecode"><span class="id" title="var">primary</span></span> 构造的 <span class="inlinecode"><span class="id" title="var">color</span></span>，即 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">green</span></span> 与 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">blue</span></span>。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">isred</span> (<span class="id" title="var">c</span> : <span class="id" title="var">color</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">black</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">white</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="tactic">red</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+</div>
+
+<div class="doc">
+<a name="lab11"></a><h2 class="section">模块</h2>
+
+<div class="paragraph"> </div>
+
+ Coq 提供了<i>'模块系统'</i>来帮助组织大规模的开发。
+    如果我们将一组定义放在 <span class="inlinecode"><span class="id" title="keyword">Module</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> 和 <span class="inlinecode"><span class="id" title="keyword">End</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> 标记之间，那么在文件中的
+    <span class="inlinecode"><span class="id" title="keyword">End</span></span> 之后，我们就可以通过像 <span class="inlinecode"><span class="id" title="var">X.foo</span></span> 这样的名字来引用，而不必直接用
+    <span class="inlinecode"><span class="id" title="var">foo</span></span> 了。在这里，我们通过此特性在内部模块中引入了 <span class="inlinecode"><span class="id" title="var">nat</span></span> 类型的定义，
+    这样就不会覆盖标准库中的同名定义了。
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">NatPlayground</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab12"></a><h2 class="section">自然数 (Naturals)</h2>
+
+<div class="paragraph"> </div>
+
+ The types we have defined so far, "enumerated types" such as
+    <span class="inlinecode"><span class="id" title="var">day</span></span>, <span class="inlinecode"><span class="id" title="var">bool</span></span>, and <span class="inlinecode"><span class="id" title="var">bit</span></span>, and tuple types such as <span class="inlinecode"><span class="id" title="var">nybble</span></span> built
+    from them, share the property that each type has a finite set of
+    values. The natural numbers are an infinite set, and we need to
+    represent all of them in a datatype with a finite number of
+    constructors. There are many representations of numbers to choose
+    from. We are most familiar with decimal notation (base 10), using
+    the digits 0 through 9, for example, to form the number 123.  You
+    may have encountered hexadecimal notation (base 16), in which the
+    same number is represented as 7B, or octal (base 8), where it is
+    173, or binary (base 2), where it is 1111011. Using an enumerated
+    type to represent digits, we could use any of these to represent
+    natural numbers. There are circumstances where each of these
+    choices can be useful.
+
+<div class="paragraph"> </div>
+
+    Binary is valuable in computer hardware because it can in turn be
+    represented with two voltage levels, resulting in simple
+    circuitry. Analogously, we wish here to choose a representation
+    that makes <i>proofs</i> simpler.
+
+<div class="paragraph"> </div>
+
+    Indeed, there is a representation of numbers that is even simpler
+    than binary, namely unary (base 1), in which only a single digit
+    is used (as one might do while counting days in prison by scratching
+    on the walls). To represent unary with a Coq datatype, we use
+    two constructors. The capital-letter <span class="inlinecode"><span class="id" title="var">O</span></span> constructor represents zero.
+    When the <span class="inlinecode"><span class="id" title="var">S</span></span> constructor is applied to the representation of the
+    natural number <i>n</i>, the result is the representation of <i>n+1</i>.
+    (<span class="inlinecode"><span class="id" title="var">S</span></span> stands for "successor", or "scratch" if one is in prison.)
+    Here is the complete datatype definition. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">nat</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+With this definition, 0 is represented by <span class="inlinecode"><span class="id" title="var">O</span></span>, 1 by <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span>,
+    2 by <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>)</span>, and so on. 
+<div class="paragraph"> </div>
+
+ 此定义中的从句可读作：
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">O</span></span> 是一个自然数（注意这里是字母“<span class="inlinecode"><span class="id" title="var">O</span></span>”，不是数字“<span class="inlinecode">0</span>”）。
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">S</span></span> 可被放在一个自然数之前产生另一个自然数 ——
+        也就是说，如果 <span class="inlinecode"><span class="id" title="var">n</span></span> 是一个自然数，那么 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 也是。 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ 同样，我们来仔细观察这个定义。
+    <span class="inlinecode"><span class="id" title="var">nat</span></span> 的定义描述了集合 <span class="inlinecode"><span class="id" title="var">nat</span></span> 中的表达式是如何构造的：
+
+<div class="paragraph"> </div>
+
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">O</span></span> 和 <span class="inlinecode"><span class="id" title="var">S</span></span> 是构造子；
+
+</li>
+<li> 表达式 <span class="inlinecode"><span class="id" title="var">O</span></span> 属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span>；
+
+</li>
+<li> 如果 <span class="inlinecode"><span class="id" title="var">n</span></span> 是属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span> 的表达式，
+      那么 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 也是属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span> 的表达式；并且
+
+</li>
+<li> 只有按照这两种方式构造的表达式才属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span>。 
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ 同样的规则也适用于 <span class="inlinecode"><span class="id" title="var">day</span></span>、<span class="inlinecode"><span class="id" title="var">bool</span></span>、<span class="inlinecode"><span class="id" title="var">color</span></span> 等的定义。
+
+<div class="paragraph"> </div>
+
+    以上条件是精确构成 <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> 声明的主要推动力。它们蕴含的表达式 <span class="inlinecode"><span class="id" title="var">O</span></span>、
+    <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>)</span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>))</span> 等等都属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span>，而像
+    <span class="inlinecode"><span class="id" title="var">true</span></span>、<span class="inlinecode"><span class="id" title="var">andb</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">false</span>)</span> 以及 <span class="inlinecode"><span class="id" title="var">O</span></span> <span class="inlinecode">(<span class="id" title="var">O</span></span> <span class="inlinecode">(<span class="id" title="var">O</span></span> <span class="inlinecode"><span class="id" title="var">S</span>))</span>
+    之类的，由数据构造子构造的表达式则不属于 <span class="inlinecode"><span class="id" title="var">nat</span></span>。
+
+<div class="paragraph"> </div>
+
+    关键之处在于，我们目前只是定义了一种数字的<i>'表示'</i>方式，
+    即一种写下它们的方式。名称 <span class="inlinecode"><span class="id" title="var">O</span></span> 和 <span class="inlinecode"><span class="id" title="var">S</span></span> 是任意的，在这一点上它们没有特殊的意义，
+    它们只是我们能用来写下数字的两个不同的记号（以及一个说明了任何 <span class="inlinecode"><span class="id" title="var">nat</span></span>
+    都能写成一串 <span class="inlinecode"><span class="id" title="var">S</span></span> 后跟一个 <span class="inlinecode"><span class="id" title="var">O</span></span> 的规则）。如果你喜欢，完全可以将同样的定义写成： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">nat'</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">stop</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">tick</span> (<span class="id" title="var">foo</span> : <span class="id" title="var">nat'</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+这些记号的<i>'解释'</i>完全取决于我们如何用它进行计算。 
+<div class="paragraph"> </div>
+
+ 我们可以像之前的布尔值或日期那样，
+    编写一个函数来对上述自然数的表示进行模式匹配。
+    例如，以下为前趋函数：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">pred</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+第二个分支可以读作：“如果 <span class="inlinecode"><span class="id" title="var">n</span></span> 对于某个 <span class="inlinecode"><span class="id" title="var">n'</span></span> 的形式为 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>，
+    那么就返回 <span class="inlinecode"><span class="id" title="var">n'</span></span>。” 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">NatPlayground</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+为了让自然数使用起来更加自然，Coq 内建了一小部分解析打印功能：
+    普通的十进制数可视为“一进制”自然数的另一种记法，以代替 <span class="inlinecode"><span class="id" title="var">S</span></span> 与 <span class="inlinecode"><span class="id" title="var">O</span></span> 构造子；
+    反过来，Coq 也会默认将自然数打印为十进制形式： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">O</span>)))).<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">minustwo</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Compute</span> (<span class="id" title="var">minustwo</span> 4).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+构造子 <span class="inlinecode"><span class="id" title="var">S</span></span> 的类型为 <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>，与函数 <span class="inlinecode"><span class="id" title="var">pred</span></span> 和 <span class="inlinecode"><span class="id" title="var">minustwo</span></span> 相同： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">S</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">pred</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">minustwo</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+以上三个函数均可作用于自然数，并产生自然数结果，但第一个 <span class="inlinecode"><span class="id" title="var">S</span></span>
+    与后两者有本质区别：<span class="inlinecode"><span class="id" title="var">pred</span></span> 和 <span class="inlinecode"><span class="id" title="var">minustwo</span></span> 这类函数定义了 <i>'计算规则'</i>——
+    例如 <span class="inlinecode"><span class="id" title="var">pred</span></span> 的定义表明 <span class="inlinecode"><span class="id" title="var">pred</span></span> <span class="inlinecode">2</span> 可化简为 <span class="inlinecode">1</span>——但 <span class="inlinecode"><span class="id" title="var">S</span></span> 的定义不表征此类行为。
+    虽然 <span class="inlinecode"><span class="id" title="var">S</span></span> 可以作用于参数这点与函数相仿，但其作用仅限于构造数字。
+    （考虑标准的十进制数：数字 <span class="inlinecode">1</span> 不代表任何计算，只表示一部分数据。
+    用 <span class="inlinecode">111</span> 指代数字一百一十一，实则使用三个 <span class="inlinecode">1</span> 符号表示此数各位。）
+
+<div class="paragraph"> </div>
+
+    模式匹配不足以描述很多数字运算，我们还需要递归定义。
+    例如：给定自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>，欲判定其是否为偶数，则需递归检查 <span class="inlinecode"><span class="id" title="var">n</span>-2</span> 是否为偶数。
+    关键字 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 可用于定义此类函数。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">evenb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span>        =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span>      =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">evenb</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+我们可以使用类似的 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 声明来定义 <span class="inlinecode"><span class="id" title="var">odd</span></span> 函数，
+    不过还有种更简单的定义：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">oddb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span>   :=   <span class="id" title="var">negb</span> (<span class="id" title="var">evenb</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb1</span>:    <span class="id" title="var">oddb</span> 1 = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb2</span>:    <span class="id" title="var">oddb</span> 4 = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+（如果你逐步检查完这些证明，就会发现 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 其实没什么作用
+    —— 所有工作都被 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 完成了。我们不久就会看到为什么会这样。)
+
+<div class="paragraph"> </div>
+
+    当然，我们也可以用递归定义多参函数。  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">NatPlayground2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+三加二等于五，正如所料。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Compute</span> (<span class="id" title="var">plus</span> 3 2).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+为得出此结论，Coq 所执行的化简步骤如下： 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+为了书写方便，如果两个或更多参数具有相同的类型，那么它们可以写在一起。
+    在下面的定义中，<span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 的意思与 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 相同。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mult</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">plus</span> <span class="id" title="var">m</span> (<span class="id" title="var">mult</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_mult1</span>: (<span class="id" title="var">mult</span> 3 3) = 9.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+你可以在两个表达式之间添加逗号来同时匹配它们：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">minus</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span>   , <span class="id" title="var">_</span>    =&gt; <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">_</span> , <span class="id" title="var">O</span>    =&gt; <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">minus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">NatPlayground2</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">exp</span> (<span class="id" title="var">base</span> <span class="id" title="var">power</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">power</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">S</span> <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">p</span> =&gt; <span class="id" title="var">mult</span> <span class="id" title="var">base</span> (<span class="id" title="var">exp</span> <span class="id" title="var">base</span> <span class="id" title="var">p</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab13"></a><h4 class="section">练习：1 星, standard (factorial)</h4>
+
+
+<div class="paragraph"> </div>
+
+    回想一下标准的阶乘函数：
+
+<div class="paragraph"> </div>
+
+       factorial(0)  =  1
+       factorial(n)  =  n * factorial(n-1)     (if n&gt;0)
+
+<div class="paragraph"> </div>
+
+    把它翻译成 Coq 语言。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">factorial</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_factorial1</span>:          (<span class="id" title="var">factorial</span> 3) = 6.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_factorial2</span>:          (<span class="id" title="var">factorial</span> 5) = (<span class="id" title="var">mult</span> 10 12).<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+ 我们可以通过引入加法、乘法和减法的<i>'记法（Notation）'</i>来让数字表达式更加易读。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x + y" := (<span class="id" title="var">plus</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;x - y" := (<span class="id" title="var">minus</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;x * y" := (<span class="id" title="var">mult</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> ((0 + 1) + 1).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+（<span class="inlinecode"><span class="id" title="keyword">level</span></span>、<span class="inlinecode"><span class="id" title="keyword">associativity</span></span> 和 <span class="inlinecode"><span class="id" title="var">nat_scope</span></span> 标记控制着 Coq
+    语法分析器如何处理上述记法。本课程不关注其细节。有兴趣的读者可参阅本章末尾
+    “关于记法的更多内容”一节。）
+
+<div class="paragraph"> </div>
+
+    注意，它们并不会改变我们之前的定义，而只是让 Coq 语法分析器接受用
+    <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">y</span></span> 来代替 <span class="inlinecode"><span class="id" title="var">plus</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>，并在 Coq 美化输出时反过来将 <span class="inlinecode"><span class="id" title="var">plus</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>
+    显示为 <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">y</span></span>。 
+<div class="paragraph"> </div>
+
+ Coq 不包含任何内置定义，以至于数值间相等关系的测试也是由用户来实现。
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">eqb</span></span> 函数定义如下：该函数测试自然数 <span class="inlinecode"><span class="id" title="var">nat</span></span> 间相等关系 <span class="inlinecode"><span class="id" title="var">eq</span></span>，
+    并以布尔值 <span class="inlinecode"><span class="id" title="var">bool</span></span> 表示。注意该定义使用嵌套匹配 <span class="inlinecode"><span class="id" title="keyword">match</span></span>
+    （亦可仿照 <span class="inlinecode"><span class="id" title="var">minus</span></span> 使用并列匹配）。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">eqb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">eqb</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+类似地，<span class="inlinecode"><span class="id" title="var">leb</span></span> 函数检查其第一个参数是否小于等于第二个参数，以布尔值表示。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">leb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">leb</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_leb1</span>:             (<span class="id" title="var">leb</span> 2 2) = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_leb2</span>:             (<span class="id" title="var">leb</span> 2 4) = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_leb3</span>:             (<span class="id" title="var">leb</span> 4 2) = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Since we'll be using these (especially <span class="inlinecode"><span class="id" title="var">eqb</span></span>) a lot, let's give
+    them infix notations. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x =? y" := (<span class="id" title="var">eqb</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 70) : <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;x &lt;=? y" := (<span class="id" title="var">leb</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 70) : <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_leb3'</span>:             (4 &lt;=? 2) = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab14"></a><h4 class="section">练习：1 星, standard (ltb)</h4>
+
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">ltb</span></span> 函数检查自然数间的小于关系，以布尔值表示。
+    利用前文定义的函数写出该定义，不要使用 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 构造新的递归。
+    （只需前文中的一个函数即可实现定义，但亦可两者皆用。） 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ltb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x &lt;? y" := (<span class="id" title="var">ltb</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 70) : <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_ltb1</span>:             (<span class="id" title="var">ltb</span> 2 2) = <span class="id" title="var">false</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_ltb2</span>:             (<span class="id" title="var">ltb</span> 2 4) = <span class="id" title="var">true</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_ltb3</span>:             (<span class="id" title="var">ltb</span> 4 2) = <span class="id" title="var">false</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab15"></a><h1 class="section">基于化简的证明</h1>
+
+<div class="paragraph"> </div>
+
+ 至此，我们已经定义了一些数据类型和函数。让我们把问题转到如何表述和证明
+    它们行为的性质上来。其实我们已经开始这样做了：前几节中的每个 <span class="inlinecode"><span class="id" title="keyword">Example</span></span>
+    都对几个函数在某些特定输入上的行为做出了准确的断言。这些断言的证明方法都一样：
+    使用 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 来化简等式两边，然后用 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 来检查两边是否具有相同的值。
+
+<div class="paragraph"> </div>
+
+    这类“基于化简的证明”还可以用来证明更多有趣的性质。例如，对于“<span class="inlinecode">0</span>
+    出现在左边时是加法 <span class="inlinecode">+</span> 的‘幺元’”这一事实，我们只需读一遍 <span class="inlinecode"><span class="id" title="var">plus</span></span> 的定义，
+    即可通过观察“对于 <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>，无论 <span class="inlinecode"><span class="id" title="var">n</span></span> 的值为多少均可化简为 <span class="inlinecode"><span class="id" title="var">n</span></span>”而得到证明。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_O_n</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 0 + <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+（如果你同时浏览 <span class="inlinecode">.<span class="id" title="var">v</span></span> 文件和 HTML 文件，那么大概会注意到以上语句在你的 IDE
+    中和在浏览器渲染的 HTML 中不大一样，我们用保留标识符“forall”来表示全称量词
+    <span class="inlinecode"><span class="id" title="keyword">forall</span></span>。当 <span class="inlinecode">.<span class="id" title="var">v</span></span> 文件转换为 HTML 后，它会变成一个倒立的“A”。）
+
+<div class="paragraph"> </div>
+
+    现在是时候说一下 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 了，它其实比我们想象得更为强大。
+    在前面的例子中，其实并不需要调用 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> ，因为 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span>
+    在检查等式两边是否相等时会自动做一些化简；我们加上 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 只是为了看到化简之后，
+    证明结束之前的中间状态。下面是对同一定理更短的证明：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_O_n'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 0 + <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+此外，<span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 在某些方面做了比 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> <i>'更多'</i>的化简 ——
+    比如它会尝试“展开”已定义的项，将它们替换为该定义右侧的值。
+    了解这一点会对以后很有帮助。产生这种差别的原因是，当自反性成立时，
+    整个证明目标就完成了，我们不必再关心 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 化简和展开了什么；
+    而当我们必须去观察和理解新产生的证明目标时，我们并不希望它盲目地展开定义，
+    将证明目标留在混乱的声明中。这种情况下就要用到 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 了。
+
+<div class="paragraph"> </div>
+
+    我们刚刚声明的定理形式及其证明与前面的例子基本相同，它们只有一点差别。
+
+<div class="paragraph"> </div>
+
+    首先，我们使用了关键字 <span class="inlinecode"><span class="id" title="keyword">Theorem</span></span> 而非 <span class="inlinecode"><span class="id" title="keyword">Example</span></span>。这种差别纯粹是风格问题；
+    在 Coq 中，关键字 <span class="inlinecode"><span class="id" title="keyword">Example</span></span> 和 <span class="inlinecode"><span class="id" title="keyword">Theorem</span></span>（以及其它一些，包括 <span class="inlinecode"><span class="id" title="keyword">Lemma</span></span>、<span class="inlinecode"><span class="id" title="keyword">Fact</span></span>
+    和 <span class="inlinecode"><span class="id" title="keyword">Remark</span></span>）都表示完全一样的东西。
+
+<div class="paragraph"> </div>
+
+    其次，我们增加了量词 <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">n</span>:<span class="id" title="var">nat</span></span>，因此我们的定理讨论了<i>'所有的'</i> 自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>。
+    在非形式化的证明中，为了证明这种形式的定理，我们通常会说“<i>'假设'</i>
+    存在一个任意自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>...”。而在形式化证明中，这是用 <span class="inlinecode"><span class="id" title="tactic">intros</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>
+    来实现的，它会将量词从证明目标转移到当前假设的<i>'上下文'</i>中。
+
+<div class="paragraph"> </div>
+
+    关键字 <span class="inlinecode"><span class="id" title="tactic">intros</span></span>、<span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 和 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 都是 <i>'策略（Tactic）'</i> 的例子。
+    策略是一条可以用在 <span class="inlinecode"><span class="id" title="keyword">Proof</span></span>（证明）和 <span class="inlinecode"><span class="id" title="keyword">Qed</span></span>（证毕）之间的指令，它告诉 Coq
+    如何来检验我们所下的一些断言的正确性。在本章剩余的部分及以后的课程中，
+    我们会见到更多的策略。 
+<div class="paragraph"> </div>
+
+ 其它类似的定理可通过相同的模式证明。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>, 1 + <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_0_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>, 0 * <span class="id" title="var">n</span> = 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+上述定理名称的后缀 <span class="inlinecode"><span class="id" title="var">_l</span></span> 读作“在左边”。 
+<div class="paragraph"> </div>
+
+ 跟进这些证明的每个步骤，观察上下文及证明目标的变化是非常值得的。
+    你可能要在 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 前面加上 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 调用，以便观察 Coq
+    在检查它们的相等关系前进行的化简。 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab16"></a><h1 class="section">基于改写的证明</h1>
+
+<div class="paragraph"> </div>
+
+ 下面这个定理比我们之前见过的更加有趣： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_id_example</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>:<span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> + <span class="id" title="var">n</span> = <span class="id" title="var">m</span> + <span class="id" title="var">m</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+该定理并未对自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 和 <span class="inlinecode"><span class="id" title="var">m</span></span> 所有可能的值做全称断言，而是讨论了仅当
+    <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 时这一更加特定情况。箭头符号读作“蕴含”。
+
+<div class="paragraph"> </div>
+
+    与此前相同，我们需要在能够假定存在自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 和 <span class="inlinecode"><span class="id" title="var">m</span></span> 的基础上进行推理。
+    另外我们需要假定有前提 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span>。<span class="inlinecode"><span class="id" title="tactic">intros</span></span> 策略用来将这三条前提从证明目标
+    移到当前上下文的假设中。
+
+<div class="paragraph"> </div>
+
+    由于 <span class="inlinecode"><span class="id" title="var">n</span></span> 和 <span class="inlinecode"><span class="id" title="var">m</span></span> 是任意自然数，我们无法用化简来证明此定理，
+    不过可以通过观察来证明它。如果我们假设了 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span>，那么就可以将证明目标中的
+    <span class="inlinecode"><span class="id" title="var">n</span></span> 替换成 <span class="inlinecode"><span class="id" title="var">m</span></span> 从而获得两边表达式相同的等式。用来告诉 Coq
+    执行这种替换的策略叫做<i>'改写'</i> <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span>。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+证明的第一行将全称量词变量 <span class="inlinecode"><span class="id" title="var">n</span></span> 和 <span class="inlinecode"><span class="id" title="var">m</span></span> 移到上下文中。第二行将前提
+    <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 移到上下文中，并将其命名为 <span class="inlinecode"><span class="id" title="var">H</span></span>。第三行告诉 Coq
+    改写当前目标（<span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span>），把前提等式 <span class="inlinecode"><span class="id" title="var">H</span></span> 的左边替换成右边。
+
+<div class="paragraph"> </div>
+
+    (<span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 中的箭头与蕴含无关：它指示 Coq 从左往右地应用改写。
+    若要从右往左改写，可以使用 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">&lt;-</span>。在上面的证明中试一试这种改变，
+    看看 Coq 的反应有何不同。) 
+<div class="paragraph"> </div>
+
+<a name="lab17"></a><h4 class="section">练习：1 星, standard (plus_id_exercise)</h4>
+
+
+<div class="paragraph"> </div>
+
+    删除 "<span class="inlinecode"><span class="id" title="var">Admitted</span>.</span>" 并补完证明。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_id_exercise</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">o</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span> -&gt; <span class="id" title="var">m</span> = <span class="id" title="var">o</span> -&gt; <span class="id" title="var">n</span> + <span class="id" title="var">m</span> = <span class="id" title="var">m</span> + <span class="id" title="var">o</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+ <span class="inlinecode"><span class="id" title="var">Admitted</span></span> 指令告诉 Coq 我们想要跳过此定理的证明，而将其作为已知条件，
+    这在开发较长的证明时很有用。在进行一些较大的命题论证时，我们能够声明一些附加的事实。
+    既然我们认为这些事实对论证是有用的，就可以用 <span class="inlinecode"><span class="id" title="var">Admitted</span></span> 先不加怀疑地接受这些事实，
+    然后继续思考大命题的论证。直到确认了该命题确实是有意义的，
+    再回过头去证明刚才跳过的证明。但是要小心：每次使用 <span class="inlinecode"><span class="id" title="var">Admitted</span></span> 或者 <span class="inlinecode"><span class="id" title="var">admit</span></span>，
+    你就为 Coq 这个完好、严密、形式化且封闭的世界开了一个毫无道理的后门。 
+<div class="paragraph"> </div>
+
+ 可用的不只有上下文中现有的前提，我们还可以通过 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 策略来运用前期证明过的定理。
+    如果前期证明的定理的语句中包含量词变量，如前例所示，Coq 会通过匹配当前的证明目标
+    来尝试实例化（Instantiate）它们。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_0_plus</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;(0 + <span class="id" title="var">n</span>) * <span class="id" title="var">m</span> = <span class="id" title="var">n</span> * <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">plus_O_n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab18"></a><h4 class="section">练习：2 星, standard (mult_S_1)</h4>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_S_1</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">m</span> = <span class="id" title="var">S</span> <span class="id" title="var">n</span> -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">m</span> * (1 + <span class="id" title="var">n</span>) = <span class="id" title="var">m</span> * <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab19"></a><h1 class="section">利用情况分析来证明</h1>
+
+<div class="paragraph"> </div>
+
+ 当然，并非一切都能通过简单的计算和改写来证明。通常，一些未知的，
+    假定的值（如任意数值、布尔值、列表等等）会阻碍化简。
+    例如，如果我们像以前一样使用 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 策略尝试证明下面的事实，就会被卡住。
+    （现在我们用 <span class="inlinecode"><span class="id" title="keyword">Abort</span></span> 指令来放弃证明。） 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0_firsttry</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> + 1) =? 0 = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+原因在于：根据 <span class="inlinecode"><span class="id" title="var">eqb</span></span> 和 <span class="inlinecode">+</span> 的定义，其第一个参数先被 <span class="inlinecode"><span class="id" title="keyword">match</span></span> 匹配。
+    但此处 <span class="inlinecode">+</span> 的第一个参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 未知，而 <span class="inlinecode"><span class="id" title="var">eqb</span></span> 的第一个参数 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span>
+    是复杂表达式，二者均无法化简。
+
+<div class="paragraph"> </div>
+
+    欲进行规约，则需分情况讨论 <span class="inlinecode"><span class="id" title="var">n</span></span> 的所有可能构造。如果 <span class="inlinecode"><span class="id" title="var">n</span></span> 为 <span class="inlinecode"><span class="id" title="var">O</span></span>，
+    则可验算 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> <span class="inlinecode">=?</span> <span class="inlinecode">0</span> 的结果确实为 <span class="inlinecode"><span class="id" title="var">false</span></span>；如果 <span class="inlinecode"><span class="id" title="var">n</span></span> 由 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> 构造，
+    那么即使我们不知道 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1</span> 的确切结果，但至少知道它的构造子为 <span class="inlinecode"><span class="id" title="var">S</span></span>，
+    因而足以得出 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> <span class="inlinecode">=?</span> <span class="inlinecode">0</span> 的结果为 <span class="inlinecode"><span class="id" title="var">false</span></span>。
+
+<div class="paragraph"> </div>
+
+    告诉 Coq 分别对 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> 和 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> 这两种情况进行分析的策略，叫做 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> + 1) =? 0 = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> generates <i>two</i> subgoals, which we must then
+    prove, separately, in order to get Coq to accept the theorem.
+
+<div class="paragraph"> </div>
+
+    The annotation "<span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[|</span> <span class="inlinecode"><span class="id" title="var">n'</span>]</span>" is called an <i>intro pattern</i>.  It
+    tells Coq what variable names to introduce in each subgoal.  In
+    general, what goes between the square brackets is a <i>list of
+    lists</i> of names, separated by <span class="inlinecode">|</span>.  In this case, the first
+    component is empty, since the <span class="inlinecode"><span class="id" title="var">O</span></span> constructor is nullary (it
+    doesn't have any arguments).  The second component gives a single
+    name, <span class="inlinecode"><span class="id" title="var">n'</span></span>, since <span class="inlinecode"><span class="id" title="var">S</span></span> is a unary constructor.
+
+<div class="paragraph"> </div>
+
+    In each subgoal, Coq remembers the assumption about <span class="inlinecode"><span class="id" title="var">n</span></span> that is
+    relevant for this subgoal -- either <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> or <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> for some
+    n'.  The <span class="inlinecode"><span class="id" title="var">eqn</span>:<span class="id" title="var">E</span></span> annotation tells <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> to give the name <span class="inlinecode"><span class="id" title="var">E</span></span> to
+    this equation.  (Leaving off the <span class="inlinecode"><span class="id" title="var">eqn</span>:<span class="id" title="var">E</span></span> annotation causes Coq to
+    elide these assumptions in the subgoals.  This slightly
+    streamlines proofs where the assumptions are not explicitly used,
+    but it is better practice to keep them for the sake of
+    documentation, as they can help keep you oriented when working
+    with the subgoals.)
+
+<div class="paragraph"> </div>
+
+    第二行和第三行中的 <span class="inlinecode">-</span> 符号叫做<i>'标号'</i>，它标明了每个生成的子目标所对应的证明部分。
+    （译注：此处的“标号”应理解为一个项目列表中每个 <i>'条目'</i> 前的小标记，如 ‣ 或 •。）
+    标号后面的代码是一个子目标的完整证明。在本例中，每个子目标都简单地使用
+    <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 完成了证明。通常，<span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 本身会执行一些化简操作。
+    例如，第二段证明将 <span class="inlinecode"><span class="id" title="tactic">at</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> <span class="inlinecode">0</span> 化简成 <span class="inlinecode"><span class="id" title="var">false</span></span>，是通过先将
+    <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span> 转写成 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode">1)</span>，接着展开 <span class="inlinecode"><span class="id" title="var">beq_nat</span></span>，之后再化简 <span class="inlinecode"><span class="id" title="keyword">match</span></span> 完成的。
+
+<div class="paragraph"> </div>
+
+    用标号来区分情况完全是可选的：如果没有标号，Coq 只会简单地要求你依次证明每个子目标。
+    尽管如此，使用标号仍然是一个好习惯。原因有二：首先，它能让证明的结构更加清晰易读。
+    其次，标号能指示 Coq 在开始验证下一个目标前确认上一个子目标已完成，
+    防止不同子目标的证明搅和在一起。这一点在大型开发中尤为重要，
+    因为一些证明片段会导致很耗时的排错过程。
+
+<div class="paragraph"> </div>
+
+    在 Coq 中并没有既严格又便捷的规则来格式化证明 —— 尤其指应在哪里断行，
+    以及证明中的段落应如何缩进以显示其嵌套结构。然而，无论格式的其它方面如何布局，
+    只要在多个子目标生成的地方为每行开头标上标号，那么整个证明就会有很好的可读性。
+
+<div class="paragraph"> </div>
+
+    这里也有必要提一下关于每行代码长度的建议。Coq 的初学者有时爱走极端，
+    要么一行只有一个策略语句，要么把整个证明都写在一行里。更好的风格则介于两者之间。
+    一个合理的习惯是给自己设定一个每行 80 个字符的限制。更长的行会很难读，
+    也不便于显示或打印。很多编辑器都能帮你做到。
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 策略可用于任何归纳定义的数据类型。比如，我们接下来会用它来证明
+    布尔值的取反是对合（Involutive）的 —— 即，取反是自身的逆运算。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_involutive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">negb</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+注意这里的 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 没有 <span class="inlinecode"><span class="id" title="keyword">as</span></span> 子句，因为此处 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>
+    生成的子分类均无需绑定任何变量，因此也就不必指定名字。（当然，我们也可以写上
+    <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[|]</span> 或者 <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[]</span>。) 实际上，我们也可以省略 <i>'任何'</i> <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 中的 <span class="inlinecode"><span class="id" title="keyword">as</span></span> 子句，
+    Coq 会自动填上变量名。不过这通常是个坏习惯，因为如果任其自由决定的话，
+    Coq 经常会选择一些容易令人混淆的名字。
+
+<div class="paragraph"> </div>
+
+    有时在一个子目标内调用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>，产生出更多的证明义务（Proof Obligation）
+    也非常有用。这时候，我们使用不同的标号来标记目标的不同“层级”，比如： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_commutative</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Eb</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ec</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ec</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+每一对 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 调用和紧邻其上的 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span>
+    执行后生成的子目标对应。 
+<div class="paragraph"> </div>
+
+ 除了 <span class="inlinecode">-</span> 和 <span class="inlinecode">+</span>，Coq 证明还可以使用 <span class="inlinecode">*</span> 作为第三种标号。我们也可以用花括号
+    将每个子证明目标括起来，这在遇到一个证明生成了超过三层的子目标时很有用： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_commutative'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Eb</span>.<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ec</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">reflexivity</span>. }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">reflexivity</span>. } }<br/>
+&nbsp;&nbsp;{ <span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ec</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">reflexivity</span>. }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">reflexivity</span>. } }<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+由于花括号同时标识了证明的开始和结束，因此它们可以同时用于不同的子目标层级，
+    如上例所示。此外，花括号还允许我们在一个证明中的多个层级下使用同一个标号： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb3_exchange</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span>, <span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) <span class="id" title="var">d</span> = <span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">d</span>) <span class="id" title="var">c</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Eb</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ec</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">destruct</span> <span class="id" title="var">d</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ed</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>. }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">destruct</span> <span class="id" title="var">d</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ed</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>. }<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ec</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">destruct</span> <span class="id" title="var">d</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ed</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>. }<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;{ <span class="id" title="tactic">destruct</span> <span class="id" title="var">d</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ed</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>. }<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+在本章结束之前，我们最后说一种简便写法。或许你已经注意到了，
+    很多证明在引入变量之后会立即对它进行情况分析：
+
+<div class="paragraph"> </div>
+
+       intros x y. destruct y as <span class="inlinecode">|<span class="id" title="var">y</span></span> eqn:E.
+
+<div class="paragraph"> </div>
+
+    This pattern is so common that Coq provides a shorthand for it: we
+    can perform case analysis on a variable when introducing it by
+    using an intro pattern instead of a variable name. For instance,
+    here is a shorter proof of the <span class="inlinecode"><span class="id" title="var">plus_1_neq_0</span></span> theorem
+    above.  (You'll also note one downside of this shorthand: we lose
+    the equation recording the assumption we are making in each
+    subgoal, which we previously got from the <span class="inlinecode"><span class="id" title="var">eqn</span>:<span class="id" title="var">E</span></span> annotation.) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> + 1) =? 0 = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [|<span class="id" title="var">n</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+如果没有需要命名的参数，我们只需写上 <span class="inlinecode">[]</span> 即可。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_commutative''</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [] [].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab20"></a><h4 class="section">练习：2 星, standard (andb_true_elim2)</h4>
+
+
+<div class="paragraph"> </div>
+
+    证明以下断言, 当使用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 时请用标号标出情况（以及子情况）。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_true_elim2</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">c</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab21"></a><h4 class="section">练习：1 星, standard (zero_nbeq_plus_1)</h4>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">zero_nbeq_plus_1</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;0 =? (<span class="id" title="var">n</span> + 1) = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab22"></a><h1 class="section">关于记法的更多内容 (可选)</h1>
+
+<div class="paragraph"> </div>
+
+ （通常，标为可选的部分对于跟进本书其它部分的学习来说不是必须的，
+    除了那些也标记为可选的部分。在初次阅读时，你可以快速浏览这些部分，
+    以便在将来遇到时能够想起来这里讲了些什么。）
+
+<div class="paragraph"> </div>
+
+    回忆一下中缀加法和乘法的记法定义：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x + y" := (<span class="id" title="var">plus</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;x * y" := (<span class="id" title="var">mult</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+对于 Coq 中的每个记法符号，我们可以指定它的 <i>'优先级'</i> 和 <i>'结合性'</i>。
+    优先级 <span class="inlinecode"><span class="id" title="var">n</span></span> 用 <span class="inlinecode"><span class="id" title="tactic">at</span></span> <span class="inlinecode"><span class="id" title="keyword">level</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 来表示，这样有助于 Coq 分析复合表达式。
+    结合性的设置有助于消除表达式中相同符号出现多次时产生的歧义。比如，
+    上面这组对 <span class="inlinecode">+</span> 和 <span class="inlinecode">*</span> 的参数定义的表达式 <span class="inlinecode">1+2*3*4</span> 是 <span class="inlinecode">(1+((2*3)*4))</span> 的
+    简写。Coq 使用 0 到 100 的优先级等级，同时支持 <i>'左结合'</i>、<i>'右结合'</i>
+    和 <i>'不结合'</i> 三种结合性。之后我们会看到更多与此相关的例子，比如
+    <i>'列表'</i> 一章。
+
+<div class="paragraph"> </div>
+
+    每个记法符号还与 <i>'记法范围（Notation Scope）'</i>相关。Coq 会尝试根据上下文来猜测
+    你所指的范围，因此当你写出 <span class="inlinecode"><span class="id" title="var">S</span>(0*0)</span> 时，它猜测是 <span class="inlinecode"><span class="id" title="var">nat_scope</span></span>；而当你
+    写出笛卡尔积（元组）类型 <span class="inlinecode"><span class="id" title="var">bool</span>*<span class="id" title="var">bool</span></span> 时，它猜测是 <span class="inlinecode"><span class="id" title="var">type_scope</span></span>。
+    有时你可能必须百分号记法 <span class="inlinecode">(<span class="id" title="var">x</span>*<span class="id" title="var">y</span>)%<span class="id" title="var">nat</span></span> 来帮助 Coq 确定范围。
+    另外，有时 Coq 打印的结果中也用 <span class="inlinecode">%<span class="id" title="var">nat</span></span> 来指示记法所在的范围。
+
+<div class="paragraph"> </div>
+
+    记法范围同样适用于数值记法（<span class="inlinecode">3</span>、<span class="inlinecode">4</span>、<span class="inlinecode">5</span> 等等），因此你有时候会看到
+    <span class="inlinecode">0%<span class="id" title="var">nat</span></span>，表示 <span class="inlinecode">0</span>（即我们在本章中使用的自然数零 <span class="inlinecode">0</span>），而 <span class="inlinecode">0%<span class="id" title="var">Z</span></span> 表示整数零
+    （来自于标准库中的另一个部分）。
+
+<div class="paragraph"> </div>
+
+    专业提示：Coq 的符号机制不是特别强大。别期望太多！ 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab23"></a><h1 class="section">不动点 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 和结构化递归 (可选)</h1>
+
+<div class="paragraph"> </div>
+
+ 以下是加法定义的一个副本： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus'</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus'</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+当 Coq 查看此定义时，它会注意到“<span class="inlinecode"><span class="id" title="var">plus'</span></span> 的第一个参数是递减的”。
+    这意味着我们对参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 执行了<i>'结构化递归'</i>。换言之，我们仅对严格递减的
+    <span class="inlinecode"><span class="id" title="var">n</span></span> 值进行递归调用。这一点蕴含了“对 <span class="inlinecode"><span class="id" title="var">plus'</span></span> 的调用最终会停止”。
+    Coq 要求每个 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 定义中的某些参数必须是“递减的”。
+
+<div class="paragraph"> </div>
+
+    这项要求是 Coq 的基本特性之一，它保证了 Coq 中定义的所有函数对于所有输入都会终止。
+    然而，由于 Coq 的“递减分析”不是非常精致，
+    因此有时必须用一点不同寻常的方式来编写函数。 
+<div class="paragraph"> </div>
+
+<a name="lab24"></a><h4 class="section">练习：2 星, standard, optional (decreasing)</h4>
+
+
+<div class="paragraph"> </div>
+
+    To get a concrete sense of this, find a way to write a sensible
+    <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> definition (of a simple function on numbers, say) that
+    <i>does</i> terminate on all inputs, but that Coq will reject because
+    of this restriction.  (If you choose to turn in this optional
+    exercise as part of a homework assignment, make sure you comment
+    out your solution so that it doesn't cause Coq to reject the whole
+    file!) 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab25"></a><h1 class="section">更多练习</h1>
+
+<div class="paragraph"> </div>
+
+ Each SF chapter comes with a tester file (e.g.  <span class="inlinecode"><span class="id" title="var">BasicsTest.v</span></span>),
+    containing scripts that check most of the exercises. You can run
+    <span class="inlinecode"><span class="id" title="var">make</span></span> <span class="inlinecode"><span class="id" title="var">BasicsTest.vo</span></span> in a terminal and check its output to make
+    sure you didn't miss anything. 
+<div class="paragraph"> </div>
+
+<a name="lab26"></a><h4 class="section">练习：1 星, standard (indentity_fn_applied_twice)</h4>
+
+
+<div class="paragraph"> </div>
+
+    用你学过的策略证明以下关于布尔函数的定理。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">identity_fn_applied_twice</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">f</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">bool</span>),<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">bool</span>), <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">x</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>), <span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab27"></a><h4 class="section">练习：1 星, standard (negation_fn_applied_twice)</h4>
+
+
+<div class="paragraph"> </div>
+
+    现在声明并证明定理 <span class="inlinecode"><span class="id" title="var">negation_fn_applied_twice</span></span>，与上一个类似，
+    但是第二个前提说明函数 <span class="inlinecode"><span class="id" title="var">f</span></span> 有 <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">negb</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> 的性质。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">String</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_negation_fn_applied_twice</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab28"></a><h4 class="section">练习：3 星, standard, optional (andb_eq_orb)</h4>
+
+
+<div class="paragraph"> </div>
+
+    请证明下列定理。（提示：此定理的证明可能会有点棘手，取决于你如何证明它。
+    或许你需要先证明一到两个辅助引理。或者，你要记得未必要同时引入所有前提。） 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_eq_orb</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>),<br/>
+&nbsp;&nbsp;(<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">orb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="var">b</span> = <span class="id" title="var">c</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab29"></a><h4 class="section">练习：3 星, standard (binary)</h4>
+
+
+<div class="paragraph"> </div>
+
+    We can generalize our unary representation of natural numbers to
+    the more efficient binary representation by treating a binary
+    number as a sequence of constructors <span class="inlinecode"><span class="id" title="var">A</span></span> and <span class="inlinecode"><span class="id" title="var">B</span></span> (representing 0s
+    and 1s), terminated by a <span class="inlinecode"><span class="id" title="var">Z</span></span>. For comparison, in the unary
+    representation, a number is a sequence of <span class="inlinecode"><span class="id" title="var">S</span></span>s terminated by an
+    <span class="inlinecode"><span class="id" title="var">O</span></span>.
+
+<div class="paragraph"> </div>
+
+    For example:
+
+<div class="paragraph"> </div>
+
+        decimal            binary                           unary
+           0                   Z                              O
+           1                 B Z                            S O
+           2              A (B Z)                        S (S O)
+           3              B (B Z)                     S (S (S O))
+           4           A (A (B Z))                 S (S (S (S O)))
+           5           B (A (B Z))              S (S (S (S (S O))))
+           6           A (B (B Z))           S (S (S (S (S (S O)))))
+           7           B (B (B Z))        S (S (S (S (S (S (S O))))))
+           8        A (A (A (B Z)))    S (S (S (S (S (S (S (S O)))))))
+
+<div class="paragraph"> </div>
+
+    Note that the low-order bit is on the left and the high-order bit
+    is on the right -- the opposite of the way binary numbers are
+    usually written.  This choice makes them easier to manipulate. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">bin</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">Z</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">A</span> (<span class="id" title="var">n</span> : <span class="id" title="var">bin</span>)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">B</span> (<span class="id" title="var">n</span> : <span class="id" title="var">bin</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+(a) Complete the definitions below of an increment function <span class="inlinecode"><span class="id" title="var">incr</span></span>
+        for binary numbers, and a function <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> to convert
+        binary numbers to unary numbers. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">incr</span> (<span class="id" title="var">m</span>:<span class="id" title="var">bin</span>) : <span class="id" title="var">bin</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">bin_to_nat</span> (<span class="id" title="var">m</span>:<span class="id" title="var">bin</span>) : <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+   (b) Write five unit tests <span class="inlinecode"><span class="id" title="var">test_bin_incr1</span></span>, <span class="inlinecode"><span class="id" title="var">test_bin_incr2</span></span>, etc.
+        for your increment and binary-to-unary functions.  (A "unit
+        test" in Coq is a specific <span class="inlinecode"><span class="id" title="keyword">Example</span></span> that can be proved with
+        just <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span>, as we've done for several of our
+        definitions.)  Notice that incrementing a binary number and
+        then converting it to unary should yield the same result as
+        first converting it to unary and then incrementing. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
