@@ -395,20 +395,18 @@ Module NatPlayground.
 (* ================================================================= *)
 (** ** 自然数 (Naturals) *)
 
-(** The types we have defined so far, "enumerated types" such as
-    [day], [bool], and [bit], and tuple types such as [nybble] built
-    from them, share the property that each type has a finite set of
-    values. The natural numbers are an infinite set, and we need to
-    represent all of them in a datatype with a finite number of
-    constructors. There are many representations of numbers to choose
-    from. We are most familiar with decimal notation (base 10), using
-    the digits 0 through 9, for example, to form the number 123.  You
-    may have encountered hexadecimal notation (base 16), in which the
-    same number is represented as 7B, or octal (base 8), where it is
-    173, or binary (base 2), where it is 1111011. Using an enumerated
-    type to represent digits, we could use any of these to represent
-    natural numbers. There are circumstances where each of these
-    choices can be useful.
+(**
+  现在，我们要定义自然数数据类型。好戏刚刚开场。
+  
+  自然数类型与之前我们定义的数据类型有一个很大的区别，
+  那就是自然数有无穷多个 (在后续课程中，我们会知道，自然数有可数无穷多个)。
+  我们无法以一一列举的方式定义自然数类型。
+  怎么办？怎么才能在有限的纸张上写下无穷多个自然数？
+  (“以”)
+  答案是：归纳定义。[Inductive]关键词的威力在这里得以显现。
+*)
+
+(** 
 
     Binary is valuable in computer hardware because it can in turn be
     represented with two voltage levels, resulting in simple
@@ -429,122 +427,91 @@ Inductive nat : Type :=
   | O
   | S (n : nat).
 
-(** With this definition, 0 is represented by [O], 1 by [S O],
-    2 by [S (S O)], and so on. *)
+(**
+  So Easy! 我们来解读一下。
+  这个归纳定义告诉我们，自然数 [nat] _有且仅有_ 两种构造方式：
+  - [O] 是一个构造函数。
+  它告诉我们，[O] 是自然数。(注意：这里是大写字母 [O]，不是数字 [0]。
+  本质上讲，我们现在仅仅是在定义一些符号。这些符号毫无意义。
+  它们的意义来自于我们如何使用(通过定义函数)它们。
+  如果我们像使用自然数那样使用它们，那么它们“就是”自然数。)
+  - [S (n : nat)] 是一个构造函数。
+  它告诉我们，如何 [n] 是自然数，那么 [S n] 也是自然数。
+  
+  需要注意的是，与 [monochrome] 中的 [primary q] 构造函数不同，
+  [S n] 中的 [n] 的类型是我们正在定义的 [nat]。
+  什么？等等！你要定义 [nat]，但是你在定义中又用到了 [nat]，这不会造成循环依赖吗?
+  让我们再分析一下 [nat] 的定义。
+  根据第一个构造函数，我们知道 [O] 是自然数 (类型是 [nat])。
+  根据第二个构造函数，我们知道 [S O] 是自然数。
+  再根据第二个构造函数，我们知道 [S (S O)] 是自然数，
+  依此类推，我们知道 [S (S (S O))]、[S (S (S (S O)))]…… 都是自然数。
+  
+  综上所述，在 [nat] 的定义中，
+  第一个构造函数给出了一个特定的自然数 [O]，
+  第二个构造函数根据已知的自然数 [n] 构造一个新的自然数 [S n] 
+  (也称为 [n] 的 _'后继'(Successor)_)。
+  没有循环依赖。
+*)
 
-(** 此定义中的从句可读作：
-      - [O] 是一个自然数（注意这里是字母“[O]”，不是数字“[0]”）。
-      - [S] 可被放在一个自然数之前产生另一个自然数 ——
-        也就是说，如果 [n] 是一个自然数，那么 [S n] 也是。 *)
 
-(** 同样，我们来仔细观察这个定义。
-    [nat] 的定义描述了集合 [nat] 中的表达式是如何构造的：
+(** 
+  需要再次强调的是，到目前为止，我们仅仅是定义了一些符号：
+  [O]、[S O]、[S (S O)] 等。
+  [O]、[S] 并无特别之处，你可以将它们换成其它符号。
+  
+  接下来，我们将在 [nat] 上定义函数：
+  前驱函数 [pred]、加法 [plus]、减法 [minus]、乘法 [mult] 与幂运算 [exp]。
+  正是这些函数为符号赋予了意义。
+  (以后大家在学习数理逻辑的时候，遇到的第一个难点，
+  就是区分语法 (符号、公式)与语义 (解释、意义、真假)。)
+*)
 
-    - [O] 和 [S] 是构造子；
-    - 表达式 [O] 属于集合 [nat]；
-    - 如果 [n] 是属于集合 [nat] 的表达式，
-      那么 [S n] 也是属于集合 [nat] 的表达式；并且
-    - 只有按照这两种方式构造的表达式才属于集合 [nat]。 *)
+End NatPlayground.
 
-(** 同样的规则也适用于 [day]、[bool]、[color] 等的定义。
+(** 
+  [nat] 实际上刻画了自然数的一进制表示法。
+  在一进制下，100 需要表示为一百个S后接一个O。
+  为了避免这种麻烦，Coq 允许我们将一进制的 [nat] 解析打印为十进制形式。
+*)
 
-    以上条件是精确构成 [Inductive] 声明的主要推动力。它们蕴含的表达式 [O]、
-    [S O]、[S (S O)]、[S (S (S O))] 等等都属于集合 [nat]，而像
-    [true]、[andb true false]、[S (S false)] 以及 [O (O (O S))]
-    之类的，由数据构造子构造的表达式则不属于 [nat]。
+Check (S (S (S (S O)))).
+  (* ===> 4 : nat *)
+Check 4.
 
-    关键之处在于，我们目前只是定义了一种数字的_'表示'_方式，
-    即一种写下它们的方式。名称 [O] 和 [S] 是任意的，在这一点上它们没有特殊的意义，
-    它们只是我们能用来写下数字的两个不同的记号（以及一个说明了任何 [nat]
-    都能写成一串 [S] 后跟一个 [O] 的规则）。如果你喜欢，完全可以将同样的定义写成： *)
+(** 
+  你猜构造函数 [S] 的类型是什么？
+*)
 
-Inductive nat' : Type :=
-  | stop
-  | tick (foo : nat').
+Check S.
 
-(** 这些记号的_'解释'_完全取决于我们如何用它进行计算。 *)
+Module NatPlayground2.
 
-(** 我们可以像之前的布尔值或日期那样，
-    编写一个函数来对上述自然数的表示进行模式匹配。
-    例如，以下为前趋函数：*)
-
+(**
+  先定义前驱函数 [pred]。
+  需要注意的是，我们规定 [O] 的前驱仍是 [O]。
+  根据 [nat] 的定义，我们知道非零自然数的形式一定是 [S n']，
+  它的前驱是 [n']。 
+*)
 Definition pred (n : nat) : nat :=
   match n with
     | O => O
     | S n' => n'
   end.
 
-(** 第二个分支可以读作：“如果 [n] 对于某个 [n'] 的形式为 [S n']，
-    那么就返回 [n']。” *)
-
-End NatPlayground.
-
-(** 为了让自然数使用起来更加自然，Coq 内建了一小部分解析打印功能：
-    普通的十进制数可视为“一进制”自然数的另一种记法，以代替 [S] 与 [O] 构造子；
-    反过来，Coq 也会默认将自然数打印为十进制形式： *)
-
-Check (S (S (S (S O)))).
-  (* ===> 4 : nat *)
-
-Definition minustwo (n : nat) : nat :=
-  match n with
-    | O => O
-    | S O => O
-    | S (S n') => n'
-  end.
-
-Compute (minustwo 4).
-  (* ===> 2 : nat *)
-
-(** 构造子 [S] 的类型为 [nat -> nat]，与函数 [pred] 和 [minustwo] 相同： *)
-
-Check S.
-Check pred.
-Check minustwo.
-
-(** 以上三个函数均可作用于自然数，并产生自然数结果，但第一个 [S]
-    与后两者有本质区别：[pred] 和 [minustwo] 这类函数定义了 _'计算规则'_——
-    例如 [pred] 的定义表明 [pred 2] 可化简为 [1]——但 [S] 的定义不表征此类行为。
-    虽然 [S] 可以作用于参数这点与函数相仿，但其作用仅限于构造数字。
-    （考虑标准的十进制数：数字 [1] 不代表任何计算，只表示一部分数据。
-    用 [111] 指代数字一百一十一，实则使用三个 [1] 符号表示此数各位。）
-
-    模式匹配不足以描述很多数字运算，我们还需要递归定义。
-    例如：给定自然数 [n]，欲判定其是否为偶数，则需递归检查 [n-2] 是否为偶数。
-    关键字 [Fixpoint] 可用于定义此类函数。 *)
-
-Fixpoint evenb (n:nat) : bool :=
-  match n with
-  | O        => true
-  | S O      => false
-  | S (S n') => evenb n'
-  end.
-
-(** 我们可以使用类似的 [Fixpoint] 声明来定义 [odd] 函数，
-    不过还有种更简单的定义：*)
-
-Definition oddb (n:nat) : bool   :=   negb (evenb n).
-
-Example test_oddb1:    oddb 1 = true.
-Proof. simpl. reflexivity.  Qed.
-Example test_oddb2:    oddb 4 = false.
-Proof. simpl. reflexivity.  Qed.
-
-(** （如果你逐步检查完这些证明，就会发现 [simpl] 其实没什么作用
-    —— 所有工作都被 [reflexivity] 完成了。我们不久就会看到为什么会这样。)
-
-    当然，我们也可以用递归定义多参函数。  *)
-
-Module NatPlayground2.
-
+(**
+  函数 [plus] 返回两个自然数 [n] 与 [m] 的和：
+  - 第一个分支： [O + m = m]
+  - 第二个分支： [S n' + m = S (n' + m)]。
+  注意：我们还没有定义 “+”。这里的 “+” 是数学上的加法符号。
+*)  
 Fixpoint plus (n : nat) (m : nat) : nat :=
   match n with
     | O => m
     | S n' => S (plus n' m)
   end.
 
-(** 三加二等于五，正如所料。 *)
-
+(** 测试 [3 + 2]。 *)
 Compute (plus 3 2).
 
 (** 为得出此结论，Coq 所执行的化简步骤如下： *)
@@ -555,19 +522,35 @@ Compute (plus 3 2).
 ==> [S (S (S (plus O (S (S O)))))] 根据第二个 [match] 子句
 ==> [S (S (S (S (S O))))]          根据第一个 [match] 子句 *)
 
-(** 为了书写方便，如果两个或更多参数具有相同的类型，那么它们可以写在一起。
-    在下面的定义中，[(n m : nat)] 的意思与 [(n : nat) (m : nat)] 相同。 *)
-
+(**
+  乘法 [mult] 的定义方式类似，它用到了刚刚定义的 [plus]。
+  这里，[(n m : nat)] 的意思与 [(n : nat) (m : nat)] 相同。
+*)
 Fixpoint mult (n m : nat) : nat :=
   match n with
     | O => O
     | S n' => plus m (mult n' m)
   end.
 
-Example test_mult1: (mult 3 3) = 9.
-Proof. simpl. reflexivity.  Qed.
+Example test_mult: (mult 3 3) = 9.
+Proof. simpl. reflexivity. Qed.
 
-(** 你可以在两个表达式之间添加逗号来同时匹配它们：*)
+(** **** 练习：1 星, standard (exp)  
+  我们将自然数上的幂运算的定义作为练习。
+  你需要用到刚刚定义的 [mult]。
+*)
+
+Fixpoint exp (base power : nat) : nat
+  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+
+(** 测试一下。*)    
+Example test_exp: (exp 3 3) = 27.
+Proof. (* 请在此处写入证明 *) Admitted.
+
+(** 你可以在两个表达式之间添加逗号来同时匹配它们
+  减法 [minus] 的定义稍微有些复杂。
+  它需要对两个参数 [n] 与 [m] 分别做模式匹配。
+*)
 
 Fixpoint minus (n m:nat) : nat :=
   match n, m with
@@ -576,23 +559,24 @@ Fixpoint minus (n m:nat) : nat :=
   | S n', S m' => minus n' m'
   end.
 
+(** **** 练习：1 星, standard (exp)  
+  注意 [minus] 是如何使用 [match] 对两个参数同时做模式匹配的。
+  当然，你也可以先对 [n] 做模式匹配，再对 [m] 做模式匹配。
+  留作练习。
+*)
+Fixpoint minus' (n m:nat) : nat
+  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+  
+Example test_minus': minus 10 5 = minus' 10 5.
+Proof. (* 请在此处写入证明 *) Admitted.
+(** [] *)
 End NatPlayground2.
 
-Fixpoint exp (base power : nat) : nat :=
-  match power with
-    | O => S O
-    | S p => mult base (exp base p)
-  end.
-
-(** **** 练习：1 星, standard (factorial)  
-
-    回想一下标准的阶乘函数：
-
+(** **** 练习：1 星, standard (factorial)
+    请定义阶乘函数 [factorial]：
        factorial(0)  =  1
-       factorial(n)  =  n * factorial(n-1)     (if n>0)
-
-    把它翻译成 Coq 语言。 *)
-
+       factorial(n)  =  n * factorial(n-1)     (if n > 0)
+*)
 Fixpoint factorial (n:nat) : nat
   (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
 
@@ -624,11 +608,33 @@ Check ((0 + 1) + 1).
     [x + y] 来代替 [plus x y]，并在 Coq 美化输出时反过来将 [plus x y]
     显示为 [x + y]。 *)
 
-(** Coq 不包含任何内置定义，以至于数值间相等关系的测试也是由用户来实现。
-
+(** 
     [eqb] 函数定义如下：该函数测试自然数 [nat] 间相等关系 [eq]，
     并以布尔值 [bool] 表示。注意该定义使用嵌套匹配 [match]
     （亦可仿照 [minus] 使用并列匹配）。 *)
+
+(** 
+    模式匹配不足以描述很多数字运算，我们还需要递归定义。
+    例如：给定自然数 [n]，欲判定其是否为偶数，则需递归检查 [n-2] 是否为偶数。
+    关键字 [Fixpoint] 可用于定义此类函数。 *)
+
+Fixpoint evenb (n:nat) : bool :=
+  match n with
+  | O        => true
+  | S O      => false
+  | S (S n') => evenb n'
+  end.
+
+(** 我们可以使用类似的 [Fixpoint] 声明来定义 [odd] 函数，
+    不过还有种更简单的定义：*)
+
+Definition oddb (n:nat) : bool   :=   negb (evenb n).
+
+Example test_oddb1:    oddb 1 = true.
+Proof. simpl. reflexivity.  Qed.
+Example test_oddb2:    oddb 4 = false.
+Proof. simpl. reflexivity.  Qed.
+
 
 Fixpoint eqb (n m : nat) : bool :=
   match n with

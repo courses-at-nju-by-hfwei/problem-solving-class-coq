@@ -728,20 +728,22 @@
 
 <div class="paragraph"> </div>
 
- The types we have defined so far, "enumerated types" such as
-    <span class="inlinecode"><span class="id" title="var">day</span></span>, <span class="inlinecode"><span class="id" title="var">bool</span></span>, and <span class="inlinecode"><span class="id" title="var">bit</span></span>, and tuple types such as <span class="inlinecode"><span class="id" title="var">nybble</span></span> built
-    from them, share the property that each type has a finite set of
-    values. The natural numbers are an infinite set, and we need to
-    represent all of them in a datatype with a finite number of
-    constructors. There are many representations of numbers to choose
-    from. We are most familiar with decimal notation (base 10), using
-    the digits 0 through 9, for example, to form the number 123.  You
-    may have encountered hexadecimal notation (base 16), in which the
-    same number is represented as 7B, or octal (base 8), where it is
-    173, or binary (base 2), where it is 1111011. Using an enumerated
-    type to represent digits, we could use any of these to represent
-    natural numbers. There are circumstances where each of these
-    choices can be useful.
+
+<div class="paragraph"> </div>
+
+  现在，我们要定义自然数数据类型。好戏刚刚开场。
+
+<div class="paragraph"> </div>
+
+  自然数类型与之前我们定义的数据类型有一个很大的区别，
+  那就是自然数有无穷多个 (在后续课程中，我们会知道，自然数有可数无穷多个)。
+  我们无法以一一列举的方式定义自然数类型。
+  怎么办？怎么才能在有限的纸张上写下无穷多个自然数？
+  (“以”)
+  答案是：归纳定义。<span class="inlinecode"><span class="id" title="keyword">Inductive</span></span>关键词的威力在这里得以显现。
+
+<div class="paragraph"> </div>
+
 
 <div class="paragraph"> </div>
 
@@ -773,93 +775,60 @@
 </div>
 
 <div class="doc">
-With this definition, 0 is represented by <span class="inlinecode"><span class="id" title="var">O</span></span>, 1 by <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span>,
-    2 by <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>)</span>, and so on. 
-<div class="paragraph"> </div>
-
- 此定义中的从句可读作：
+  So Easy! 我们来解读一下。
+  这个归纳定义告诉我们，自然数 <span class="inlinecode"><span class="id" title="var">nat</span></span> _有且仅有_ 两种构造方式：
 <ul class="doclist">
-<li> <span class="inlinecode"><span class="id" title="var">O</span></span> 是一个自然数（注意这里是字母“<span class="inlinecode"><span class="id" title="var">O</span></span>”，不是数字“<span class="inlinecode">0</span>”）。
+<li> <span class="inlinecode"><span class="id" title="var">O</span></span> 是一个构造函数。
 
-</li>
-<li> <span class="inlinecode"><span class="id" title="var">S</span></span> 可被放在一个自然数之前产生另一个自然数 ——
-        也就是说，如果 <span class="inlinecode"><span class="id" title="var">n</span></span> 是一个自然数，那么 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 也是。 
 </li>
 </ul>
-
-<div class="paragraph"> </div>
-
- 同样，我们来仔细观察这个定义。
-    <span class="inlinecode"><span class="id" title="var">nat</span></span> 的定义描述了集合 <span class="inlinecode"><span class="id" title="var">nat</span></span> 中的表达式是如何构造的：
-
-<div class="paragraph"> </div>
-
+  它告诉我们，<span class="inlinecode"><span class="id" title="var">O</span></span> 是自然数。(注意：这里是大写字母 <span class="inlinecode"><span class="id" title="var">O</span></span>，不是数字 <span class="inlinecode">0</span>。
+  本质上讲，我们现在仅仅是在定义一些符号。这些符号毫无意义。
+  它们的意义来自于我们如何使用(通过定义函数)它们。
+  如果我们像使用自然数那样使用它们，那么它们“就是”自然数。)
 <ul class="doclist">
-<li> <span class="inlinecode"><span class="id" title="var">O</span></span> 和 <span class="inlinecode"><span class="id" title="var">S</span></span> 是构造子；
+<li> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 是一个构造函数。
 
-</li>
-<li> 表达式 <span class="inlinecode"><span class="id" title="var">O</span></span> 属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span>；
-
-</li>
-<li> 如果 <span class="inlinecode"><span class="id" title="var">n</span></span> 是属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span> 的表达式，
-      那么 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 也是属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span> 的表达式；并且
-
-</li>
-<li> 只有按照这两种方式构造的表达式才属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span>。 
 </li>
 </ul>
+  它告诉我们，如何 <span class="inlinecode"><span class="id" title="var">n</span></span> 是自然数，那么 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 也是自然数。
 
 <div class="paragraph"> </div>
 
- 同样的规则也适用于 <span class="inlinecode"><span class="id" title="var">day</span></span>、<span class="inlinecode"><span class="id" title="var">bool</span></span>、<span class="inlinecode"><span class="id" title="var">color</span></span> 等的定义。
+  需要注意的是，与 <span class="inlinecode"><span class="id" title="var">monochrome</span></span> 中的 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> 构造函数不同，
+  <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 中的 <span class="inlinecode"><span class="id" title="var">n</span></span> 的类型是我们正在定义的 <span class="inlinecode"><span class="id" title="var">nat</span></span>。
+  什么？等等！你要定义 <span class="inlinecode"><span class="id" title="var">nat</span></span>，但是你在定义中又用到了 <span class="inlinecode"><span class="id" title="var">nat</span></span>，这不会造成循环依赖吗?
+  让我们再分析一下 <span class="inlinecode"><span class="id" title="var">nat</span></span> 的定义。
+  根据第一个构造函数，我们知道 <span class="inlinecode"><span class="id" title="var">O</span></span> 是自然数 (类型是 <span class="inlinecode"><span class="id" title="var">nat</span></span>)。
+  根据第二个构造函数，我们知道 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span> 是自然数。
+  再根据第二个构造函数，我们知道 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>)</span> 是自然数，
+  依此类推，我们知道 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>))</span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>)))</span>…… 都是自然数。
 
 <div class="paragraph"> </div>
 
-    以上条件是精确构成 <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> 声明的主要推动力。它们蕴含的表达式 <span class="inlinecode"><span class="id" title="var">O</span></span>、
-    <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>)</span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>))</span> 等等都属于集合 <span class="inlinecode"><span class="id" title="var">nat</span></span>，而像
-    <span class="inlinecode"><span class="id" title="var">true</span></span>、<span class="inlinecode"><span class="id" title="var">andb</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">false</span>)</span> 以及 <span class="inlinecode"><span class="id" title="var">O</span></span> <span class="inlinecode">(<span class="id" title="var">O</span></span> <span class="inlinecode">(<span class="id" title="var">O</span></span> <span class="inlinecode"><span class="id" title="var">S</span>))</span>
-    之类的，由数据构造子构造的表达式则不属于 <span class="inlinecode"><span class="id" title="var">nat</span></span>。
+  综上所述，在 <span class="inlinecode"><span class="id" title="var">nat</span></span> 的定义中，
+  第一个构造函数给出了一个特定的自然数 <span class="inlinecode"><span class="id" title="var">O</span></span>，
+  第二个构造函数根据已知的自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 构造一个新的自然数 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 
+  (也称为 <span class="inlinecode"><span class="id" title="var">n</span></span> 的 <i>'后继'(Successor)_)。
+  没有循环依赖。
 
 <div class="paragraph"> </div>
 
-    关键之处在于，我们目前只是定义了一种数字的<i>'表示'</i>方式，
-    即一种写下它们的方式。名称 <span class="inlinecode"><span class="id" title="var">O</span></span> 和 <span class="inlinecode"><span class="id" title="var">S</span></span> 是任意的，在这一点上它们没有特殊的意义，
-    它们只是我们能用来写下数字的两个不同的记号（以及一个说明了任何 <span class="inlinecode"><span class="id" title="var">nat</span></span>
-    都能写成一串 <span class="inlinecode"><span class="id" title="var">S</span></span> 后跟一个 <span class="inlinecode"><span class="id" title="var">O</span></span> 的规则）。如果你喜欢，完全可以将同样的定义写成： 
-</div>
-<div class="code">
 
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">nat'</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;| <span class="id" title="var">stop</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">tick</span> (<span class="id" title="var">foo</span> : <span class="id" title="var">nat'</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-这些记号的<i>'解释'</i>完全取决于我们如何用它进行计算。 
 <div class="paragraph"> </div>
 
- 我们可以像之前的布尔值或日期那样，
-    编写一个函数来对上述自然数的表示进行模式匹配。
-    例如，以下为前趋函数：
-</div>
-<div class="code">
+  需要再次强调的是，到目前为止，我们仅仅是定义了一些符号：
+  <span class="inlinecode"><span class="id" title="var">O</span></span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span>、<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span>)</span> 等。
+  <span class="inlinecode"><span class="id" title="var">O</span></span>、<span class="inlinecode"><span class="id" title="var">S</span></span> 并无特别之处，你可以将它们换成其它符号。
 
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">pred</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">n'</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<div class="paragraph"> </div>
 
-<br/>
-</div>
+  接下来，我们将在 <span class="inlinecode"><span class="id" title="var">nat</span></span> 上定义函数：
+  前驱函数 <span class="inlinecode"><span class="id" title="var">pred</span></span>、加法 <span class="inlinecode"><span class="id" title="var">plus</span></span>、减法 <span class="inlinecode"><span class="id" title="var">minus</span></span>、乘法 <span class="inlinecode"><span class="id" title="var">mult</span></span> 与幂运算 <span class="inlinecode"><span class="id" title="var">exp</span></span>。
+  正是这些函数为符号赋予了意义。
+  (以后大家在学习数理逻辑的时候，遇到的第一个难点，
+  就是区分语法 (符号、公式)与语义 (解释、意义、真假)。)
 
-<div class="doc">
-第二个分支可以读作：“如果 <span class="inlinecode"><span class="id" title="var">n</span></span> 对于某个 <span class="inlinecode"><span class="id" title="var">n'</span></span> 的形式为 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>，
-    那么就返回 <span class="inlinecode"><span class="id" title="var">n'</span></span>。” 
 </div>
 <div class="code">
 
@@ -870,101 +839,72 @@ With this definition, 0 is represented by <span class="inlinecode"><span class="
 </div>
 
 <div class="doc">
-为了让自然数使用起来更加自然，Coq 内建了一小部分解析打印功能：
-    普通的十进制数可视为“一进制”自然数的另一种记法，以代替 <span class="inlinecode"><span class="id" title="var">S</span></span> 与 <span class="inlinecode"><span class="id" title="var">O</span></span> 构造子；
-    反过来，Coq 也会默认将自然数打印为十进制形式： 
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">nat</span></span> 实际上刻画了自然数的一进制表示法。
+  在一进制下，100 需要表示为一百个S后接一个O。
+  为了避免这种麻烦，Coq 允许我们将一进制的 <span class="inlinecode"><span class="id" title="var">nat</span></span> 解析打印为十进制形式。
+
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Check</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">O</span>)))).<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">minustwo</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">n'</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Compute</span> (<span class="id" title="var">minustwo</span> 4).<br/>
+<span class="id" title="keyword">Check</span> 4.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-构造子 <span class="inlinecode"><span class="id" title="var">S</span></span> 的类型为 <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>，与函数 <span class="inlinecode"><span class="id" title="var">pred</span></span> 和 <span class="inlinecode"><span class="id" title="var">minustwo</span></span> 相同： 
+
+<div class="paragraph"> </div>
+
+  你猜构造函数 <span class="inlinecode"><span class="id" title="var">S</span></span> 的类型是什么？
+
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Check</span> <span class="id" title="var">S</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">pred</span>.<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">minustwo</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">NatPlayground2</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-以上三个函数均可作用于自然数，并产生自然数结果，但第一个 <span class="inlinecode"><span class="id" title="var">S</span></span>
-    与后两者有本质区别：<span class="inlinecode"><span class="id" title="var">pred</span></span> 和 <span class="inlinecode"><span class="id" title="var">minustwo</span></span> 这类函数定义了 <i>'计算规则'</i>——
-    例如 <span class="inlinecode"><span class="id" title="var">pred</span></span> 的定义表明 <span class="inlinecode"><span class="id" title="var">pred</span></span> <span class="inlinecode">2</span> 可化简为 <span class="inlinecode">1</span>——但 <span class="inlinecode"><span class="id" title="var">S</span></span> 的定义不表征此类行为。
-    虽然 <span class="inlinecode"><span class="id" title="var">S</span></span> 可以作用于参数这点与函数相仿，但其作用仅限于构造数字。
-    （考虑标准的十进制数：数字 <span class="inlinecode">1</span> 不代表任何计算，只表示一部分数据。
-    用 <span class="inlinecode">111</span> 指代数字一百一十一，实则使用三个 <span class="inlinecode">1</span> 符号表示此数各位。）
+  先定义前驱函数 <span class="inlinecode"><span class="id" title="var">pred</span></span>。
+  需要注意的是，我们规定 <span class="inlinecode"><span class="id" title="var">O</span></span> 的前驱仍是 <span class="inlinecode"><span class="id" title="var">O</span></span>。
+  根据 <span class="inlinecode"><span class="id" title="var">nat</span></span> 的定义，我们知道非零自然数的形式一定是 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>，
+  它的前驱是 <span class="inlinecode"><span class="id" title="var">n'</span></span>。 
 
-<div class="paragraph"> </div>
-
-    模式匹配不足以描述很多数字运算，我们还需要递归定义。
-    例如：给定自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>，欲判定其是否为偶数，则需递归检查 <span class="inlinecode"><span class="id" title="var">n</span>-2</span> 是否为偶数。
-    关键字 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 可用于定义此类函数。 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">evenb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">pred</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">O</span>        =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span>      =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">evenb</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">n'</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-我们可以使用类似的 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 声明来定义 <span class="inlinecode"><span class="id" title="var">odd</span></span> 函数，
-    不过还有种更简单的定义：
+  函数 <span class="inlinecode"><span class="id" title="var">plus</span></span> 返回两个自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 与 <span class="inlinecode"><span class="id" title="var">m</span></span> 的和：
+<ul class="doclist">
+<li> 第一个分支： <span class="inlinecode"><span class="id" title="var">O</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span>
+
+</li>
+<li> 第二个分支： <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span>。
+
+</li>
+</ul>
+  注意：我们还没有定义 “+”。这里的 “+” 是数学上的加法符号。
+
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">oddb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span>   :=   <span class="id" title="var">negb</span> (<span class="id" title="var">evenb</span> <span class="id" title="var">n</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb1</span>:    <span class="id" title="var">oddb</span> 1 = <span class="id" title="var">true</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb2</span>:    <span class="id" title="var">oddb</span> 4 = <span class="id" title="var">false</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-（如果你逐步检查完这些证明，就会发现 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 其实没什么作用
-    —— 所有工作都被 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 完成了。我们不久就会看到为什么会这样。)
-
-<div class="paragraph"> </div>
-
-    当然，我们也可以用递归定义多参函数。  
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">NatPlayground2</span>.<br/>
-
-<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">m</span><br/>
@@ -975,11 +915,9 @@ With this definition, 0 is represented by <span class="inlinecode"><span class="
 </div>
 
 <div class="doc">
-三加二等于五，正如所料。 
+测试 <span class="inlinecode">3</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span>。 
 </div>
 <div class="code">
-
-<br/>
 <span class="id" title="keyword">Compute</span> (<span class="id" title="var">plus</span> 3 2).<br/>
 
 <br/>
@@ -996,12 +934,11 @@ With this definition, 0 is represented by <span class="inlinecode"><span class="
 </div>
 
 <div class="doc">
-为了书写方便，如果两个或更多参数具有相同的类型，那么它们可以写在一起。
-    在下面的定义中，<span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 的意思与 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 相同。 
+  乘法 <span class="inlinecode"><span class="id" title="var">mult</span></span> 的定义方式类似，它用到了刚刚定义的 <span class="inlinecode"><span class="id" title="var">plus</span></span>。
+  这里，<span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 的意思与 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 相同。
+
 </div>
 <div class="code">
-
-<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mult</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
@@ -1009,14 +946,43 @@ With this definition, 0 is represented by <span class="inlinecode"><span class="
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">test_mult1</span>: (<span class="id" title="var">mult</span> 3 3) = 9.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_mult</span>: (<span class="id" title="var">mult</span> 3 3) = 9.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-你可以在两个表达式之间添加逗号来同时匹配它们：
+<a name="lab13"></a><h4 class="section">练习：1 星, standard (exp)</h4>
+
+  我们将自然数上的幂运算的定义作为练习。
+  你需要用到刚刚定义的 <span class="inlinecode"><span class="id" title="var">mult</span></span>。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">exp</span> (<span class="id" title="var">base</span> <span class="id" title="var">power</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+测试一下。
+</div>
+<div class="code">
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_exp</span>: (<span class="id" title="var">exp</span> 3 3) = 27.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+你可以在两个表达式之间添加逗号来同时匹配它们
+  减法 <span class="inlinecode"><span class="id" title="var">minus</span></span> 的定义稍微有些复杂。
+  它需要对两个参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 与 <span class="inlinecode"><span class="id" title="var">m</span></span> 分别做模式匹配。
+
 </div>
 <div class="code">
 
@@ -1029,38 +995,43 @@ With this definition, 0 is represented by <span class="inlinecode"><span class="
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">NatPlayground2</span>.<br/>
+</div>
+
+<div class="doc">
+<a name="lab14"></a><h4 class="section">练习：1 星, standard (exp)</h4>
+
+  注意 <span class="inlinecode"><span class="id" title="var">minus</span></span> 是如何使用 <span class="inlinecode"><span class="id" title="keyword">match</span></span> 对两个参数同时做模式匹配的。
+  当然，你也可以先对 <span class="inlinecode"><span class="id" title="var">n</span></span> 做模式匹配，再对 <span class="inlinecode"><span class="id" title="var">m</span></span> 做模式匹配。
+  留作练习。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">minus'</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">exp</span> (<span class="id" title="var">base</span> <span class="id" title="var">power</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">power</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">S</span> <span class="id" title="var">O</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">p</span> =&gt; <span class="id" title="var">mult</span> <span class="id" title="var">base</span> (<span class="id" title="var">exp</span> <span class="id" title="var">base</span> <span class="id" title="var">p</span>)<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_minus'</span>: <span class="id" title="var">minus</span> 10 5 = <span class="id" title="var">minus'</span> 10 5.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+<span class="id" title="keyword">End</span> <span class="id" title="var">NatPlayground2</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab13"></a><h4 class="section">练习：1 星, standard (factorial)</h4>
+<a name="lab15"></a><h4 class="section">练习：1 星, standard (factorial)</h4>
 
-
-<div class="paragraph"> </div>
-
-    回想一下标准的阶乘函数：
-
-<div class="paragraph"> </div>
-
+    请定义阶乘函数 <span class="inlinecode"><span class="id" title="var">factorial</span></span>：
        factorial(0)  =  1
-       factorial(n)  =  n * factorial(n-1)     (if n&gt;0)
+       factorial(n)  =  n * factorial(n-1)     (if n &gt; 0)
 
-<div class="paragraph"> </div>
-
-    把它翻译成 Coq 语言。 
 </div>
 <div class="code">
-
-<br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">factorial</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span><br/>
 &nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
 
@@ -1108,15 +1079,48 @@ With this definition, 0 is represented by <span class="inlinecode"><span class="
     显示为 <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">y</span></span>。 
 <div class="paragraph"> </div>
 
- Coq 不包含任何内置定义，以至于数值间相等关系的测试也是由用户来实现。
 
 <div class="paragraph"> </div>
 
     <span class="inlinecode"><span class="id" title="var">eqb</span></span> 函数定义如下：该函数测试自然数 <span class="inlinecode"><span class="id" title="var">nat</span></span> 间相等关系 <span class="inlinecode"><span class="id" title="var">eq</span></span>，
     并以布尔值 <span class="inlinecode"><span class="id" title="var">bool</span></span> 表示。注意该定义使用嵌套匹配 <span class="inlinecode"><span class="id" title="keyword">match</span></span>
     （亦可仿照 <span class="inlinecode"><span class="id" title="var">minus</span></span> 使用并列匹配）。 
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+    模式匹配不足以描述很多数字运算，我们还需要递归定义。
+    例如：给定自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>，欲判定其是否为偶数，则需递归检查 <span class="inlinecode"><span class="id" title="var">n</span>-2</span> 是否为偶数。
+    关键字 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 可用于定义此类函数。 
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">evenb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span>        =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span>      =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">evenb</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+我们可以使用类似的 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 声明来定义 <span class="inlinecode"><span class="id" title="var">odd</span></span> 函数，
+    不过还有种更简单的定义：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">oddb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span>   :=   <span class="id" title="var">negb</span> (<span class="id" title="var">evenb</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb1</span>:    <span class="id" title="var">oddb</span> 1 = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb2</span>:    <span class="id" title="var">oddb</span> 4 = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">eqb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
@@ -1179,7 +1183,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab14"></a><h4 class="section">练习：1 星, standard (ltb)</h4>
+<a name="lab16"></a><h4 class="section">练习：1 星, standard (ltb)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1215,7 +1219,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab15"></a><h1 class="section">基于化简的证明</h1>
+<a name="lab17"></a><h1 class="section">基于化简的证明</h1>
 
 <div class="paragraph"> </div>
 
@@ -1326,7 +1330,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab16"></a><h1 class="section">基于改写的证明</h1>
+<a name="lab18"></a><h1 class="section">基于改写的证明</h1>
 
 <div class="paragraph"> </div>
 
@@ -1383,7 +1387,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
     看看 Coq 的反应有何不同。) 
 <div class="paragraph"> </div>
 
-<a name="lab17"></a><h4 class="section">练习：1 星, standard (plus_id_exercise)</h4>
+<a name="lab19"></a><h4 class="section">练习：1 星, standard (plus_id_exercise)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1429,7 +1433,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab18"></a><h4 class="section">练习：2 星, standard (mult_S_1)</h4>
+<a name="lab20"></a><h4 class="section">练习：2 星, standard (mult_S_1)</h4>
 
 </div>
 <div class="code">
@@ -1445,7 +1449,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab19"></a><h1 class="section">利用情况分析来证明</h1>
+<a name="lab21"></a><h1 class="section">利用情况分析来证明</h1>
 
 <div class="paragraph"> </div>
 
@@ -1704,7 +1708,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 </div>
 
 <div class="doc">
-<a name="lab20"></a><h4 class="section">练习：2 星, standard (andb_true_elim2)</h4>
+<a name="lab22"></a><h4 class="section">练习：2 星, standard (andb_true_elim2)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1724,7 +1728,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab21"></a><h4 class="section">练习：1 星, standard (zero_nbeq_plus_1)</h4>
+<a name="lab23"></a><h4 class="section">练习：1 星, standard (zero_nbeq_plus_1)</h4>
 
 </div>
 <div class="code">
@@ -1743,7 +1747,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 </div>
 
 <div class="doc">
-<a name="lab22"></a><h1 class="section">关于记法的更多内容 (可选)</h1>
+<a name="lab24"></a><h1 class="section">关于记法的更多内容 (可选)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1801,7 +1805,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 </div>
 
 <div class="doc">
-<a name="lab23"></a><h1 class="section">不动点 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 和结构化递归 (可选)</h1>
+<a name="lab25"></a><h1 class="section">不动点 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 和结构化递归 (可选)</h1>
 
 <div class="paragraph"> </div>
 
@@ -1832,7 +1836,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
     因此有时必须用一点不同寻常的方式来编写函数。 
 <div class="paragraph"> </div>
 
-<a name="lab24"></a><h4 class="section">练习：2 星, standard, optional (decreasing)</h4>
+<a name="lab26"></a><h4 class="section">练习：2 星, standard, optional (decreasing)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1853,7 +1857,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 </div>
 
 <div class="doc">
-<a name="lab25"></a><h1 class="section">更多练习</h1>
+<a name="lab27"></a><h1 class="section">更多练习</h1>
 
 <div class="paragraph"> </div>
 
@@ -1863,7 +1867,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
     sure you didn't miss anything. 
 <div class="paragraph"> </div>
 
-<a name="lab26"></a><h4 class="section">练习：1 星, standard (indentity_fn_applied_twice)</h4>
+<a name="lab28"></a><h4 class="section">练习：1 星, standard (indentity_fn_applied_twice)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1887,7 +1891,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab27"></a><h4 class="section">练习：1 星, standard (negation_fn_applied_twice)</h4>
+<a name="lab29"></a><h4 class="section">练习：1 星, standard (negation_fn_applied_twice)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1908,7 +1912,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab28"></a><h4 class="section">练习：3 星, standard, optional (andb_eq_orb)</h4>
+<a name="lab30"></a><h4 class="section">练习：3 星, standard, optional (andb_eq_orb)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1933,7 +1937,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab29"></a><h4 class="section">练习：3 星, standard (binary)</h4>
+<a name="lab31"></a><h4 class="section">练习：3 星, standard (binary)</h4>
 
 
 <div class="paragraph"> </div>
