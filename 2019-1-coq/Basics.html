@@ -1000,8 +1000,8 @@
 <div class="doc">
 <a name="lab14"></a><h4 class="section">练习：1 星, standard (exp)</h4>
 
-  注意 <span class="inlinecode"><span class="id" title="var">minus</span></span> 是如何使用 <span class="inlinecode"><span class="id" title="keyword">match</span></span> 对两个参数同时做模式匹配的。
-  当然，你也可以先对 <span class="inlinecode"><span class="id" title="var">n</span></span> 做模式匹配，再对 <span class="inlinecode"><span class="id" title="var">m</span></span> 做模式匹配。
+  注意 <span class="inlinecode"><span class="id" title="var">minus</span></span> 是如何使用 <span class="inlinecode"><span class="id" title="keyword">match</span></span> 对两个参数同时做并列模式匹配的。
+  当然，你也可以先对 <span class="inlinecode"><span class="id" title="var">n</span></span> 做模式匹配，再嵌套地对 <span class="inlinecode"><span class="id" title="var">m</span></span> 做模式匹配。
   留作练习。
 
 </div>
@@ -1046,7 +1046,13 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
- 我们可以通过引入加法、乘法和减法的<i>'记法（Notation）'</i>来让数字表达式更加易读。 
+
+<div class="paragraph"> </div>
+
+  我们可以引入通常的加法、减法、乘法<i>'记号（Notation）'</i>。
+  <span class="inlinecode"><span class="id" title="keyword">level</span></span> 规定了优先级，<span class="inlinecode"><span class="id" title="tactic">left</span></span> <span class="inlinecode"><span class="id" title="keyword">associativity</span></span> 表示“左结合”。
+  目前，你不需要了解这些细节。
+
 </div>
 <div class="code">
 
@@ -1068,59 +1074,20 @@
 </div>
 
 <div class="doc">
-（<span class="inlinecode"><span class="id" title="keyword">level</span></span>、<span class="inlinecode"><span class="id" title="keyword">associativity</span></span> 和 <span class="inlinecode"><span class="id" title="var">nat_scope</span></span> 标记控制着 Coq
-    语法分析器如何处理上述记法。本课程不关注其细节。有兴趣的读者可参阅本章末尾
-    “关于记法的更多内容”一节。）
 
 <div class="paragraph"> </div>
 
-    注意，它们并不会改变我们之前的定义，而只是让 Coq 语法分析器接受用
-    <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">y</span></span> 来代替 <span class="inlinecode"><span class="id" title="var">plus</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>，并在 Coq 美化输出时反过来将 <span class="inlinecode"><span class="id" title="var">plus</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>
-    显示为 <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">y</span></span>。 
+  我们再来练习定义几个自然数上的函数。
+
 <div class="paragraph"> </div>
 
 
 <div class="paragraph"> </div>
 
-    <span class="inlinecode"><span class="id" title="var">eqb</span></span> 函数定义如下：该函数测试自然数 <span class="inlinecode"><span class="id" title="var">nat</span></span> 间相等关系 <span class="inlinecode"><span class="id" title="var">eq</span></span>，
-    并以布尔值 <span class="inlinecode"><span class="id" title="var">bool</span></span> 表示。注意该定义使用嵌套匹配 <span class="inlinecode"><span class="id" title="keyword">match</span></span>
-    （亦可仿照 <span class="inlinecode"><span class="id" title="var">minus</span></span> 使用并列匹配）。 
-<div class="paragraph"> </div>
+  <span class="inlinecode"><span class="id" title="var">eqb</span></span> 判断两个自然数是否相等 (命名中的后缀 ”b“ 表示它返回的是 bool 值)。
 
-
-<div class="paragraph"> </div>
-
-    模式匹配不足以描述很多数字运算，我们还需要递归定义。
-    例如：给定自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>，欲判定其是否为偶数，则需递归检查 <span class="inlinecode"><span class="id" title="var">n</span>-2</span> 是否为偶数。
-    关键字 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 可用于定义此类函数。 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">evenb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">O</span>        =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span>      =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">evenb</span> <span class="id" title="var">n'</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-我们可以使用类似的 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 声明来定义 <span class="inlinecode"><span class="id" title="var">odd</span></span> 函数，
-    不过还有种更简单的定义：
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">oddb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span>   :=   <span class="id" title="var">negb</span> (<span class="id" title="var">evenb</span> <span class="id" title="var">n</span>).<br/>
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb1</span>:    <span class="id" title="var">oddb</span> 1 = <span class="id" title="var">true</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb2</span>:    <span class="id" title="var">oddb</span> 4 = <span class="id" title="var">false</span>.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">eqb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
@@ -1139,7 +1106,78 @@
 </div>
 
 <div class="doc">
-类似地，<span class="inlinecode"><span class="id" title="var">leb</span></span> 函数检查其第一个参数是否小于等于第二个参数，以布尔值表示。 
+<a name="lab16"></a><h4 class="section">练习：1 星, standard (eqb1)</h4>
+
+  参考 <span class="inlinecode"><span class="id" title="var">minus</span></span>的定义，使用并列模式匹配改写 <span class="inlinecode"><span class="id" title="var">eqb</span></span>，
+  并设计测试用例。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">eqb1</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">evenb</span></span> 判断给定的自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 是否为偶数。
+  注意，这个函数与之前定义的函数有本质区别。
+  之前的函数只需要对参数做模式匹配(即，分情形分析)即可实现。
+  在这里，尽管我们知道 <span class="inlinecode"><span class="id" title="var">O</span></span> 为偶数，但是我们无法直接判断 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> 是否为偶数，
+  因为 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> 是否为偶数，取决于 <span class="inlinecode"><span class="id" title="var">pred</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> 是否为偶数。
+  换句话说，我们需要 <i>'递归'(Recursively)_ 定义该函数。
+  并且，根据上面的分析，我们需要两个 <i>'基础情况'(Basic Cases)_：
+  <span class="inlinecode"><span class="id" title="var">O</span></span> 是偶数，<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span> 不是偶数。
+
+<div class="paragraph"> </div>
+
+  关键字 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 是与递归定义紧密相关的概念。
+  我们不深究它背后的理论。
+  有兴趣的同学，可以选修冯老师的课程。 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">evenb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span>        =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span>      =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">evenb</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_evenb1</span>:   <span class="id" title="var">evenb</span> 2019 = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+我们可以基于 <span class="inlinecode"><span class="id" title="var">evenb</span></span> 定义 <span class="inlinecode"><span class="id" title="var">oddb</span></span>。
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">oddb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span>   :=   <span class="id" title="var">negb</span> (<span class="id" title="var">evenb</span> <span class="id" title="var">n</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb1</span>:    <span class="id" title="var">oddb</span> 2019 = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb2</span>:    <span class="id" title="var">oddb</span> 9102 = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">leb</span></span> 函数检查第一个参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 是否小于等于第二个参数 <span class="inlinecode"><span class="id" title="var">m</span></span>。
+  注意这也是一个递归函数。 
+
 </div>
 <div class="code">
 
@@ -1166,8 +1204,11 @@
 </div>
 
 <div class="doc">
-Since we'll be using these (especially <span class="inlinecode"><span class="id" title="var">eqb</span></span>) a lot, let's give
-    them infix notations. 
+
+<div class="paragraph"> </div>
+
+  为 <span class="inlinecode"><span class="id" title="var">eqb</span></span> 与 <span class="inlinecode"><span class="id" title="var">leb</span></span> 引入符号记法。 
+
 </div>
 <div class="code">
 
@@ -1176,25 +1217,20 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 <span class="id" title="keyword">Notation</span> &quot;x &lt;=? y" := (<span class="id" title="var">leb</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>) (<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 70) : <span class="id" title="var">nat_scope</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">test_leb3'</span>:             (4 &lt;=? 2) = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_leb3'</span>:  (4 &lt;=? 2) = <span class="id" title="var">false</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab16"></a><h4 class="section">练习：1 星, standard (ltb)</h4>
+<a name="lab17"></a><h4 class="section">练习：1 星, standard (ltb)</h4>
 
+    <span class="inlinecode"><span class="id" title="var">ltb</span></span> 检查第一个参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 是否小于第二个参数 <span class="inlinecode"><span class="id" title="var">m</span></span>。
+    请完成它的定义。 
 
-<div class="paragraph"> </div>
-
-    <span class="inlinecode"><span class="id" title="var">ltb</span></span> 函数检查自然数间的小于关系，以布尔值表示。
-    利用前文定义的函数写出该定义，不要使用 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 构造新的递归。
-    （只需前文中的一个函数即可实现定义，但亦可两者皆用。） 
 </div>
 <div class="code">
-
-<br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">ltb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span><br/>
 &nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
 
@@ -1214,12 +1250,10 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
-
-<br/>
 </div>
 
 <div class="doc">
-<a name="lab17"></a><h1 class="section">基于化简的证明</h1>
+<a name="lab18"></a><h1 class="section">基于化简的证明</h1>
 
 <div class="paragraph"> </div>
 
@@ -1330,7 +1364,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab18"></a><h1 class="section">基于改写的证明</h1>
+<a name="lab19"></a><h1 class="section">基于改写的证明</h1>
 
 <div class="paragraph"> </div>
 
@@ -1387,7 +1421,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
     看看 Coq 的反应有何不同。) 
 <div class="paragraph"> </div>
 
-<a name="lab19"></a><h4 class="section">练习：1 星, standard (plus_id_exercise)</h4>
+<a name="lab20"></a><h4 class="section">练习：1 星, standard (plus_id_exercise)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1433,7 +1467,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab20"></a><h4 class="section">练习：2 星, standard (mult_S_1)</h4>
+<a name="lab21"></a><h4 class="section">练习：2 星, standard (mult_S_1)</h4>
 
 </div>
 <div class="code">
@@ -1449,7 +1483,7 @@ Since we'll be using these (especially <span class="inlinecode"><span class="id"
 </div>
 
 <div class="doc">
-<a name="lab21"></a><h1 class="section">利用情况分析来证明</h1>
+<a name="lab22"></a><h1 class="section">利用情况分析来证明</h1>
 
 <div class="paragraph"> </div>
 
@@ -1708,7 +1742,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 </div>
 
 <div class="doc">
-<a name="lab22"></a><h4 class="section">练习：2 星, standard (andb_true_elim2)</h4>
+<a name="lab23"></a><h4 class="section">练习：2 星, standard (andb_true_elim2)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1728,7 +1762,7 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab23"></a><h4 class="section">练习：1 星, standard (zero_nbeq_plus_1)</h4>
+<a name="lab24"></a><h4 class="section">练习：1 星, standard (zero_nbeq_plus_1)</h4>
 
 </div>
 <div class="code">
@@ -1740,64 +1774,6 @@ The <span class="inlinecode"><span class="id" title="tactic">destruct</span></sp
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
-</div>
-<div class="code">
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab24"></a><h1 class="section">关于记法的更多内容 (可选)</h1>
-
-<div class="paragraph"> </div>
-
- （通常，标为可选的部分对于跟进本书其它部分的学习来说不是必须的，
-    除了那些也标记为可选的部分。在初次阅读时，你可以快速浏览这些部分，
-    以便在将来遇到时能够想起来这里讲了些什么。）
-
-<div class="paragraph"> </div>
-
-    回忆一下中缀加法和乘法的记法定义：
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Notation</span> &quot;x + y" := (<span class="id" title="var">plus</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
-<span class="id" title="keyword">Notation</span> &quot;x * y" := (<span class="id" title="var">mult</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-对于 Coq 中的每个记法符号，我们可以指定它的 <i>'优先级'</i> 和 <i>'结合性'</i>。
-    优先级 <span class="inlinecode"><span class="id" title="var">n</span></span> 用 <span class="inlinecode"><span class="id" title="tactic">at</span></span> <span class="inlinecode"><span class="id" title="keyword">level</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 来表示，这样有助于 Coq 分析复合表达式。
-    结合性的设置有助于消除表达式中相同符号出现多次时产生的歧义。比如，
-    上面这组对 <span class="inlinecode">+</span> 和 <span class="inlinecode">*</span> 的参数定义的表达式 <span class="inlinecode">1+2*3*4</span> 是 <span class="inlinecode">(1+((2*3)*4))</span> 的
-    简写。Coq 使用 0 到 100 的优先级等级，同时支持 <i>'左结合'</i>、<i>'右结合'</i>
-    和 <i>'不结合'</i> 三种结合性。之后我们会看到更多与此相关的例子，比如
-    <i>'列表'</i> 一章。
-
-<div class="paragraph"> </div>
-
-    每个记法符号还与 <i>'记法范围（Notation Scope）'</i>相关。Coq 会尝试根据上下文来猜测
-    你所指的范围，因此当你写出 <span class="inlinecode"><span class="id" title="var">S</span>(0*0)</span> 时，它猜测是 <span class="inlinecode"><span class="id" title="var">nat_scope</span></span>；而当你
-    写出笛卡尔积（元组）类型 <span class="inlinecode"><span class="id" title="var">bool</span>*<span class="id" title="var">bool</span></span> 时，它猜测是 <span class="inlinecode"><span class="id" title="var">type_scope</span></span>。
-    有时你可能必须百分号记法 <span class="inlinecode">(<span class="id" title="var">x</span>*<span class="id" title="var">y</span>)%<span class="id" title="var">nat</span></span> 来帮助 Coq 确定范围。
-    另外，有时 Coq 打印的结果中也用 <span class="inlinecode">%<span class="id" title="var">nat</span></span> 来指示记法所在的范围。
-
-<div class="paragraph"> </div>
-
-    记法范围同样适用于数值记法（<span class="inlinecode">3</span>、<span class="inlinecode">4</span>、<span class="inlinecode">5</span> 等等），因此你有时候会看到
-    <span class="inlinecode">0%<span class="id" title="var">nat</span></span>，表示 <span class="inlinecode">0</span>（即我们在本章中使用的自然数零 <span class="inlinecode">0</span>），而 <span class="inlinecode">0%<span class="id" title="var">Z</span></span> 表示整数零
-    （来自于标准库中的另一个部分）。
-
-<div class="paragraph"> </div>
-
-    专业提示：Coq 的符号机制不是特别强大。别期望太多！ 
 </div>
 <div class="code">
 

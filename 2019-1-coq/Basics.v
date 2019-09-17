@@ -560,8 +560,8 @@ Fixpoint minus (n m:nat) : nat :=
   end.
 
 (** **** 练习：1 星, standard (exp)  
-  注意 [minus] 是如何使用 [match] 对两个参数同时做模式匹配的。
-  当然，你也可以先对 [n] 做模式匹配，再对 [m] 做模式匹配。
+  注意 [minus] 是如何使用 [match] 对两个参数同时做并列模式匹配的。
+  当然，你也可以先对 [n] 做模式匹配，再嵌套地对 [m] 做模式匹配。
   留作练习。
 *)
 Fixpoint minus' (n m:nat) : nat
@@ -586,7 +586,11 @@ Example test_factorial2:          (factorial 5) = (mult 10 12).
 (* 请在此处解答 *) Admitted.
 (** [] *)
 
-(** 我们可以通过引入加法、乘法和减法的_'记法（Notation）'_来让数字表达式更加易读。 *)
+(** 
+  我们可以引入通常的加法、减法、乘法_'记号（Notation）'_。
+  [level] 规定了优先级，[left associativity] 表示“左结合”。
+  目前，你不需要了解这些细节。
+*)
 
 Notation "x + y" := (plus x y)
                        (at level 50, left associativity)
@@ -600,41 +604,13 @@ Notation "x * y" := (mult x y)
 
 Check ((0 + 1) + 1).
 
-(** （[level]、[associativity] 和 [nat_scope] 标记控制着 Coq
-    语法分析器如何处理上述记法。本课程不关注其细节。有兴趣的读者可参阅本章末尾
-    “关于记法的更多内容”一节。）
-
-    注意，它们并不会改变我们之前的定义，而只是让 Coq 语法分析器接受用
-    [x + y] 来代替 [plus x y]，并在 Coq 美化输出时反过来将 [plus x y]
-    显示为 [x + y]。 *)
-
 (** 
-    [eqb] 函数定义如下：该函数测试自然数 [nat] 间相等关系 [eq]，
-    并以布尔值 [bool] 表示。注意该定义使用嵌套匹配 [match]
-    （亦可仿照 [minus] 使用并列匹配）。 *)
+  我们再来练习定义几个自然数上的函数。
+*)
 
-(** 
-    模式匹配不足以描述很多数字运算，我们还需要递归定义。
-    例如：给定自然数 [n]，欲判定其是否为偶数，则需递归检查 [n-2] 是否为偶数。
-    关键字 [Fixpoint] 可用于定义此类函数。 *)
-
-Fixpoint evenb (n:nat) : bool :=
-  match n with
-  | O        => true
-  | S O      => false
-  | S (S n') => evenb n'
-  end.
-
-(** 我们可以使用类似的 [Fixpoint] 声明来定义 [odd] 函数，
-    不过还有种更简单的定义：*)
-
-Definition oddb (n:nat) : bool   :=   negb (evenb n).
-
-Example test_oddb1:    oddb 1 = true.
-Proof. simpl. reflexivity.  Qed.
-Example test_oddb2:    oddb 4 = false.
-Proof. simpl. reflexivity.  Qed.
-
+(**
+  [eqb] 判断两个自然数是否相等 (命名中的后缀 ”b“ 表示它返回的是 bool 值)。
+*)
 
 Fixpoint eqb (n m : nat) : bool :=
   match n with
@@ -648,7 +624,50 @@ Fixpoint eqb (n m : nat) : bool :=
             end
   end.
 
-(** 类似地，[leb] 函数检查其第一个参数是否小于等于第二个参数，以布尔值表示。 *)
+(** **** 练习：1 星, standard (eqb1)
+  参考 [minus]的定义，使用并列模式匹配改写 [eqb]，
+  并设计测试用例。
+*)
+Fixpoint eqb1 (n m : nat) : bool
+  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+  
+(** 
+  [evenb] 判断给定的自然数 [n] 是否为偶数。
+  注意，这个函数与之前定义的函数有本质区别。
+  之前的函数只需要对参数做模式匹配(即，分情形分析)即可实现。
+  在这里，尽管我们知道 [O] 为偶数，但是我们无法直接判断 [S n'] 是否为偶数，
+  因为 [S n'] 是否为偶数，取决于 [pred n'] 是否为偶数。
+  换句话说，我们需要 _'递归'(Recursively)_ 定义该函数。
+  并且，根据上面的分析，我们需要两个 _'基础情况'(Basic Cases)_：
+  [O] 是偶数，[S O] 不是偶数。
+  
+  关键字 [Fixpoint] 是与递归定义紧密相关的概念。
+  我们不深究它背后的理论。
+  有兴趣的同学，可以选修冯老师的课程。 
+*)
+
+Fixpoint evenb (n:nat) : bool :=
+  match n with
+  | O        => true
+  | S O      => false
+  | S (S n') => evenb n'
+  end.
+
+Example test_evenb1:   evenb 2019 = false.
+Proof. simpl. reflexivity.  Qed.
+
+(** 我们可以基于 [evenb] 定义 [oddb]。*)
+Definition oddb (n:nat) : bool   :=   negb (evenb n).
+
+Example test_oddb1:    oddb 2019 = true.
+Proof. simpl. reflexivity.  Qed.
+Example test_oddb2:    oddb 9102 = false.
+Proof. simpl. reflexivity.  Qed.
+
+(** 
+  [leb] 函数检查第一个参数 [n] 是否小于等于第二个参数 [m]。
+  注意这也是一个递归函数。 
+*)
 
 Fixpoint leb (n m : nat) : bool :=
   match n with
@@ -667,21 +686,20 @@ Proof. simpl. reflexivity.  Qed.
 Example test_leb3:             (leb 4 2) = false.
 Proof. simpl. reflexivity.  Qed.
 
-(** Since we'll be using these (especially [eqb]) a lot, let's give
-    them infix notations. *)
+(** 
+  为 [eqb] 与 [leb] 引入符号记法。 
+*)
 
 Notation "x =? y" := (eqb x y) (at level 70) : nat_scope.
 Notation "x <=? y" := (leb x y) (at level 70) : nat_scope.
 
-Example test_leb3':             (4 <=? 2) = false.
+Example test_leb3':  (4 <=? 2) = false.
 Proof. simpl. reflexivity.  Qed.
 
 (** **** 练习：1 星, standard (ltb)  
-
-    [ltb] 函数检查自然数间的小于关系，以布尔值表示。
-    利用前文定义的函数写出该定义，不要使用 [Fixpoint] 构造新的递归。
-    （只需前文中的一个函数即可实现定义，但亦可两者皆用。） *)
-
+    [ltb] 检查第一个参数 [n] 是否小于第二个参数 [m]。
+    请完成它的定义。 
+*)
 Definition ltb (n m : nat) : bool
   (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
 
@@ -694,7 +712,6 @@ Example test_ltb2:             (ltb 2 4) = true.
 Example test_ltb3:             (ltb 4 2) = false.
 (* 请在此处解答 *) Admitted.
 (** [] *)
-
 (* ################################################################# *)
 (** * 基于化简的证明 *)
 
@@ -1034,42 +1051,6 @@ Theorem zero_nbeq_plus_1 : forall n : nat,
 Proof.
   (* 请在此处解答 *) Admitted.
 (** [] *)
-
-(* ################################################################# *)
-(** * 关于记法的更多内容 (可选) *)
-
-(** （通常，标为可选的部分对于跟进本书其它部分的学习来说不是必须的，
-    除了那些也标记为可选的部分。在初次阅读时，你可以快速浏览这些部分，
-    以便在将来遇到时能够想起来这里讲了些什么。）
-
-    回忆一下中缀加法和乘法的记法定义：*)
-
-Notation "x + y" := (plus x y)
-                       (at level 50, left associativity)
-                       : nat_scope.
-Notation "x * y" := (mult x y)
-                       (at level 40, left associativity)
-                       : nat_scope.
-
-(** 对于 Coq 中的每个记法符号，我们可以指定它的 _'优先级'_ 和 _'结合性'_。
-    优先级 [n] 用 [at level n] 来表示，这样有助于 Coq 分析复合表达式。
-    结合性的设置有助于消除表达式中相同符号出现多次时产生的歧义。比如，
-    上面这组对 [+] 和 [*] 的参数定义的表达式 [1+2*3*4] 是 [(1+((2*3)*4))] 的
-    简写。Coq 使用 0 到 100 的优先级等级，同时支持 _'左结合'_、_'右结合'_
-    和 _'不结合'_ 三种结合性。之后我们会看到更多与此相关的例子，比如
-    _'列表'_ 一章。
-
-    每个记法符号还与 _'记法范围（Notation Scope）'_相关。Coq 会尝试根据上下文来猜测
-    你所指的范围，因此当你写出 [S(0*0)] 时，它猜测是 [nat_scope]；而当你
-    写出笛卡尔积（元组）类型 [bool*bool] 时，它猜测是 [type_scope]。
-    有时你可能必须百分号记法 [(x*y)%nat] 来帮助 Coq 确定范围。
-    另外，有时 Coq 打印的结果中也用 [%nat] 来指示记法所在的范围。
-
-    记法范围同样适用于数值记法（[3]、[4]、[5] 等等），因此你有时候会看到
-    [0%nat]，表示 [0]（即我们在本章中使用的自然数零 [0]），而 [0%Z] 表示整数零
-    （来自于标准库中的另一个部分）。
-
-    专业提示：Coq 的符号机制不是特别强大。别期望太多！ *)
 
 (* ################################################################# *)
 (** * 不动点 [Fixpoint] 和结构化递归 (可选) *)
