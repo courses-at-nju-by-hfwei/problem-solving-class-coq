@@ -759,7 +759,11 @@ Example test_ltb3:             (ltb 4 2) = false.
   - [forall] 是一阶谓词逻辑里的全称量词符号，读作“对于所有”。
 *)
 Theorem plus_O_n : forall n : nat, 0 + n = n.
-Proof. intros n. simpl. reflexivity. Qed.
+Proof. (* 证明开始 *)
+  intros n. (* 引入任意自然数 [n] *)
+  simpl. (* 等号两边化简 *)
+  reflexivity. (* 等号两边相同 *)
+Qed. (* 证毕 *)
 
 (** 
   我们逐步解释该证明：

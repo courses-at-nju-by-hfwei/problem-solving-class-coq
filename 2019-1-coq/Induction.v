@@ -1,234 +1,195 @@
 (** * Induction: 归纳证明 *)
 
-(** 在开始之前，我们需要把上一章中所有的定义都导入进来： *)
+(** 
+  我们先用下面一行命令，将上一章中所有的定义都导入进来。
+  在此之前，你需要先编译 [Basics.v] 得到 [Basics.vo]。
+  编译方法：在 CoqIDE 中打开 [Basics.v]，
+  执行 "Compile" 菜单中的 "Compile Buffer" 命令。
+  
+  (TODO (to ant-hengxin): How to "Make"?)
+*)
 
-From LF Require Export Basics.
-
-(** For the [Require Export] to work, Coq needs to be able to
-    find a compiled version of [Basics.v], called [Basics.vo], in a directory
-    associated with the prefix [LF].  This file is analogous to the [.class]
-    files compiled from [.java] source files and the [.o] files compiled from
-    [.c] files.
-
-    First create a file named [_CoqProject] containing the following line
-    (if you obtained the whole volume "Logical Foundations" as a single
-    archive, a [_CoqProject] should already exist and you can skip this step):
-
-      [-Q . LF]
-
-    This maps the current directory ("[.]", which contains [Basics.v],
-    [Induction.v], etc.) to the prefix (or "logical directory") "[LF]".
-    PG and CoqIDE read [_CoqProject] automatically, so they know to where to
-    look for the file [Basics.vo] corresponding to the library [LF.Basics].
-
-    Once [_CoqProject] is thus created, there are various ways to build
-    [Basics.vo]:
-
-     - In Proof General: The compilation can be made to happen automatically
-       when you submit the [Require] line above to PG, by setting the emacs
-       variable [coq-compile-before-require] to [t].
-
-     - In CoqIDE: Open [Basics.v]; then, in the "Compile" menu, click
-       on "Compile Buffer".
-
-     - From the command line: Generate a [Makefile] using the [coq_makefile]
-       utility, that comes installed with Coq (if you obtained the whole
-       volume as a single archive, a [Makefile] should already exist
-       and you can skip this step):
-
-         [coq_makefile -f _CoqProject *.v -o Makefile]
-
-       Note: You should rerun that command whenever you add or remove Coq files
-       to the directory.
-
-       Then you can compile [Basics.v] by running [make] with the corresponding
-       [.vo] file as a target:
-
-         [make Basics.vo]
-
-       All files in the directory can be compiled by giving no arguments:
-
-         [make]
-
-       Under the hood, [make] uses the Coq compiler, [coqc].  You can also
-       run [coqc] directly:
-
-         [coqc -Q . LF Basics.v]
-
-       But [make] also calculates dependencies between source files to compile
-       them in the right order, so [make] should generally be prefered over
-       explicit [coqc].
-
-    如果你遇到了问题（例如，稍后你可能会在本文件中遇到缺少标识符的提示），
-    那可能是因为没有正确设置 Coq 的“加载路径”。指令 [Print LoadPath.]
-    能帮你理清这类问题。
-
-    特别是，如果你看到了像这样的信息：
-
-        [Compiled library Foo makes inconsistent assumptions over
-        library Bar]
-
-    check whether you have multiple installations of Coq on your machine.
-    It may be that commands (like [coqc]) that you execute in a terminal
-    window are getting a different version of Coq than commands executed by
-    Proof General or CoqIDE.
-
-    - Another common reason is that the library [Bar] was modified and
-      recompiled without also recompiling [Foo] which depends on it.  Recompile
-      [Foo], or everything if too many files are affected.  (Using the third
-      solution above: [make clean; make].)
-
-    再给 CoqIDE 用户一点技巧：如果你看到了 [Error: Unable to locate
-    library Basics]，那么可能的原因是用 _'CoqIDE'_ 编译的代码和在指令行用
-    _'coqc'_ 编译的不一致。这通常在系统中安装了两个不兼容的 [coqc] 时发生
-    （一个与 CoqIDE 关联，另一个与指令行的 [coqc] 关联）。这种情况的变通方法
-    就是只使用 CoqIDE 来编译（即从菜单中选择“make”）并完全避免使用 [coqc]。 *)
-
+From LF Require Export Basics.    
 (* ################################################################# *)
 (** * 归纳法证明 *)
 
-(** 我们在上一章中通过基于化简的简单论据证明了 [0] 是 [+] 的左幺元。
-    我们也观察到，当我们打算证明 [0] 也是 [+] 的 _'右'_ 幺元时... *)
+(** 
+  在上一章中，我们使用 [simpl] 证明了定理 [plus_O_n] (即，[0] 是 [+] 的左单位元)。
+  下面，我们尝试使用 [simpl] 证明定理 [plus_n_O]，
+  它表明 [0] 也是 [+] 的右单位元。
+*)
 
 Theorem plus_n_O_firsttry : forall n:nat,
   n = n + 0.
-
-(** ...事情就没这么简单了。只应用 [reflexivity] 的话不起作用，因为 [n + 0]
-    中的 [n] 是任意未知数，所以在 [+] 的定义中 [match] 匹配无法被化简。 *)
 
 Proof.
   intros n.
   simpl. (* Does nothing! *)
 Abort.
 
-(** 即便用 [destruct n] 分类讨论也不会有所改善：诚然，我们能够轻易地证明 [n = 0]
-    时的情况；但在证明对于某些 [n'] 而言 [n = S n'] 时，我们又会遇到和此前相同的问题。 *)
+
+(** 
+  我们发现 [simpl] 不起作用。
+  这是因为，[n + 0] 中的 [n] 是任意自然数，无法使用 [plus] 定义中的匹配进行化简。
+  
+  那么，用上一章学过的 [destruct n] 对 [n] 分情况讨论，是否可行?
+*)
 
 Theorem plus_n_O_secondtry : forall n:nat,
   n = n + 0.
 Proof.
-  intros n. destruct n as [| n'] eqn:E.
+  destruct n as [| n'] eqn:E.
   - (* n = 0 *)
-    reflexivity. (* 虽然目前还没啥问题... *)
+    reflexivity. (* So far so good... *)
   - (* n = S n' *)
     simpl.       (* ...不过我们又卡在这儿了 *)
 Abort.
 
-(** 虽然还可以用 [destruct n'] 再推进一步，但由于 [n] 可以任意大，
-    如果照这个思路继续证明的话，我们永远也证不完。 *)
+(** 
+  - [n = 0] 的情形可以通过 [plus] 的第一条模式匹配完成化简。
+  - 对于 [n = S n']，经过一步 [simpl] 后，
+    我们还需要证明 [S n' = S (n' + 0)]。
+    这意味着我们需要证明 [n' = n' + 0]。
+    而这与我们一开始要证明的目标 [n = n + 0]在形式上是完全相同的，
+    不同的是，此处 [n'] 比 [n] 小 1。
+    这就提示我们需要使用 _'数学归纳法' (Mathematical Induction)_。
+    
+    在我们问题求解课程四个学期的内容中，数学归纳法经常出现，非常重要。
+    甚至在大家以后的科研工作中，数学归纳法都有可能是最常用的理解问题
+    与证明定理的方法。
+    (请默念三遍：数学归纳法，数学归纳法，数学归纳法)
+    另外，数学归纳法不仅仅是应用在自然数上的，
+    而是可以应用于所有归纳定义的结构/对象。
+    关于这一点，我们会在后续章节与后续课程深入学习。
+*)
 
-(** 为了证明这种关于数字、列表等归纳定义的集合的有趣事实，
-    我们通常需要一个更强大的推理原理：_'归纳'_。
+(** 
+  我们从_'自然数上的归纳原理'_开始：
+  (问卷：高中时是否学习过数学归纳法?)
+  假设 [P(n)] 为关于自然数的命题。
+  我们想要证明 [P] 对于所有自然数 [n] 都成立时。
+  数学归纳法告诉我们，只需要：
+  - 证明 [P(O)] 成立；
+  - 证明对于任何 [n']，若 [P(n')] 成立，那么 [P(S n')] 也成立。
 
-    回想一下 _'自然数的归纳法则'_，你也许曾在高中的数学课上，在某门离散数学课上或
-    在其它类似的课上学到过它：若 [P(n)] 为关于自然数的命题，而当我们想要证明 [P]
-    对于所有自然数 [n] 都成立时，可以这样推理：
-         - 证明 [P(O)] 成立；
-         - 证明对于任何 [n']，若 [P(n')] 成立，那么 [P(S n')] 也成立。
-         - 最后得出 [P(n)] 对于所有 [n] 都成立的结论。
+  (此处又有学生提问：怎么证明数学归纳法的正确性呢?)
+  
+  (答：难道你不觉得这是显然成立的吗?)
+  
+  (另一位学生反驳：你不是说要“怀疑一切、证明一切”吗? (TODO: 嗯，回头补上))
+  
+  (故作镇定：很好。那怎么证明呢? 这个问题我们还是先留给大家思考吧。
+  后续课程中我们还有机会回到这个问题上来。)
+*)
 
-    在 Coq 中的步骤也一样：我们以证明 [P(n)] 对于所有 [n] 都成立的目标开始，
-    然后（通过应用 [induction] 策略）把它分为两个子目标：一个是我们必须证明
-    [P(O)] 成立，另一个是我们必须证明 [P(n') -> P(S n')]。下面就是对该定理的用法： *)
+(**  
+  Coq 通过应用 [induction] 策略把待定目标 [forall n : nat, n = n + 0]
+  分为两个子目标:
+  - 基础情况: [n = 0]。此时，我们需要证明 [P(0)]，即 [0 = 0 + 0] 成立。
+  - 归纳步骤: [n = S n']。
+    此时，我们有归纳假设 [P(n')] 成立，即 [n' = n' + 0] 成立。
+    我们需要在归纳假设 [P(n')] 成立的基础上，证明 [P(n)] 成立，
+    即证明 [P(S n')] 成立，
+    也就是 [S n' = S n' + 0] 成立。
+    基本的证明方法就是将对 [P(S n')] 的证明
+    化归 (Reduce) 到可以直接应用归纳假设 [P(n')] 的情况。
+*)
 
-Theorem plus_n_O : forall n:nat, n = n + 0.
+Theorem plus_n_O : forall n : nat, n = n + 0.
 Proof.
-  intros n. induction n as [| n' IHn'].
-  - (* n = 0 *)    reflexivity.
-  - (* n = S n' *) simpl. rewrite <- IHn'. reflexivity.  Qed.
+  intros n.
+  induction n as [| n' IHn']. (* 讲解如下 *)
+  - (* n = 0 *)
+    reflexivity.
+  - (* n = S n' *)
+    simpl.
+    rewrite <- IHn'. (* 应用归纳假设 *)
+    reflexivity.
+Qed.
 
-(** 和 [destruct] 一样，[induction] 策略也能通过 [as...] 从句为引入到
-    子目标中的变量指定名字。由于这次有两个子目标，因此 [as...] 有两部分，用 [|]
-    隔开。（严格来说，我们可以忽略 [as...] 从句，Coq 会为它们选择名字。
-    然而在实践中这样不好，因为让 Coq 自行选择名字的话更容易导致理解上的困难。）
+(** 
+  根据上面的分析，对自然数 [n] 应用 [induction] 策略，
+  会产生两个子目标。
+  就像使用 [destruct] 做分情形分析一样，在 [induction] 中，
+  我们使用 [as [ | ]] 表达基本情况与归纳步骤。
+  - 在基本情况中，[n = 0]。不需要额外参数。
+  - 在归纳步骤，[n = S n']。我们需要引入额外参数代表 [n']。
+  需要特别注意的是，我们还使用 IHn' 记录了归纳假设。
+*)
 
-    在第一个子目标中 [n] 被 [0] 所取代。由于没有新的变量会被引入，因此 [as ...]
-    字句的第一部分为空；而当前的目标会变成 [0 + 0 = 0]：使用化简就能得到此结论。
-
-    在第二个子目标中，[n] 被 [S n'] 所取代，而对 [n'] 的归纳假设（Inductive
-    Hypothesis），即 [n' + 0 = n'] 则以 [IHn'] 为名被添加到了上下文中。
-    这两个名字在 [as...] 从句的第二部分中指定。在此上下文中，待证目标变成了
-    [(S n') + 0 = S n']；它可被化简为 [S (n' + 0) = S n']，而此结论可通过
-    [IHn'] 得出。 *)
-
-Theorem minus_diag : forall n,
+Theorem minus_diag : forall n : nat,
   minus n n = 0.
 Proof.
-  (* 课上已完成 *)
-  intros n. induction n as [| n' IHn'].
+  induction n as [| n' IHn'].
   - (* n = 0 *)
-    simpl. reflexivity.
+    reflexivity.
   - (* n = S n' *)
-    simpl. rewrite -> IHn'. reflexivity.  Qed.
+    simpl. rewrite -> IHn'. reflexivity.
+Qed.
 
-(** （其实在这些证明中我们并不需要 [intros]：当 [induction]
-    策略被应用到包含量化变量的目标中时，它会自动将需要的变量移到上下文中。） *)
+(**
+  注意: 在上面的证明中，我们没有使用 [intros n]。
+  当 [induction n] 会自动将 [n] 移到上下文中。
+*)
+(** **** 练习：2 星, standard, recommended (basic_induction)
+    使用 [induction] 完成以下证明。你可能需要使用之前证明的定理。
+    记住 [Print]、[Search]。
+*)
 
-(** **** 练习：2 星, standard, recommended (basic_induction)  
-
-    用归纳法证明以下命题。你可能需要之前的证明结果。 *)
-
-Theorem mult_0_r : forall n:nat,
+Theorem mult_0_r : forall n : nat,
   n * 0 = 0.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem plus_n_Sm : forall n m : nat,
   S (n + m) = n + (S m).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
+(**
+  我们终于可以证明加法交换律与结合律了。
+*)
 Theorem plus_comm : forall n m : nat,
   n + m = m + n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem plus_assoc : forall n m p : nat,
   n + (m + p) = (n + m) + p.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** **** 练习：2 星, standard (double_plus)  
+(** **** 练习：2 星, standard (double_plus)
+  完成函数 [double] 的定义，它接受参数 [n]，返回 [2n]: 
+*)
 
-    考虑以下函数，它将其参数乘以二： *)
+Fixpoint double (n:nat) : nat
+  (* := 你的解答 *).
+Admitted.
 
-Fixpoint double (n:nat) :=
-  match n with
-  | O => O
-  | S n' => S (S (double n'))
-  end.
-
-(** 用归纳法证明以下关于 [double] 的简单事实： *)
+(** 使用 [induction] 证明 [double n = n + n]: *)
 
 Lemma double_plus : forall n, double n = n + n .
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** **** 练习：2 星, standard, optional (evenb_S)  
-
-    我们的 [evenb n] 定义对 [n - 2] 的递归调用不大方便。这让证明 [evenb n]
-    时更难对 [n] 进行归纳，因此我们需要一个关于 [n - 2] 的归纳假设。
-    以下引理赋予了 [evenb (S n)] 另一个特征，使其在归纳时能够更好地工作： *)
+(** **** 练习：2 星, standard, optional (evenb_S) 
+  证明下述关于 [evenb] 的定理。
+*)
 
 Theorem evenb_S : forall n : nat,
   evenb (S n) = negb (evenb n).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
-
-(** **** 练习：1 星, standard (destruct_induction)  
-
-    请简要说明一下 [destruct] 策略和 [induction] 策略之间的区别。
-
-(* 请在此处解答 *)
-*)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_destruct_induction : option (nat*string) := None.
-(** [] *)
-
 (* ################################################################# *)
 (** * 证明里的证明 *)
 
@@ -289,8 +250,6 @@ Proof.
 (* ################################################################# *)
 (** * 形式化证明 vs. 非形式化证明 *)
 
-(** _'“非形式化证明是算法，形式化证明是代码。”'_ *)
-
 (** 数学声明的成功证明由什么构成？这个问题已经困扰了哲学家数千年，
     不过这儿有个还算凑合的定义：数学命题 [P] 的证明是一段书面（或口头）的文本，
     它对 [P] 的真实性进行无可辩驳的论证，逐步说服读者或听者使其确信 [P] 为真。
@@ -300,44 +259,7 @@ Proof.
     此时灌输的“确信”是 [P] 能够从一个确定的，由形式化逻辑规则组成的集合中
     机械地推导出来，而证明则是指导程序检验这一事实的方法。这种方法就是
     _'形式化'_ 证明。
-
-    另一方面，读者也可以是人类，这种情况下证明可以用英语或其它自然语言写出，
-    因此必然是 _'非形式化'_ 的，此时成功的标准不太明确。一个“有效的”证明是让读者
-    相信 [P]。但同一个证明可能被很多不同的读者阅读，其中一些人可能会被某种特定
-    的表述论证方式说服，而其他人则不会。有些读者太爱钻牛角尖，或者缺乏经验，
-    或者只是单纯地过于愚钝；说服他们的唯一方法就是细致入微地进行论证。
-    不过熟悉这一领域的读者可能会觉得所有细节都太过繁琐，让他们无法抓住
-    整体的思路；他们想要的不过是抓住主要思路，因为相对于事无巨细的描述而言，
-    让他们自行补充所需细节更为容易。总之，我们没有一个通用的标准，
-    因为没有一种编写非形式化证明的方式能够说服所能顾及的每一个读者。
-
-    然而在实践中，数学家们已经发展出了一套用于描述复杂数学对象的约定和习语，
-    这让交流（至少在特定的社区内）变得十分可靠。这种约定俗成的交流形式已然成风，
-    它为证明的好坏给出了清晰的判断标准。
-
-    由于我们在本课程中使用 Coq，因此会重度使用形式化证明。但这并不意味着我们
-    可以完全忽略掉非形式化的证明过程！形式化证明在很多方面都非常有用，
-    不过它们对人类之间的思想交流而言 _'并不'_ 十分高效。 *)
-
-(** 例如，下面是一段加法结合律的证明： *)
-
-Theorem plus_assoc' : forall n m p : nat,
-  n + (m + p) = (n + m) + p.
-Proof. intros n m p. induction n as [| n' IHn']. reflexivity.
-  simpl. rewrite -> IHn'. reflexivity.  Qed.
-
-(** Coq 对此表示十分满意。然而人类却很难理解它。我们可以用注释和标号让它
-    的结构看上去更清晰一点... *)
-
-Theorem plus_assoc'' : forall n m p : nat,
-  n + (m + p) = (n + m) + p.
-Proof.
-  intros n m p. induction n as [| n' IHn'].
-  - (* n = 0 *)
-    reflexivity.
-  - (* n = S n' *)
-    simpl. rewrite -> IHn'. reflexivity.   Qed.
-
+    
 (** ...而且如果你习惯了 Coq，你可能会在脑袋里逐步过一遍策略，并想象出
     每一处上下文和目标栈的状态。不过若证明再复杂一点，那就几乎不可能了。
 
@@ -368,13 +290,6 @@ Proof.
         S (n' + (m + p)) = S ((n' + m) + p),
 
       它由归纳假设直接得出。_'证毕'_。 *)
-
-(** 证明的总体形式大体类似，当然这并非偶然：Coq 的设计使其 [induction]
-    策略会像数学家写出的标号那样，按相同的顺序生成相同的子目标。但在细节上则有
-    明显的不同：形式化证明在某些方面更为明确（例如对 [reflexivity] 的使用），
-    但在其它方面则不够明确（特别是 Coq 证明中任何一处的“证明状态”都是完全
-    隐含的，而非形式化证明则经常反复告诉读者目前证明进行的状态）。 *)
-
 (** **** 练习：2 星, advanced, recommended (plus_comm_informal)  
 
     将你对 [plus_comm] 的解答翻译成非形式化证明：
