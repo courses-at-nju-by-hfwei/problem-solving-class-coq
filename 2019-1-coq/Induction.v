@@ -193,78 +193,95 @@ Admitted.
 (* ################################################################# *)
 (** * 证明里的证明 *)
 
-(** 和在非形式化的数学中一样，在 Coq 中，大的证明通常会被分为一系列定理，
-    后面的定理引用之前的定理。但有时一个证明会需要一些繁杂琐碎的事实，
-    而这些事实缺乏普遍性，以至于我们甚至都不应该给它们单独取顶级的名字。
-    此时，如果能仅在需要时简单地陈述并立即证明所需的“子定理”就会很方便。
-    我们可以用 [assert] 策略来做到。例如，我们之前对 [mult_0_plus]
-    定理的证明引用了前一个名为 [plus_O_n] 的定理，而我们只需内联使用 [assert]
-    就能陈述并证明 [plus_O_n]： *)
+(**
+  关于 [induction]，我们暂时介绍这么多。
+  后面，我们还会回到这个主题。
+  
+  下面，我们介绍一个在做证明时经常会碰到的情况:
+  一个证明会依赖于其它结论，但是这个结论可能很简单，或者缺乏普遍性，
+  不值得我们专门为之引入一个定理。
+  这时，Coq 允许我们使用 [assert] 策略将该结论嵌入 (inline) 在大的证明结构中。 
+*)
 
 Theorem mult_0_plus' : forall n m : nat,
   (0 + n) * m = n * m.
 Proof.
   intros n m.
-  assert (H: 0 + n = n). { reflexivity. }
-  rewrite -> H.
-  reflexivity.  Qed.
+  (* 当然，我们可以直接使用 [simpl.]。这里仅做演示之用。*)
+  assert (H: 0 + n = n). { reflexivity. } 
+  rewrite H.
+  reflexivity.
+Qed.
 
-(** [assert] 策略引入两个子目标。第一个为断言本身，通过给它加前缀 [H:]
-    我们将该断言命名为 [H]。（当然也可以用 [as] 来命名该断言，与之前的
-    [destruct] 和 [induction] 一样。例如 [assert (0 + n = n) as H]。）
-    注意我们用花括号 [{ ... }] 将该断言的证明括了起来。这样不仅方便阅读，
-    同时也能在交互使用 Coq 时更容易看出该子目标何时得证。第二个目标
-    与之前执行 [assert] 时一样，只是这次在上下文中，我们有了名为 [H] 的前提
-    [0 + n = n]。也就是说，[assert] 生成的第一个子目标是我们必须证明的已断言的事实，
-    而在第二个子目标中，我们可以使用已断言的事实在一开始尝试证明的事情上取得进展。 *)
+(**
+  注意观察 [assert] 对证明目标的改变。
+  [assert (H : 0 + n = n)] 策略引入了一个子目标，记为 [H]。
+  我们先在随后的 [{ ... }] 内给出这个子目标的证明。
+  退出 [{ ... }] 后，我们又回到原来的证明目标 [(0 + n) * m = n * m]。
+  此时，我们可以将 [H] 作为已知定理使用了。
+*)
 
-(** 另一个 [assert] 的例子... *)
-
-(** 举例来说，假如我们要证明 [(n + m) + (p + q) = (m + n) + (p + q)]。
-    [=] 两边唯一不同的就是内层第一个子式中 [+] 的参数 [m] 和 [n] 交换了位置，
-    我们似乎可以用加法交换律（[plus_comm]）来改写它。然而，
-    [rewrite] 策略并不知道应该作用在 _'哪里'_。本命题中 [+] 用了三次 ，
-    结果 [rewrite -> plus_comm] 只对 _'最外层'_ 起了作用... *)
+(**
+  [assert] 还有一个特别的用处，我们举例说明。
+  假设我们要证明 [(n + m) + (p + q) = (m + n) + (p + q)]。
+  似乎我们可以直接使用加法交换律 [plus_comm] 将等号左边的 [(n + m)] 
+  改写为等号右边的 [(m + n)]。
+  但是，这里有6个加号，Coq 的 [rewrite plus_comm] 并没有聪明到
+  知道我们想对哪个加号应用加法交换律。
+  实际上，它将 [rewrite plus_comm] 作用在了最外层的加号上。
+*)
 
 Theorem plus_rearrange_firsttry : forall n m p q : nat,
   (n + m) + (p + q) = (m + n) + (p + q).
 Proof.
   intros n m p q.
-  (* 我们只需要将 (m + n) 交换为 (n + m)... 看起来 plus_comm 能搞定！*)
+  (* 我们希望将 (m + n) 改写为 (n + m) *)
   rewrite -> plus_comm.
-  (* 搞不定... Coq 选错了要改写的加法！ *)
+  (* 但是，Coq 将 [plus_comm] 应用到了最外层的加号上 *)
 Abort.
 
-(** 为了在需要的地方使用 [plus_comm]，我们可以（为此这里讨论的 [m] 和 [n]）
-    引入一个局部引理来陈述 [n + m = m + n]，之后用 [plus_comm] 证明它，
-    并用它来进行期望的改写。 *)
+(**
+  [assert] 允许我们陈述一个针对证明中特定的变量的引理。
+*)
 
 Theorem plus_rearrange : forall n m p q : nat,
   (n + m) + (p + q) = (m + n) + (p + q).
 Proof.
   intros n m p q.
-  assert (H: n + m = m + n).
+  assert (H: n + m = m + n). (* 针对 [n] 与 [m] *)
   { rewrite -> plus_comm. reflexivity. }
-  rewrite -> H. reflexivity.  Qed.
+  rewrite -> H. 
+  reflexivity.
+Qed.
 
+Print plus_comm.
+(**
+  在后面章节，我们将会看到，这个证明中的第2到第4行，可以用一条语句代替：
+  [rewrite (plus_comm n m).]。
+  回顾 [plus_comm] 定理:
+  [forall n m : nat, n + m = m + n]。
+  我们可以将该定理看成接受两个自然数的函数。
+  给定 [n] 与 [m]，[plus_comm n m] 就是加法交换律在 [n] 与 [m] 上的实例化。
+  
+  哦，定理是函数? 那就可以做计算了?
+  嗯，没错。关于这个话题，我们先点到为止。后面我们还会回来。
+*)
 (* ################################################################# *)
 (** * 形式化证明 vs. 非形式化证明 *)
 
-(** 数学声明的成功证明由什么构成？这个问题已经困扰了哲学家数千年，
-    不过这儿有个还算凑合的定义：数学命题 [P] 的证明是一段书面（或口头）的文本，
-    它对 [P] 的真实性进行无可辩驳的论证，逐步说服读者或听者使其确信 [P] 为真。
-    也就是说，证明是一种交流行为。
+(** 
+  在初中，我们就开始写数学证明了。
+  但是，什么是证明?
+  我们好像从来没有给证明本身下过定义?
+  
+  关于这个问题的答案，我们把它留给你们的数理逻辑老师。
+  让人惊讶的是，为证明下定义也不过是最近一百年的事情。
+  同样让人惊讶的是，我们的经验表明，不知道证明的定义也并不妨碍我们做证明。
 
-    交流活动会涉及不同类型的读者。一方面，“读者”可以是像 Coq 这样的程序，
-    此时灌输的“确信”是 [P] 能够从一个确定的，由形式化逻辑规则组成的集合中
-    机械地推导出来，而证明则是指导程序检验这一事实的方法。这种方法就是
-    _'形式化'_ 证明。
-    
-(** ...而且如果你习惯了 Coq，你可能会在脑袋里逐步过一遍策略，并想象出
-    每一处上下文和目标栈的状态。不过若证明再复杂一点，那就几乎不可能了。
-
-    一个（迂腐的）数学家可能把证明写成这样： *)
-
+  在 Coq 里，我们需要写机器可以检验的 _'形式化证明' (Formal Proof)_，
+  而大多数时候，我们写的是 _'非形式化证明' (Informal Proof)_。
+  如下所示。
+*)
 (** - _'定理'_：对于任何 [n]、[m] 和 [p]，
 
       n + (m + p) = (n + m) + p.
@@ -302,75 +319,66 @@ Proof.
 (* 请勿修改下面这一行： *)
 Definition manual_grade_for_plus_comm_informal : option (nat*string) := None.
 (** [] *)
-
-(** **** 练习：2 星, standard, optional (eqb_refl_informal)  
-
-    以 [plus_assoc] 的非形式化证明为范本，写出以下定理的非形式化证明。
-    不要只是用中文来解释 Coq 策略！
-
-    定理：对于任何 [n]，均有 [true = n =? n]。
-
-    证明： (* 请在此处解答 *)
-
-    [] *)
-
 (* ################################################################# *)
 (** * 更多练习 *)
 
 (** **** 练习：3 星, standard, recommended (mult_comm)  
-
-    用 [assert] 来帮助证明此定理。你应该不需要对 [plus_swap] 进行归纳。 *)
+    利用 [assert] 证明下述定理 [plus_swap]。(提示: 不必使用 [induction]。) *)
 
 Theorem plus_swap : forall n m p : nat,
   n + (m + p) = m + (n + p).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
-(** 现在证明乘法交换律。（你在证明过程中可能需要定义并证明一个独立的辅助定理。
-    你可能会用上 [plus_swap]。） *)
+(** 现在我们终于可以证明乘法交换律了。你可能会用上 [plus_swap]。*)
 
 Theorem mult_comm : forall m n : nat,
   m * n = n * m.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** **** 练习：3 星, standard, optional (more_exercises)  
-
-    找一张纸。对于以下定理，首先请 _'思考'_ (a) 它能否能只用化简和改写来证明，
-    (b) 它还需要分类讨论（[destruct]），以及 (c) 它还需要归纳证明。先写下你的
-    预判，然后填写下面的证明（你的纸不用交上来，这只是鼓励你先思考再行动！） *)
-
+(** **** 练习：3 星, standard, optional (more_exercises) *)
+(** TODO: 精简练习题 *)
 Check leb.
+Print leb.
 
 Theorem leb_refl : forall n:nat,
   true = (n <=? n).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem zero_nbeq_S : forall n:nat,
   0 =? (S n) = false.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem andb_false_r : forall b : bool,
   andb b false = false.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem plus_ble_compat_l : forall n m p : nat,
   n <=? m = true -> (p + n) <=? (p + m) = true.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem S_nbeq_0 : forall n:nat,
   (S n) =? 0 = false.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem mult_1_l : forall n:nat, 1 * n = n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem all3_spec : forall b c : bool,
     orb
@@ -379,17 +387,20 @@ Theorem all3_spec : forall b c : bool,
                (negb c))
   = true.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem mult_plus_distr_r : forall n m p : nat,
   (n + m) * p = (n * p) + (m * p).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem mult_assoc : forall n m p : nat,
   n * (m * p) = (n * m) * p.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
 (** **** 练习：2 星, standard, optional (eqb_refl)  

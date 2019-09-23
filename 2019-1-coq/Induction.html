@@ -343,13 +343,19 @@
 
 <div class="paragraph"> </div>
 
- 和在非形式化的数学中一样，在 Coq 中，大的证明通常会被分为一系列定理，
-    后面的定理引用之前的定理。但有时一个证明会需要一些繁杂琐碎的事实，
-    而这些事实缺乏普遍性，以至于我们甚至都不应该给它们单独取顶级的名字。
-    此时，如果能仅在需要时简单地陈述并立即证明所需的“子定理”就会很方便。
-    我们可以用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 策略来做到。例如，我们之前对 <span class="inlinecode"><span class="id" title="var">mult_0_plus</span></span>
-    定理的证明引用了前一个名为 <span class="inlinecode"><span class="id" title="var">plus_O_n</span></span> 的定理，而我们只需内联使用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span>
-    就能陈述并证明 <span class="inlinecode"><span class="id" title="var">plus_O_n</span></span>： 
+
+<div class="paragraph"> </div>
+
+  关于 <span class="inlinecode"><span class="id" title="tactic">induction</span></span>，我们暂时介绍这么多。
+  后面，我们还会回到这个主题。
+
+<div class="paragraph"> </div>
+
+  下面，我们介绍一个在做证明时经常会碰到的情况:
+  一个证明会依赖于其它结论，但是这个结论可能很简单，或者缺乏普遍性，
+  不值得我们专门为之引入一个定理。
+  这时，Coq 允许我们使用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 策略将该结论嵌入 (inline) 在大的证明结构中。 
+
 </div>
 <div class="code">
 
@@ -358,32 +364,34 @@
 &nbsp;&nbsp;(0 + <span class="id" title="var">n</span>) * <span class="id" title="var">m</span> = <span class="id" title="var">n</span> * <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span>: 0 + <span class="id" title="var">n</span> = <span class="id" title="var">n</span>). { <span class="id" title="tactic">reflexivity</span>. }<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span>: 0 + <span class="id" title="var">n</span> = <span class="id" title="var">n</span>). { <span class="id" title="tactic">reflexivity</span>. } <br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<span class="inlinecode"><span class="id" title="tactic">assert</span></span> 策略引入两个子目标。第一个为断言本身，通过给它加前缀 <span class="inlinecode"><span class="id" title="var">H</span>:</span>
-    我们将该断言命名为 <span class="inlinecode"><span class="id" title="var">H</span></span>。（当然也可以用 <span class="inlinecode"><span class="id" title="keyword">as</span></span> 来命名该断言，与之前的
-    <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 和 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 一样。例如 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> <span class="inlinecode">(0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span>。）
-    注意我们用花括号 <span class="inlinecode">{</span> <span class="inlinecode">...</span> <span class="inlinecode">}</span> 将该断言的证明括了起来。这样不仅方便阅读，
-    同时也能在交互使用 Coq 时更容易看出该子目标何时得证。第二个目标
-    与之前执行 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 时一样，只是这次在上下文中，我们有了名为 <span class="inlinecode"><span class="id" title="var">H</span></span> 的前提
-    <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span>。也就是说，<span class="inlinecode"><span class="id" title="tactic">assert</span></span> 生成的第一个子目标是我们必须证明的已断言的事实，
-    而在第二个子目标中，我们可以使用已断言的事实在一开始尝试证明的事情上取得进展。 
+  注意观察 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 对证明目标的改变。
+  <span class="inlinecode"><span class="id" title="tactic">assert</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> 策略引入了一个子目标，记为 <span class="inlinecode"><span class="id" title="var">H</span></span>。
+  我们先在随后的 <span class="inlinecode">{</span> <span class="inlinecode">...</span> <span class="inlinecode">}</span> 内给出这个子目标的证明。
+  退出 <span class="inlinecode">{</span> <span class="inlinecode">...</span> <span class="inlinecode">}</span> 后，我们又回到原来的证明目标 <span class="inlinecode">(0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">*</span> <span class="inlinecode"><span class="id" title="var">m</span></span>。
+  此时，我们可以将 <span class="inlinecode"><span class="id" title="var">H</span></span> 作为已知定理使用了。
+
 <div class="paragraph"> </div>
 
- 另一个 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 的例子... 
+
 <div class="paragraph"> </div>
 
- 举例来说，假如我们要证明 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span> <span class="inlinecode">+</span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">q</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode">+</span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">q</span>)</span>。
-    <span class="inlinecode">=</span> 两边唯一不同的就是内层第一个子式中 <span class="inlinecode">+</span> 的参数 <span class="inlinecode"><span class="id" title="var">m</span></span> 和 <span class="inlinecode"><span class="id" title="var">n</span></span> 交换了位置，
-    我们似乎可以用加法交换律（<span class="inlinecode"><span class="id" title="var">plus_comm</span></span>）来改写它。然而，
-    <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 策略并不知道应该作用在 <i>'哪里'</i>。本命题中 <span class="inlinecode">+</span> 用了三次 ，
-    结果 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 只对 <i>'最外层'</i> 起了作用... 
+  <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 还有一个特别的用处，我们举例说明。
+  假设我们要证明 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span> <span class="inlinecode">+</span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">q</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode">+</span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">q</span>)</span>。
+  似乎我们可以直接使用加法交换律 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 将等号左边的 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span> 
+  改写为等号右边的 <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>。
+  但是，这里有6个加号，Coq 的 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 并没有聪明到
+  知道我们想对哪个加号应用加法交换律。
+  实际上，它将 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 作用在了最外层的加号上。
+
 </div>
 <div class="code">
 
@@ -399,9 +407,8 @@
 </div>
 
 <div class="doc">
-为了在需要的地方使用 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span>，我们可以（为此这里讨论的 <span class="inlinecode"><span class="id" title="var">m</span></span> 和 <span class="inlinecode"><span class="id" title="var">n</span></span>）
-    引入一个局部引理来陈述 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>，之后用 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 证明它，
-    并用它来进行期望的改写。 
+  <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 允许我们陈述一个针对证明中特定的变量的引理。
+
 </div>
 <div class="code">
 
@@ -410,11 +417,30 @@
 &nbsp;&nbsp;(<span class="id" title="var">n</span> + <span class="id" title="var">m</span>) + (<span class="id" title="var">p</span> + <span class="id" title="var">q</span>) = (<span class="id" title="var">m</span> + <span class="id" title="var">n</span>) + (<span class="id" title="var">p</span> + <span class="id" title="var">q</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span>: <span class="id" title="var">n</span> + <span class="id" title="var">m</span> = <span class="id" title="var">m</span> + <span class="id" title="var">n</span>).<br/>
-&nbsp;&nbsp;{ <span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">plus_comm</span>. <span class="id" title="tactic">reflexivity</span>. }<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span>: <span class="id" title="var">n</span> + <span class="id" title="var">m</span> = <span class="id" title="var">m</span> + <span class="id" title="var">n</span>). &nbsp;&nbsp;{ <span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">plus_comm</span>. <span class="id" title="tactic">reflexivity</span>. }<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">plus_comm</span>.<br/>
+</div>
+
+<div class="doc">
+  在后面章节，我们将会看到，这个证明中的第2到第4行，可以用一条语句代替：
+  <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">(<span class="id" title="var">plus_comm</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span>).</span>。
+  回顾 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 定理:
+  <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>。
+  我们可以将该定理看成接受两个自然数的函数。
+  给定 <span class="inlinecode"><span class="id" title="var">n</span></span> 与 <span class="inlinecode"><span class="id" title="var">m</span></span>，<span class="inlinecode"><span class="id" title="var">plus_comm</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> 就是加法交换律在 <span class="inlinecode"><span class="id" title="var">n</span></span> 与 <span class="inlinecode"><span class="id" title="var">m</span></span> 上的实例化。
+
+<div class="paragraph"> </div>
+
+  哦，定理是函数? 那就可以做计算了?
+  嗯，没错。关于这个话题，我们先点到为止。后面我们还会回来。
+
+</div>
+<div class="code">
 </div>
 
 <div class="doc">
@@ -422,203 +448,394 @@
 
 <div class="paragraph"> </div>
 
- 数学声明的成功证明由什么构成？这个问题已经困扰了哲学家数千年，
-    不过这儿有个还算凑合的定义：数学命题 <span class="inlinecode"><span class="id" title="var">P</span></span> 的证明是一段书面（或口头）的文本，
-    它对 <span class="inlinecode"><span class="id" title="var">P</span></span> 的真实性进行无可辩驳的论证，逐步说服读者或听者使其确信 <span class="inlinecode"><span class="id" title="var">P</span></span> 为真。
-    也就是说，证明是一种交流行为。
 
 <div class="paragraph"> </div>
 
-    交流活动会涉及不同类型的读者。一方面，“读者”可以是像 Coq 这样的程序，
-    此时灌输的“确信”是 <span class="inlinecode"><span class="id" title="var">P</span></span> 能够从一个确定的，由形式化逻辑规则组成的集合中
-    机械地推导出来，而证明则是指导程序检验这一事实的方法。这种方法就是
-    <i>'形式化'</i> 证明。
+  在初中，我们就开始写数学证明了。
+  但是，什么是证明?
+  我们好像从来没有给证明本身下过定义?
 
 <div class="paragraph"> </div>
 
+  关于这个问题的答案，我们把它留给你们的数理逻辑老师。
+  让人惊讶的是，为证明下定义也不过是最近一百年的事情。
+  同样让人惊讶的是，我们的经验表明，不知道证明的定义也并不妨碍我们做证明。
 
 <div class="paragraph"> </div>
 
+  在 Coq 里，我们需要写机器可以检验的 <i>'形式化证明' (Formal Proof)_，
+  而大多数时候，我们写的是 <i>'非形式化证明' (Informal Proof)_。
+  如下所示。
+<ul class="doclist">
+<li> <i>'定理'</i>：对于任何 <span class="inlinecode"><span class="id" title="var">n</span></span>、<span class="inlinecode"><span class="id" title="var">m</span></span> 和 <span class="inlinecode"><span class="id" title="var">p</span></span>，
 
 <div class="paragraph"> </div>
 
-Definition manual_grade_for_plus_comm_informal : option (nat*string) := None.
+      n + (m + p) = (n + m) + p.
 
 <div class="paragraph"> </div>
 
+    <i>'证明'</i>：对 <span class="inlinecode"><span class="id" title="var">n</span></span> 使用归纳法。
 
 <div class="paragraph"> </div>
 
+<ul class="doclist">
+<li> 首先，设 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>。我们必须证明
 
 <div class="paragraph"> </div>
 
+        0 + (m + p) = (0 + m) + p.
 
 <div class="paragraph"> </div>
 
-Theorem plus_swap : forall n m p : nat,
-  n + (m + p) = m + (n + p).
-Proof.
-   Admitted.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Theorem mult_comm : forall m n : nat,
-  m * n = n * m.
-Proof.
-   Admitted.
+      此结论可从 <span class="inlinecode">+</span> 的定义直接得到。
 
 <div class="paragraph"> </div>
 
 
-<div class="paragraph"> </div>
-
-Check leb.
-
-<div class="paragraph"> </div>
-
-Theorem leb_refl : forall n:nat,
-  true = (n &lt;=? n).
-Proof.
-   Admitted.
+</li>
+<li> 然后，设 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>，其中
 
 <div class="paragraph"> </div>
 
-Theorem zero_nbeq_S : forall n:nat,
-  0 =? (S n) = false.
-Proof.
-   Admitted.
+        n' + (m + p) = (n' + m) + p.
 
 <div class="paragraph"> </div>
 
-Theorem andb_false_r : forall b : bool,
-  andb b false = false.
-Proof.
-   Admitted.
+      我们必须证明
 
 <div class="paragraph"> </div>
 
-Theorem plus_ble_compat_l : forall n m p : nat,
-  n &lt;=? m = true -&gt; (p + n) &lt;=? (p + m) = true.
-Proof.
-   Admitted.
+        (S n') + (m + p) = ((S n') + m) + p.
 
 <div class="paragraph"> </div>
 
-Theorem S_nbeq_0 : forall n:nat,
-  (S n) =? 0 = false.
-Proof.
-   Admitted.
+      根据 <span class="inlinecode">+</span> 的定义，该式可写成
 
 <div class="paragraph"> </div>
 
-Theorem mult_1_l : forall n:nat, 1 * n = n.
-Proof.
-   Admitted.
+        S (n' + (m + p)) = S ((n' + m) + p),
 
 <div class="paragraph"> </div>
 
-Theorem all3_spec : forall b c : bool,
-    orb
-      (andb b c)
-      (orb (negb b)
-               (negb c))
-  = true.
-Proof.
-   Admitted.
+      它由归纳假设直接得出。<i>'证毕'</i>。 
+</li>
+</ul>
 
-<div class="paragraph"> </div>
-
-Theorem mult_plus_distr_r : forall n m p : nat,
-  (n + m) * p = (n * p) + (m * p).
-Proof.
-   Admitted.
-
-<div class="paragraph"> </div>
-
-Theorem mult_assoc : forall n m p : nat,
-  n * (m * p) = (n * m) * p.
-Proof.
-   Admitted.
-
-<div class="paragraph"> </div>
+</li>
+</ul>
+<a name="lab8"></a><h4 class="section">练习：2 星, advanced, recommended (plus_comm_informal)</h4>
 
 
 <div class="paragraph"> </div>
 
-Theorem eqb_refl : forall n : nat,
-  true = (n =? n).
-Proof.
-   Admitted.
+    将你对 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 的解答翻译成非形式化证明：
 
 <div class="paragraph"> </div>
 
+    定理：加法满足交换律。
 
 <div class="paragraph"> </div>
 
-Theorem plus_swap' : forall n m p : nat,
-  n + (m + p) = m + (n + p).
-Proof.
-   Admitted.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Definition manual_grade_for_binary_commute : option (nat*string) := None.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Fixpoint nat_to_bin (n:nat) : bin
-  . Admitted.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Theorem nat_bin_nat : forall n, bin_to_nat (nat_to_bin n) = n.
-Proof.
-   Admitted.
-
-<div class="paragraph"> </div>
-
-Definition manual_grade_for_binary_inverse_a : option (nat*string) := None.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Definition manual_grade_for_binary_inverse_b : option (nat*string) := None.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Definition manual_grade_for_binary_inverse_c : option (nat*string) := None.
-
-<div class="paragraph"> </div>
-
-
+    Proof: 
 </div>
 <div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_plus_comm_informal</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+</div>
+
+<div class="doc">
+<a name="lab9"></a><h1 class="section">更多练习</h1>
+
+<div class="paragraph"> </div>
+
+<a name="lab10"></a><h4 class="section">练习：3 星, standard, recommended (mult_comm)</h4>
+
+    利用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 证明下述定理 <span class="inlinecode"><span class="id" title="var">plus_swap</span></span>。(提示: 不必使用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span>。) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_swap</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> + (<span class="id" title="var">m</span> + <span class="id" title="var">p</span>) = <span class="id" title="var">m</span> + (<span class="id" title="var">n</span> + <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+现在我们终于可以证明乘法交换律了。你可能会用上 <span class="inlinecode"><span class="id" title="var">plus_swap</span></span>。
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_comm</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">m</span> * <span class="id" title="var">n</span> = <span class="id" title="var">n</span> * <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab11"></a><h4 class="section">练习：3 星, standard, optional (more_exercises)</h4>
+ TODO: 精简练习题 
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <span class="id" title="var">leb</span>.<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">leb</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">leb_refl</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">true</span> = (<span class="id" title="var">n</span> &lt;=? <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">zero_nbeq_S</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;0 =? (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_false_r</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">false</span> = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_ble_compat_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;=? <span class="id" title="var">m</span> = <span class="id" title="var">true</span> -&gt; (<span class="id" title="var">p</span> + <span class="id" title="var">n</span>) &lt;=? (<span class="id" title="var">p</span> + <span class="id" title="var">m</span>) = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">S_nbeq_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">S</span> <span class="id" title="var">n</span>) =? 0 = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_1_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>, 1 * <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">all3_spec</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">orb</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">orb</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">negb</span> <span class="id" title="var">c</span>))<br/>
+&nbsp;&nbsp;= <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_plus_distr_r</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">n</span> + <span class="id" title="var">m</span>) * <span class="id" title="var">p</span> = (<span class="id" title="var">n</span> * <span class="id" title="var">p</span>) + (<span class="id" title="var">m</span> * <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_assoc</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> * (<span class="id" title="var">m</span> * <span class="id" title="var">p</span>) = (<span class="id" title="var">n</span> * <span class="id" title="var">m</span>) * <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab12"></a><h4 class="section">练习：2 星, standard, optional (eqb_refl)</h4>
+
+
+<div class="paragraph"> </div>
+
+    证明以下定理。（把 <span class="inlinecode"><span class="id" title="var">true</span></span> 放在等式左边可能看起来有点奇怪，不过 Coq 标准库中
+    就是这样表示的，我们照做就是。无论按哪个方向改写都一样好用，所以无论我们如何
+    表示定理，用起来都没问题。） 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqb_refl</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">true</span> = (<span class="id" title="var">n</span> =? <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab13"></a><h4 class="section">练习：2 星, standard, optional (plus_swap')</h4>
+
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="tactic">replace</span></span> 策略允许你指定一个具体的要改写的子项和你想要将它改写成的项：
+    <span class="inlinecode"><span class="id" title="tactic">replace</span></span> <span class="inlinecode">(<span class="id" title="var">t</span>)</span> <span class="inlinecode"><span class="id" title="keyword">with</span></span> <span class="inlinecode">(<span class="id" title="var">u</span>)</span> 会将目标中表达式 <span class="inlinecode"><span class="id" title="var">t</span></span>（的所有副本）替换为表达式 <span class="inlinecode"><span class="id" title="var">u</span></span>，
+    并生成 <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">u</span></span> 作为附加的子目标。在简单的 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 作用在目标错误的部分上时
+    这种做法通常很有用。
+
+<div class="paragraph"> </div>
+
+   用 <span class="inlinecode"><span class="id" title="tactic">replace</span></span> 策略来证明 <span class="inlinecode"><span class="id" title="var">plus_swap'</span></span>，除了无需 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>
+   外和 <span class="inlinecode"><span class="id" title="var">plus_swap</span></span> 一样。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_swap'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> + (<span class="id" title="var">m</span> + <span class="id" title="var">p</span>) = <span class="id" title="var">m</span> + (<span class="id" title="var">n</span> + <span class="id" title="var">p</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab14"></a><h4 class="section">练习：3 星, standard, recommended (binary_commute)</h4>
+
+
+<div class="paragraph"> </div>
+
+    回忆一下你在 <span class="inlinecode"><span class="id" title="var">Basics</span></span> 中为练习 <span class="inlinecode"><span class="id" title="var">binary</span></span> 编写的 <span class="inlinecode"><span class="id" title="var">incr</span></span> 和 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span>
+    函数。证明下图可交换。
+
+<div class="paragraph"> </div>
+
+                            incr
+              bin ----------------------&gt; bin
+               |                           |
+    bin_to_nat |                           |  bin_to_nat
+               |                           |
+               v                           v
+              nat ----------------------&gt; nat
+                             S
+
+<div class="paragraph"> </div>
+
+    也就是说，一个二进制数先自增然后将它转换为（一进制）自然数，和先将它转换为
+    自然数后再自增会产生相同的结果。将你的定理命名为 <span class="inlinecode"><span class="id" title="var">bin_to_nat_pres_incr</span></span>
+    （“pres”即“preserves”的简写，意为“保持原状”）。
+
+<div class="paragraph"> </div>
+
+    在开始做这个练习之前，将你在 <span class="inlinecode"><span class="id" title="var">binary</span></span> 练习的解中的定义复制到这里，
+    让这个文件可以被单独评分。若你想要更改你的原始定义以便让此属性更易证明，
+    请自便！ 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary_commute</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab15"></a><h4 class="section">练习：5 星, advanced (binary_inverse)</h4>
+
+
+<div class="paragraph"> </div>
+
+    This is a further continuation of the previous exercises about
+    binary numbers.  You may find you need to go back and change your
+    earlier definitions to get things to work here.
+
+<div class="paragraph"> </div>
+
+    (a) First, write a function to convert natural numbers to binary
+        numbers. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nat_to_bin</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bin</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Prove that, if we start with any <span class="inlinecode"><span class="id" title="var">nat</span></span>, convert it to binary, and
+    convert it back, we get the same <span class="inlinecode"><span class="id" title="var">nat</span></span> we started with.  (Hint: If
+    your definition of <span class="inlinecode"><span class="id" title="var">nat_to_bin</span></span> involved any extra functions, you
+    may need to prove a subsidiary lemma showing how such functions
+    relate to <span class="inlinecode"><span class="id" title="var">nat_to_bin</span></span>.) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">nat_bin_nat</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>, <span class="id" title="var">bin_to_nat</span> (<span class="id" title="var">nat_to_bin</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary_inverse_a</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+(b) One might naturally expect that we should also prove the
+        opposite direction -- that starting with a binary number,
+        converting to a natural, and then back to binary should yield
+        the same number we started with.  However, this is not the
+        case!  Explain (in a comment) what the problem is. 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary_inverse_b</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+(c) Define a normalization function -- i.e., a function
+        <span class="inlinecode"><span class="id" title="var">normalize</span></span> going directly from <span class="inlinecode"><span class="id" title="var">bin</span></span> to <span class="inlinecode"><span class="id" title="var">bin</span></span> (i.e., <i>not</i> by
+        converting to <span class="inlinecode"><span class="id" title="var">nat</span></span> and back) such that, for any binary number
+        <span class="inlinecode"><span class="id" title="var">b</span></span>, converting <span class="inlinecode"><span class="id" title="var">b</span></span> to a natural and then back to binary yields
+        <span class="inlinecode">(<span class="id" title="var">normalize</span></span> <span class="inlinecode"><span class="id" title="var">b</span>)</span>.  Prove it.  (Warning: This part is a bit
+        tricky -- you may end up defining several auxiliary lemmas.
+        One good way to find out what you need is to start by trying
+        to prove the main statement, see where you get stuck, and see
+        if you can find a lemma -- perhaps requiring its own inductive
+        proof -- that will allow the main proof to make progress.) Don't
+        define thi using nat_to_bin and bin_to_nat! 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary_inverse_c</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
 </div>
 </div>
 
