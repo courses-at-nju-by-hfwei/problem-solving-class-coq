@@ -1040,7 +1040,7 @@ Proof.
   - simpl. reflexivity.
 Qed.
 
-(** 如果没有需要命名的参数，我们只需写上 [[]] 即可。 *)
+(** 如果没有需要命名的参数，我们只需写 [[]]。 *)
 
 Theorem andb_commutative'' :
   forall b c, andb b c = andb c b.
@@ -1056,14 +1056,16 @@ Qed.
 Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
 (** **** 练习：1 星, standard (zero_nbeq_plus_1)  *)
 Theorem zero_nbeq_plus_1 : forall n : nat,
   0 =? (n + 1) = false.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 (* ################################################################# *)
 (** * 更多练习 *)
@@ -1075,7 +1077,8 @@ Theorem identity_fn_applied_twice :
   (forall (x : bool), f x = x) ->
   forall (b : bool), f (f b) = b.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 (** [] *)
 
@@ -1094,7 +1097,6 @@ Definition manual_grade_for_negation_fn_applied_twice : option (nat*string) := N
 (** [] *)
 
 (** **** 练习：3 星, standard, optional (andb_eq_orb)  
-
     请证明定理 [andb_eq_orb]。
     
     有一点点难度 (是不是很兴奋？)，试试看吧。
@@ -1105,60 +1107,7 @@ Theorem andb_eq_orb :
   (andb b c = orb b c) ->
   b = c.
 Proof.
-  (* 请在此处解答 *) Admitted.
-
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
-
-(** **** 练习：3 星, standard (binary)
-  下面这道题目可以检验你是否掌握了本节的主要内容。
-  不要怕。正是这些让你感到有些困难的题目在悄悄地锻炼你的能力。
-  
-  我们考虑自然数的一种 _'二进制' (Binary)_ 表示法：
-  一个二进制数是由构造子 (即，构造函数) [A] (表示 0) 与 [B] (表示 1)
-  组成的序列，且该序列以构造子 [Z] 结束。
-  (能理解这句话吗? 我实在不知道该怎么表达了。
-  它的英文是：“treating a binary number as a sequence of constructors [A] and [B] (representing 0s and 1s), terminated by a [Z].”。
-  Help me if you can!)
-  
-  在我们定义的 _'一进制' (unary)_ [nat] 中，
-  一个一进制数是由构造子 [S] 组成的序列，且该序列以构造子 [O] 结束。
-
-  看下面的例子 (注意，低位 (low-order bit) 在左，高位 (high-order bit) 在右)：
-
-        decimal            binary                           unary
-           0                   Z                              O
-           1                 B Z                            S O
-           2              A (B Z)                        S (S O)
-           3              B (B Z)                     S (S (S O))
-           4           A (A (B Z))                 S (S (S (S O)))
-           5           B (A (B Z))              S (S (S (S (S O))))
-           6           A (B (B Z))           S (S (S (S (S (S O)))))
-           7           B (B (B Z))        S (S (S (S (S (S (S O))))))
-           8        A (A (A (B Z)))    S (S (S (S (S (S (S (S O)))))))
-*)
-
-Inductive bin : Type :=
-  | Z
-  | A (n : bin)
-  | B (n : bin).
-
-(** (a) 请给出递增函数 [incr] 与转换函数 [bin_to_nat] 的定义。 *)
-
-Fixpoint incr (m:bin) : bin
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-Fixpoint bin_to_nat (m:bin) : nat
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-(**    
-  (b) 为 [incr] 与 [bin_to_nat] 编写单元测试 (使用 [Example]) 并给出证明。
-  你至少需要编写单元测试用例测试 [incr] 与 [bin_to_nat] 的可交换性。
-*)
-
-(* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_binary : option (nat*string) := None.
-(** [] *)
-
 (* Fri Jul 19 00:32:19 UTC 2019 *)

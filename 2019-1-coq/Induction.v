@@ -266,6 +266,20 @@ Print plus_comm.
   哦，定理是函数? 那就可以做计算了?
   嗯，没错。关于这个话题，我们先点到为止。后面我们还会回来。
 *)
+(** **** 练习：2 星, standard, optional (plus_swap') *)
+(** 
+  除了 [assert]，我们还可以使用 [replace] 策略证明上述定理。
+  [replace (t) with (u)] 会将目标中 [t] 的所有 _'出现' (occurrences)_替换为 [u],
+  并生成子目标 [t = u]。
+  请根据上面的介绍，尝试使用 [replace] 重新证明 [plus_swap]。
+*)
+Theorem plus_swap' : forall n m p : nat,
+  n + (m + p) = m + (n + p).
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+(** [] *)
+
 (* ################################################################# *)
 (** * 形式化证明 vs. 非形式化证明 *)
 
@@ -341,41 +355,19 @@ Admitted.
 (** [] *)
 
 (** **** 练习：3 星, standard, optional (more_exercises) *)
-(** TODO: 精简练习题 *)
-Check leb.
-Print leb.
+(**
+  注意: 以下练习题并不一定都需要使用 [induction].
+  你需要通过做练习培养自己做证明时的直觉。
+  直觉是非常重要的。
+  
+  (如果你又忘记了某些函数或者定理，请记着 [Print]、[Check] 与 [Search]。)
+*)
 
-Theorem leb_refl : forall n:nat,
-  true = (n <=? n).
-Proof.
-  (* 请在此处解答 *)
-Admitted.
-
-Theorem zero_nbeq_S : forall n:nat,
-  0 =? (S n) = false.
-Proof.
-  (* 请在此处解答 *)
-Admitted.
-
+(**
+  关于布尔函数
+*)
 Theorem andb_false_r : forall b : bool,
   andb b false = false.
-Proof.
-  (* 请在此处解答 *)
-Admitted.
-
-Theorem plus_ble_compat_l : forall n m p : nat,
-  n <=? m = true -> (p + n) <=? (p + m) = true.
-Proof.
-  (* 请在此处解答 *)
-Admitted.
-
-Theorem S_nbeq_0 : forall n:nat,
-  (S n) =? 0 = false.
-Proof.
-  (* 请在此处解答 *)
-Admitted.
-
-Theorem mult_1_l : forall n:nat, 1 * n = n.
 Proof.
   (* 请在此处解答 *)
 Admitted.
@@ -386,6 +378,49 @@ Theorem all3_spec : forall b c : bool,
       (orb (negb b)
                (negb c))
   = true.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+
+(**
+  关于自然数之间的大小关系
+*)
+Theorem eqb_refl : forall n : nat,
+  true = (n =? n).
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+
+Theorem leb_refl : forall n : nat,
+  true = (n <=? n).
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+
+Print eqb.
+Theorem zero_nbeq_S : forall n : nat,
+  0 =? (S n) = false.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+
+Theorem S_nbeq_zero : forall n:nat,
+  (S n) =? 0 = false.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+
+Theorem plus_ble_compat_l : forall n m p : nat,
+  n <=? m = true -> (p + n) <=? (p + m) = true.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+
+(**
+  关于乘法运算。我们终于可以证明乘法分配律和乘法结合律了。
+*)
+Theorem mult_1_l : forall n : nat,
+  1 * n = n.
 Proof.
   (* 请在此处解答 *)
 Admitted.
@@ -402,40 +437,62 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 (** [] *)
+(** **** 练习：3 星, standard (binary)
+  下面这道题目可以检验你是否掌握了本节(以及上一节)的主要内容。
+  不要怕。正是这些让你感到有些困难的题目在悄悄地锻炼你的能力。
+  
+  我们考虑自然数的一种 _'二进制' (Binary)_ 表示法：
+  一个二进制数是由构造子 (即，构造函数) [A] (表示 0) 与 [B] (表示 1)
+  组成的序列，且该序列以构造子 [Z] 结束。
+  (能理解这句话吗? 我实在不知道该怎么表达了。
+  它的英文是：“treating a binary number as a sequence of constructors [A] and [B] (representing 0s and 1s), terminated by a [Z].”。
+  Help me if you can!)
+  
+  在我们定义的 _'一进制' (unary)_ [nat] 中，
+  一个一进制数是由构造子 [S] 组成的序列，且该序列以构造子 [O] 结束。
 
-(** **** 练习：2 星, standard, optional (eqb_refl)  
+  看下面的例子 (注意，低位 (low-order bit) 在左，高位 (high-order bit) 在右)：
 
-    证明以下定理。（把 [true] 放在等式左边可能看起来有点奇怪，不过 Coq 标准库中
-    就是这样表示的，我们照做就是。无论按哪个方向改写都一样好用，所以无论我们如何
-    表示定理，用起来都没问题。） *)
+        decimal            binary                           unary
+           0                   Z                              O
+           1                 B Z                            S O
+           2              A (B Z)                        S (S O)
+           3              B (B Z)                     S (S (S O))
+           4           A (A (B Z))                 S (S (S (S O)))
+           5           B (A (B Z))              S (S (S (S (S O))))
+           6           A (B (B Z))           S (S (S (S (S (S O)))))
+           7           B (B (B Z))        S (S (S (S (S (S (S O))))))
+           8        A (A (A (B Z)))    S (S (S (S (S (S (S (S O)))))))
+*)
 
-Theorem eqb_refl : forall n : nat,
-  true = (n =? n).
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
+Inductive bin : Type :=
+  | Z
+  | A (n : bin)
+  | B (n : bin).
 
-(** **** 练习：2 星, standard, optional (plus_swap')  
+(** (a) 请给出递增函数 [incr] 与转换函数 [bin_to_nat] 的定义。 *)
 
-    [replace] 策略允许你指定一个具体的要改写的子项和你想要将它改写成的项：
-    [replace (t) with (u)] 会将目标中表达式 [t]（的所有副本）替换为表达式 [u]，
-    并生成 [t = u] 作为附加的子目标。在简单的 [rewrite] 作用在目标错误的部分上时
-    这种做法通常很有用。
+Fixpoint incr (m:bin) : bin
+  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
 
-   用 [replace] 策略来证明 [plus_swap']，除了无需 [assert (n + m = m + n)]
-   外和 [plus_swap] 一样。 *)
+Fixpoint bin_to_nat (m:bin) : nat
+  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
 
-Theorem plus_swap' : forall n m p : nat,
-  n + (m + p) = m + (n + p).
-Proof.
-  (* 请在此处解答 *) Admitted.
+(**    
+  (b) 为 [incr] 与 [bin_to_nat] 编写单元测试 (使用 [Example]) 并给出证明。
+  你至少需要编写单元测试用例测试 [incr] 与 [bin_to_nat] 的可交换性。
+*)
+
+(* 请在此处解答 *)
+
+(* 请勿修改下面这一行： *)
+Definition manual_grade_for_binary : option (nat*string) := None.
 (** [] *)
 
 (** **** 练习：3 星, standard, recommended (binary_commute)  
-
-    回忆一下你在 [Basics] 中为练习 [binary] 编写的 [incr] 和 [bin_to_nat]
-    函数。证明下图可交换。
-
+  在上一个练习中，你已经测试过 [incr] 与 [bin_to_nat] 的可交换性，
+  如下图所示 (这种图被称为 _'交换图' (Commutative Digram???)_，
+  在以后的课程中还会遇到)。
                             incr
               bin ----------------------> bin
                |                           |
@@ -444,38 +501,25 @@ Proof.
                v                           v
               nat ----------------------> nat
                              S
-
-    也就是说，一个二进制数先自增然后将它转换为（一进制）自然数，和先将它转换为
-    自然数后再自增会产生相同的结果。将你的定理命名为 [bin_to_nat_pres_incr]
-    （“pres”即“preserves”的简写，意为“保持原状”）。
-
-    在开始做这个练习之前，将你在 [binary] 练习的解中的定义复制到这里，
-    让这个文件可以被单独评分。若你想要更改你的原始定义以便让此属性更易证明，
-    请自便！ *)
+  现在，请将 [incr] 与 [bin_to_nat] 的可交换性表达成一个定理，
+  名为 [bin_to_nat_preserve_incr]。
+  你能给出它的证明吗?
+*)
 
 (* 请在此处解答 *)
 
 (* 请勿修改下面这一行： *)
 Definition manual_grade_for_binary_commute : option (nat*string) := None.
 (** [] *)
+(** **** 练习：5 星, advanced (binary_inverse) *)  
+(** (a) 完成函数 [nat_to_bin] 的定义，它将自然数 [n] 转换为二进制形式。*)
 
-(** **** 练习：5 星, advanced (binary_inverse)  
-
-    This is a further continuation of the previous exercises about
-    binary numbers.  You may find you need to go back and change your
-    earlier definitions to get things to work here.
-
-    (a) First, write a function to convert natural numbers to binary
-        numbers. *)
-
-Fixpoint nat_to_bin (n:nat) : bin
+Fixpoint nat_to_bin (n : nat) : bin
   (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
 
-(** Prove that, if we start with any [nat], convert it to binary, and
-    convert it back, we get the same [nat] we started with.  (Hint: If
-    your definition of [nat_to_bin] involved any extra functions, you
-    may need to prove a subsidiary lemma showing how such functions
-    relate to [nat_to_bin].) *)
+(**
+  证明如下定理。它的含义很直观，你应该能猜得到。
+*)
 
 Theorem nat_bin_nat : forall n, bin_to_nat (nat_to_bin n) = n.
 Proof.
@@ -484,33 +528,33 @@ Proof.
 (* 请勿修改下面这一行： *)
 Definition manual_grade_for_binary_inverse_a : option (nat*string) := None.
 
-(** (b) One might naturally expect that we should also prove the
-        opposite direction -- that starting with a binary number,
-        converting to a natural, and then back to binary should yield
-        the same number we started with.  However, this is not the
-        case!  Explain (in a comment) what the problem is. *)
+(** 
+  (b) 然而 [Theorem bin_nat_bin : forall b : bin, nat_to_bin (bin_to_nat b)] 
+  并不成立。请给出反例，并解释问题所在。
+*)
 
 (* 请在此处解答 *)
 
 (* 请勿修改下面这一行： *)
 Definition manual_grade_for_binary_inverse_b : option (nat*string) := None.
 
-(** (c) Define a normalization function -- i.e., a function
-        [normalize] going directly from [bin] to [bin] (i.e., _not_ by
-        converting to [nat] and back) such that, for any binary number
-        [b], converting [b] to a natural and then back to binary yields
-        [(normalize b)].  Prove it.  (Warning: This part is a bit
-        tricky -- you may end up defining several auxiliary lemmas.
-        One good way to find out what you need is to start by trying
-        to prove the main statement, see where you get stuck, and see
-        if you can find a lemma -- perhaps requiring its own inductive
-        proof -- that will allow the main proof to make progress.) Don't
-        define thi using nat_to_bin and bin_to_nat! *)
+(**
+  (c) 为了修复上述定理，我们先定义一个函数 [normalize]，
+  它接受一个 [bin]，并将其 "正规化"。
+  请完成函数 [normalize] 的定义，使得定理 [bin_nat_bin_eqb_normalize] 成立。
+  注意: 你可能需要先证明一些引理。
+*)
 
+Fixpoint normalize (b : bin) : bin
+  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+          
+Theorem bin_nat_bin_eqb_normalize : 
+  forall b : bin, nat_to_bin (bin_to_nat b) = normalize b.
+Proof.
+  (* 请在此处解答 *) Admitted.
 (* 请在此处解答 *)
 
 (* 请勿修改下面这一行： *)
 Definition manual_grade_for_binary_inverse_c : option (nat*string) := None.
 (** [] *)
-
 (* Fri Jul 19 00:32:19 UTC 2019 *)

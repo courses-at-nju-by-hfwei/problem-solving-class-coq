@@ -2,15 +2,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link href="common/css/sf.css" rel="stylesheet" type="text/css"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
 <title>Basics</title>
 </head>
-<link href="common/jquery-ui/jquery-ui.css" rel="stylesheet">
-<script src="common/jquery-ui/external/jquery/jquery.js"></script>
-<script src="common/jquery-ui/jquery-ui.js"></script>
-<script src="common/toggleproofs.js"></script>
-<link href="common/css/lf.css" rel="stylesheet" type="text/css"/>
 
 <body>
 
@@ -182,13 +177,13 @@
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">next_day</span> (<span class="id" title="var">d</span>:<span class="id" title="var">day</span>) : <span class="id" title="var">day</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">d</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">monday</span>    =&gt; <span class="id" title="var">tuesday</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">tuesday</span>   =&gt; <span class="id" title="var">wednesday</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">wednesday</span> =&gt; <span class="id" title="var">thursday</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">thursday</span>  =&gt; <span class="id" title="var">friday</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">friday</span>    =&gt; <span class="id" title="var">saturday</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">saturday</span>  =&gt; <span class="id" title="var">sunday</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">sunday</span>    =&gt; <span class="id" title="var">monday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">monday</span>    ⇒ <span class="id" title="var">tuesday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">tuesday</span>   ⇒ <span class="id" title="var">wednesday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">wednesday</span> ⇒ <span class="id" title="var">thursday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">thursday</span>  ⇒ <span class="id" title="var">friday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">friday</span>    ⇒ <span class="id" title="var">saturday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">saturday</span>  ⇒ <span class="id" title="var">sunday</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">sunday</span>    ⇒ <span class="id" title="var">monday</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -386,22 +381,22 @@
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">negb</span> (<span class="id" title="var">b</span>:<span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">b</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">true</span> =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">false</span> =&gt; <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">true</span> ⇒ <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">false</span> ⇒ <span class="id" title="var">true</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">andb</span> (<span class="id" title="var">b1</span>:<span class="id" title="var">bool</span>) (<span class="id" title="var">b2</span>:<span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">b1</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">true</span> =&gt; <span class="id" title="var">b2</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">false</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">true</span> ⇒ <span class="id" title="var">b2</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">false</span> ⇒ <span class="id" title="var">false</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">orb</span> (<span class="id" title="var">b1</span>:<span class="id" title="var">bool</span>) (<span class="id" title="var">b2</span>:<span class="id" title="var">bool</span>) : <span class="id" title="var">bool</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">b1</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">true</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">false</span> =&gt; <span class="id" title="var">b2</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">true</span> ⇒ <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">false</span> ⇒ <span class="id" title="var">b2</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -532,7 +527,7 @@
 
 <div class="paragraph"> </div>
 
-  函数 <span class="inlinecode"><span class="id" title="var">negb</span></span> 的类型是 <i>'函数类型'</i> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>。
+  函数 <span class="inlinecode"><span class="id" title="var">negb</span></span> 的类型是 <i>'函数类型'</i> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>。
   这是由 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型构成的复合类型，
   它告诉我们： <span class="inlinecode"><span class="id" title="var">negb</span></span> 是一个函数，它接受一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数，
   返回一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的值。
@@ -550,19 +545,19 @@
 
 <div class="paragraph"> </div>
 
-  类似地，<span class="inlinecode"><span class="id" title="var">andb</span></span> 的类型是 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>，
+  类似地，<span class="inlinecode"><span class="id" title="var">andb</span></span> 的类型是 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span>，
   它告诉我们：<span class="inlinecode"><span class="id" title="var">andb</span></span> 是一个函数，它接受两个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数，
   返回一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的值。
 
 <div class="paragraph"> </div>
 
-  关于 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 的另一种“更函数式的”理解方式，
+  关于 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 的另一种“更函数式的”理解方式，
   我们将在函数式程序设计章节中介绍。
   此处仅简单提及。
-  实际上，<span class="inlinecode">-&gt;</span> 运算符是右结合的。
-  也就是说，<span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 实际上是 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode">(<span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span>。
+  实际上，<span class="inlinecode">→</span> 运算符是右结合的。
+  也就是说，<span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 实际上是 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode">(<span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span>)</span>。
   它告诉我们：<span class="inlinecode"><span class="id" title="var">andb</span></span> 是一个函数，它接受一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数，
-  返回一个类型为 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 的函数 
+  返回一个类型为 <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 的函数 
   (没错，在函数式程序设计中，函数可以作为返回值。是不是很优雅？)。
   这个返回的函数又可以接受一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的参数，返回一个 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的值。
 
@@ -670,8 +665,8 @@
 </ul>
   这里，<span class="inlinecode"><span class="id" title="var">q</span></span> 为变量，它的类型是 <span class="inlinecode"><span class="id" title="var">rgb</span></span> (Coq 可以自动推断出这一点)。
   当 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> 与 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">xxx</span></span> 匹配时，<span class="inlinecode"><span class="id" title="var">q</span></span> 被 <i>'绑定'(bind)_ 到 <span class="inlinecode"><span class="id" title="var">xxx</span></span>。
-  你可以在 <span class="inlinecode">=&gt;</span> 的右边使用 <span class="inlinecode"><span class="id" title="var">q</span></span>。
-  在本例中，我们并没有在 <span class="inlinecode">=&gt;</span> 的右边使用 <span class="inlinecode"><span class="id" title="var">q</span></span>。
+  你可以在 <span class="inlinecode">⇒</span> 的右边使用 <span class="inlinecode"><span class="id" title="var">q</span></span>。
+  在本例中，我们并没有在 <span class="inlinecode">⇒</span> 的右边使用 <span class="inlinecode"><span class="id" title="var">q</span></span>。
   在这种情况下，我们可以使用通配符 <span class="inlinecode"><span class="id" title="var">_</span></span> 代替 <span class="inlinecode"><span class="id" title="var">q</span></span>。
 
 </div>
@@ -680,9 +675,9 @@
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">monochrome</span> (<span class="id" title="var">c</span> : <span class="id" title="var">color</span>) : <span class="id" title="var">bool</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">black</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">white</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="var">q</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">black</span> ⇒ <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">white</span> ⇒ <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="var">q</span> ⇒ <span class="id" title="var">false</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -697,10 +692,10 @@
 <div class="code">
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">isred</span> (<span class="id" title="var">c</span> : <span class="id" title="var">color</span>) : <span class="id" title="var">bool</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">c</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">black</span> =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">white</span> =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="tactic">red</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="var">_</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">black</span> ⇒ <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">white</span> ⇒ <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="tactic">red</span> ⇒ <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">primary</span> <span class="id" title="var">_</span> ⇒ <span class="id" title="var">false</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 </div>
 
@@ -863,8 +858,8 @@
 <div class="code">
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">pred</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> ⇒ <span class="id" title="var">n'</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -886,8 +881,8 @@
 <div class="code">
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">plus</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">m</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">S</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">m</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> ⇒ <span class="id" title="var">S</span> (<span class="id" title="var">plus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -954,8 +949,8 @@
 <div class="code">
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">mult</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">O</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="var">plus</span> <span class="id" title="var">m</span> (<span class="id" title="var">mult</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> ⇒ <span class="id" title="var">plus</span> <span class="id" title="var">m</span> (<span class="id" title="var">mult</span> <span class="id" title="var">n'</span> <span class="id" title="var">m</span>)<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1002,9 +997,9 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">minus</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span>, <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">O</span>   , <span class="id" title="var">_</span>    =&gt; <span class="id" title="var">O</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">_</span> , <span class="id" title="var">O</span>    =&gt; <span class="id" title="var">n</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">minus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span>   , <span class="id" title="var">_</span>    ⇒ <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">_</span> , <span class="id" title="var">O</span>    ⇒ <span class="id" title="var">n</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span>, <span class="id" title="var">S</span> <span class="id" title="var">m'</span> ⇒ <span class="id" title="var">minus</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1105,13 +1100,13 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">eqb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> ⇒ <span class="id" title="var">false</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt; <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">eqb</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> ⇒ <span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> ⇒ <span class="id" title="var">eqb</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
@@ -1149,9 +1144,9 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">evenb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">O</span>        =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span>      =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) =&gt; <span class="id" title="var">evenb</span> <span class="id" title="var">n'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span>        ⇒ <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">O</span>      ⇒ <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> (<span class="id" title="var">S</span> <span class="id" title="var">n'</span>) ⇒ <span class="id" title="var">evenb</span> <span class="id" title="var">n'</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
@@ -1189,11 +1184,11 @@
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">leb</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> =&gt;<br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">true</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> ⇒<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">m</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> =&gt; <span class="id" title="var">false</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> =&gt; <span class="id" title="var">leb</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">false</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">m'</span> ⇒ <span class="id" title="var">leb</span> <span class="id" title="var">n'</span> <span class="id" title="var">m'</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
@@ -1328,14 +1323,14 @@
 <li> <span class="inlinecode"><span class="id" title="var">plus_O_n</span></span> 是定理的名字。以后，你可以通过这个名字引用该定理。
 
 </li>
-<li> <span class="inlinecode"><span class="id" title="keyword">forall</span></span> 是一阶谓词逻辑里的全称量词符号，读作“对于所有”。
+<li> <span class="inlinecode"><span class="id" title="keyword">∀</span></span> 是一阶谓词逻辑里的全称量词符号，读作“对于所有”。
 
 </li>
 </ul>
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_O_n</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 0 + <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_O_n</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 0 + <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>. &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. &nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. &nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>. 
 <br/>
 </div>
@@ -1382,7 +1377,7 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_O_n'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 0 + <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_O_n'</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 0 + <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -1395,7 +1390,7 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_0_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>, 0 * <span class="id" title="var">n</span> = 0.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_0_l</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>, 0 × <span class="id" title="var">n</span> = 0.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -1409,7 +1404,7 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_l</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>, 1 + <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_l</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>, 1 + <span class="id" title="var">n</span> = <span class="id" title="var">S</span> <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 </div>
 
@@ -1438,13 +1433,13 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_id_example</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>:<span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span> -&gt;<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_id_example</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>:<span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span> →<br/>
 &nbsp;&nbsp;<span class="id" title="var">n</span> + <span class="id" title="var">n</span> = <span class="id" title="var">m</span> + <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> → <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -1455,13 +1450,13 @@
 
 <div class="paragraph"> </div>
 
-  <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">H</span></span> 策略中的箭头 <span class="inlinecode">-&gt;</span> 表示从左往右应用 Rewriting，
+  <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">H</span></span> 策略中的箭头 <span class="inlinecode">→</span> 表示从左往右应用 Rewriting，
   即在目标中，将等式 <span class="inlinecode"><span class="id" title="var">H</span></span> 的左边 (即，<span class="inlinecode"><span class="id" title="var">n</span></span>) 替换成等式 <span class="inlinecode"><span class="id" title="var">H</span></span> 的右边 (即，<span class="inlinecode"><span class="id" title="var">m</span></span>)。
   如果要改变 Rewriting 的方向，则使用 <span class="inlinecode">&lt;-</span> 箭头。
 
 <div class="paragraph"> </div>
 
-  另外，<span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> 默认为 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">-&gt;</span> <span class="inlinecode"><span class="id" title="var">H</span></span>。
+  另外，<span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> 默认为 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">H</span></span>。
 
 <div class="paragraph"> </div>
 
@@ -1474,8 +1469,8 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_id_exercise</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">o</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span> -&gt; <span class="id" title="var">m</span> = <span class="id" title="var">o</span> -&gt; <span class="id" title="var">n</span> + <span class="id" title="var">m</span> = <span class="id" title="var">m</span> + <span class="id" title="var">o</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_id_exercise</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">o</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span> → <span class="id" title="var">m</span> = <span class="id" title="var">o</span> → <span class="id" title="var">n</span> + <span class="id" title="var">m</span> = <span class="id" title="var">m</span> + <span class="id" title="var">o</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
  <span class="id" title="var">Admitted</span>.<br/>
 </div>
@@ -1508,11 +1503,11 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_O_plus</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;(0 + <span class="id" title="var">n</span>) * <span class="id" title="var">m</span> = <span class="id" title="var">n</span> * <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_O_plus</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;(0 + <span class="id" title="var">n</span>) × <span class="id" title="var">m</span> = <span class="id" title="var">n</span> × <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> -&gt; <span class="id" title="var">plus_O_n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> → <span class="id" title="var">plus_O_n</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -1532,9 +1527,9 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_S_1</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
-&nbsp;&nbsp;<span class="id" title="var">m</span> = <span class="id" title="var">S</span> <span class="id" title="var">n</span> -&gt;<br/>
-&nbsp;&nbsp;<span class="id" title="var">m</span> * (1 + <span class="id" title="var">n</span>) = <span class="id" title="var">m</span> * <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_S_1</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">m</span> = <span class="id" title="var">S</span> <span class="id" title="var">n</span> →<br/>
+&nbsp;&nbsp;<span class="id" title="var">m</span> × (1 + <span class="id" title="var">n</span>) = <span class="id" title="var">m</span> × <span class="id" title="var">m</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="var">Admitted</span>.<br/>
 
@@ -1576,7 +1571,7 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0_firsttry</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0_firsttry</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;(<span class="id" title="var">n</span> + 1) =? 0 = <span class="id" title="var">false</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>.<br/>
@@ -1607,7 +1602,7 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;(<span class="id" title="var">n</span> + 1) =? 0 = <span class="id" title="var">false</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
@@ -1642,7 +1637,7 @@
   使得证明的结构更为清晰。
   从语法上讲，<span class="inlinecode">-</span> 并不是必须的。
   但是，强烈建议大家在使用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 策略时，同时使用 <span class="inlinecode">-</span>。
-  如果需要嵌套地分情况分析，可以使用 <span class="inlinecode">+</span>、<span class="inlinecode">*</span>、<span class="inlinecode">{}</span> 等 (我们马上就会碰到)。
+  如果需要嵌套地分情况分析，可以使用 <span class="inlinecode">+</span>、<span class="inlinecode">×</span>、<span class="inlinecode">{}</span> 等 (我们马上就会碰到)。
 
 <div class="paragraph"> </div>
 
@@ -1654,7 +1649,7 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_involutive</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>,<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">negb_involutive</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">negb</span> (<span class="id" title="var">negb</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
@@ -1683,7 +1678,7 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_commutative</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_commutative</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Eb</span>. &nbsp;&nbsp;- <span class="id" title="tactic">destruct</span> <span class="id" title="var">c</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Ec</span>. &nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">reflexivity</span>.<br/>
@@ -1701,7 +1696,7 @@
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_commutative'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_commutative'</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Eb</span>.<br/>
@@ -1723,7 +1718,7 @@
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb3_exchange</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span>, <span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) <span class="id" title="var">d</span> = <span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">d</span>) <span class="id" title="var">c</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span>, <span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) <span class="id" title="var">d</span> = <span class="id" title="var">andb</span> (<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">d</span>) <span class="id" title="var">c</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> <span class="id" title="var">d</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">b</span> <span class="id" title="var">eqn</span>:<span class="id" title="var">Eb</span>.<br/>
@@ -1765,7 +1760,7 @@
 
 <br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="var">eqb</span>.<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0'</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_1_neq_0'</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;(<span class="id" title="var">n</span> + 1) =? 0 = <span class="id" title="var">false</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> [|<span class="id" title="var">n</span>].<br/>
@@ -1777,13 +1772,13 @@
 </div>
 
 <div class="doc">
-如果没有需要命名的参数，我们只需写上 <span class="inlinecode">[]</span> 即可。 
+如果没有需要命名的参数，我们只需写 <span class="inlinecode">[]</span>。 
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_commutative''</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>, <span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">andb</span> <span class="id" title="var">c</span> <span class="id" title="var">b</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> [] [].<br/>
 &nbsp;&nbsp;- <span class="id" title="tactic">reflexivity</span>.<br/>
@@ -1800,10 +1795,10 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_true_elim2</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
-&nbsp;&nbsp;<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">true</span> -&gt; <span class="id" title="var">c</span> = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_true_elim2</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">true</span> → <span class="id" title="var">c</span> = <span class="id" title="var">true</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
@@ -1814,10 +1809,10 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">zero_nbeq_plus_1</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">zero_nbeq_plus_1</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;0 =? (<span class="id" title="var">n</span> + 1) = <span class="id" title="var">false</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
@@ -1836,11 +1831,11 @@
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">identity_fn_applied_twice</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">f</span> : <span class="id" title="var">bool</span> -&gt; <span class="id" title="var">bool</span>),<br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">forall</span> (<span class="id" title="var">x</span> : <span class="id" title="var">bool</span>), <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">x</span>) -&gt;<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>), <span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">f</span> : <span class="id" title="var">bool</span> → <span class="id" title="var">bool</span>),<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">∀</span> (<span class="id" title="var">x</span> : <span class="id" title="var">bool</span>), <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">x</span>) →<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>), <span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">b</span>) = <span class="id" title="var">b</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
@@ -1856,7 +1851,7 @@
 
   声明并证明定理 <span class="inlinecode"><span class="id" title="var">negation_fn_applied_twice</span></span>。
   它与 <span class="inlinecode"><span class="id" title="var">identity_fn_applied_twice</span></span>类似，
-  但是第二个前提改为 <span class="inlinecode"><span class="id" title="keyword">forall</span></span> <span class="inlinecode">(<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">bool</span>),</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">negb</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。 
+  但是第二个前提改为 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode">(<span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">bool</span>),</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">negb</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。 
 </div>
 <div class="code">
 
@@ -1865,7 +1860,7 @@
 <br/>
 <span class="id" title="var">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">String</span>. 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_negation_fn_applied_twice</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_negation_fn_applied_twice</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
 </div>
 
 <div class="doc">
@@ -1873,9 +1868,6 @@
 <div class="paragraph"> </div>
 
 <a name="lab28"></a><h4 class="section">练习：3 星, standard, optional (andb_eq_orb)</h4>
-
-
-<div class="paragraph"> </div>
 
     请证明定理 <span class="inlinecode"><span class="id" title="var">andb_eq_orb</span></span>。
 
@@ -1888,105 +1880,17 @@
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_eq_orb</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">forall</span> (<span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>),<br/>
-&nbsp;&nbsp;(<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">orb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) -&gt;<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">b</span> <span class="id" title="var">c</span> : <span class="id" title="var">bool</span>),<br/>
+&nbsp;&nbsp;(<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span> = <span class="id" title="var">orb</span> <span class="id" title="var">b</span> <span class="id" title="var">c</span>) →<br/>
 &nbsp;&nbsp;<span class="id" title="var">b</span> = <span class="id" title="var">c</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab29"></a><h4 class="section">练习：3 星, standard (binary)</h4>
-
-  下面这道题目可以检验你是否掌握了本节的主要内容。
-  不要怕。正是这些让你感到有些困难的题目在悄悄地锻炼你的能力。
-
-<div class="paragraph"> </div>
-
-  我们考虑自然数的一种 <i>'二进制' (Binary)_ 表示法：
-  一个二进制数是由构造子 (即，构造函数) <span class="inlinecode"><span class="id" title="var">A</span></span> (表示 0) 与 <span class="inlinecode"><span class="id" title="var">B</span></span> (表示 1)
-  组成的序列，且该序列以构造子 <span class="inlinecode"><span class="id" title="var">Z</span></span> 结束。
-  (能理解这句话吗? 我实在不知道该怎么表达了。
-  它的英文是：“treating a binary number as a sequence of constructors <span class="inlinecode"><span class="id" title="var">A</span></span> and <span class="inlinecode"><span class="id" title="var">B</span></span> (representing 0s and 1s), terminated by a <span class="inlinecode"><span class="id" title="var">Z</span></span>.”。
-  Help me if you can!)
-
-<div class="paragraph"> </div>
-
-  在我们定义的 <i>'一进制' (unary)_ <span class="inlinecode"><span class="id" title="var">nat</span></span> 中，
-  一个一进制数是由构造子 <span class="inlinecode"><span class="id" title="var">S</span></span> 组成的序列，且该序列以构造子 <span class="inlinecode"><span class="id" title="var">O</span></span> 结束。
-
-<div class="paragraph"> </div>
-
-  看下面的例子 (注意，低位 (low-order bit) 在左，高位 (high-order bit) 在右)：
-
-<div class="paragraph"> </div>
-
-        decimal            binary                           unary
-           0                   Z                              O
-           1                 B Z                            S O
-           2              A (B Z)                        S (S O)
-           3              B (B Z)                     S (S (S O))
-           4           A (A (B Z))                 S (S (S (S O)))
-           5           B (A (B Z))              S (S (S (S (S O))))
-           6           A (B (B Z))           S (S (S (S (S (S O)))))
-           7           B (B (B Z))        S (S (S (S (S (S (S O))))))
-           8        A (A (A (B Z)))    S (S (S (S (S (S (S (S O)))))))
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">bin</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;| <span class="id" title="var">Z</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">A</span> (<span class="id" title="var">n</span> : <span class="id" title="var">bin</span>)<br/>
-&nbsp;&nbsp;| <span class="id" title="var">B</span> (<span class="id" title="var">n</span> : <span class="id" title="var">bin</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-(a) 请给出递增函数 <span class="inlinecode"><span class="id" title="var">incr</span></span> 与转换函数 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> 的定义。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">incr</span> (<span class="id" title="var">m</span>:<span class="id" title="var">bin</span>) : <span class="id" title="var">bin</span><br/>
-&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">bin_to_nat</span> (<span class="id" title="var">m</span>:<span class="id" title="var">bin</span>) : <span class="id" title="var">nat</span><br/>
-&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-
-<div class="paragraph"> </div>
-
-  (b) 为 <span class="inlinecode"><span class="id" title="var">incr</span></span> 与 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> 编写单元测试 (使用 <span class="inlinecode"><span class="id" title="keyword">Example</span></span>) 并给出证明。
-  你至少需要编写单元测试用例测试 <span class="inlinecode"><span class="id" title="var">incr</span></span> 与 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> 的可交换性。
-
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>*<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
-
-<br/>
 </div>
 </div>
 
