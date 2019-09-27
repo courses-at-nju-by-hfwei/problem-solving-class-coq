@@ -1,11 +1,25 @@
 (** * Logic: Coq 中的逻辑系统 *)
 
-(* TODO(OlingCat): 需要统一 claim、statement 的译法。 *)
-
 Set Warnings "-notation-overridden,-parsing".
-From LF Require Export Tactics.
+(** From LF Require Export Tactics. *)
 
 (**
+  "逻辑是不可战胜的，因为要想战胜它，你也要依靠逻辑" By 谁说的来着?
+  
+  本节介绍一阶谓词逻辑 (这种说法不严格，我们放在本节的最后部分讨论) 
+  的 _'自然推理系统' (Natural Inference? System)_。
+  系统，封闭之结构也;
+  推理，证明之路径也;
+  自然，“无它，唯手熟尔???”。
+  这个推理系统，我们基本每天都在使用 (或者误用)。
+  本节只不过是告诉你如何在 Coq 中使用这个推理系统证明定理。
+  
+  在一阶谓词逻辑中，我们会考虑各种 _'命题' (Proposition)_，包括
+  _'合取' (Conjunctive?)_ 命题、_'析取' (Disjunctive)_ 命题、
+  _'否定' (Negative)_ 命题、_'蕴含 (Implication)'_ 命题、
+  _'等价' (Equivalence)_ 命题、_'相等性' (Equality)_ 命题、
+  _'存在' (Existence)_ 命题 以及 _'全称' (Forall)_ 命题。 
+    
     在前面的章节中，我们已经见过很多对事实的断言（即_'命题'_）
     以及如何用证据展示其正确性（即_'证明'_）的例子了。特别是，
     我们证明了大量形如 [e1 = e2] 的_'相等关系命题'_、形如 [P -> Q]
