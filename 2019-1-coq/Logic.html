@@ -42,13 +42,15 @@ From LF Require Export Tactics.
 
 <div class="paragraph"> </div>
 
-  本节介绍一阶谓词逻辑 (这种说法不严格，我们放在本节的最后部分讨论) 
+  本节介绍一阶谓词逻辑 
+  (说它是一阶谓词逻辑并不严格，我们在本节的最后部分讨论) 
   的 <i>'自然推理系统' (Natural Inference? System)_。
   系统，封闭之结构也;
   推理，证明之路径也;
   自然，“无它，唯手熟尔???”。
   这个推理系统，我们基本每天都在使用 (或者误用)。
-  本节只不过是告诉你如何在 Coq 中使用这个推理系统证明定理。
+  本节只不过是告诉你如何在 Coq 中使用这个推理系统证明定理 
+  (有 Coq 盯着你，你就再也不会误用它们了)。
 
 <div class="paragraph"> </div>
 
@@ -60,37 +62,31 @@ From LF Require Export Tactics.
 
 <div class="paragraph"> </div>
 
-    在前面的章节中，我们已经见过很多对事实的断言（即<i>'命题'</i>）
-    以及如何用证据展示其正确性（即<i>'证明'</i>）的例子了。特别是，
-    我们证明了大量形如 <span class="inlinecode"><span class="id" title="var">e1</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">e2</span></span> 的<i>'相等关系命题'</i>、形如 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>
-    的蕴含式、以及形如 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> 的量化命题。
+  关于逻辑，首先需要介绍的一个概念就是 <i>'命题' (Proposition)_。
+  什么是命题? 命题就是可以判断真假的语句。
+  什么是语句? 语句是不含自由变量的公式。
+  什么是真? 什么是假? 这个问题就深了。我不敢妄言。
+  在这里，我们采用直觉的定义方式，不深究真与假的概念。
+  所谓命题，就是可以判断真假的不含自由变量的公式。
+  (又有学生问: 什么是变量? 什么是自由变量? 什么是公式?)
+  我们之前证明过的 <span class="inlinecode"><span class="id" title="keyword">Example</span></span>、<span class="inlinecode"><span class="id" title="keyword">Lemma</span></span>、<span class="inlinecode"><span class="id" title="keyword">Theorem</span></span> 都是命题。
+  如果这个定义还是让你疑惑重重，你不妨采取下面这种定义方式:
+  "我不知道什么是命题，但是当我见到它的时候，我就知道了"
+  ("I Know It When I See It")
 
 <div class="paragraph"> </div>
 
-    在深入细节之前，我们先来探讨一下 Coq 中数学表达式的地位。
-    回忆一下，Coq 是一门拥有<i>'类型'</i>的语言，也就是说，一切有意义的
-    表达式都具有一个相应的类型。逻辑表达也不例外，我们试图在 Coq
-    中证明的一切语句都有名为 <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> 的类型，即<i>'命题类型'</i>。我们
-    可以用 <span class="inlinecode"><span class="id" title="keyword">Check</span></span> 指令来查看：  
+
+<div class="paragraph"> </div>
+
+  在 Coq 中，作为一个表达式，命题也是有类型的。
+  它的类型是 <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>，即 <i>'命题类型'</i>。
+
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Check</span> 3 = 3.<br/>
 
 <br/>
 <span class="id" title="keyword">Check</span> <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> + <span class="id" title="var">m</span> = <span class="id" title="var">m</span> + <span class="id" title="var">n</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-注意：<i>'所有'</i>语法形式良好的命题，无论是否为真，其类型均为 <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>。 
-<div class="paragraph"> </div>
-
- 简单来说，<i>'是'</i>一个命题与该命题<i>'可以证明'</i>是两回事。 
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Check</span> 2 = 2.<br/>
@@ -99,47 +95,41 @@ From LF Require Export Tactics.
 <span class="id" title="keyword">Check</span> <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = 2.<br/>
 
 <br/>
-<span class="id" title="keyword">Check</span> 3 = 4.<br/>
-
-<br/>
 </div>
 
 <div class="doc">
-除了拥有类型之外，命题还是<i>'一等对象（First-Class Object）'</i>，
-    即在 Coq 的世界中，我们可以像操作其它实体那样操作命题。 
+
 <div class="paragraph"> </div>
 
- 到目前为止，我们已经知道命题可以出现在 <span class="inlinecode"><span class="id" title="keyword">Theorem</span></span>（还有 <span class="inlinecode"><span class="id" title="keyword">Lemma</span></span> 以及
-    <span class="inlinecode"><span class="id" title="keyword">Example</span></span>）的声明中了。 
+  <i>'是'</i>一个命题与该命题<i>'为真'</i> (或者说，<i>'可被证明' (Provable)_) 是两回事。
+  后者是计算机科学与数理逻辑的重要研究对象。 
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  在 Coq 中，命题是 <i>'一等对象（First-Class Object）'</i>，
+  我们可以像操作其它实体那样操作命题，比如:
+<ul class="doclist">
+<li> (1) 为命题命名，并在之后引用它的名字。
+
+</li>
+<li> (2) 命题可以作为函数的返回值。 
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+ (1) 我们可以用 <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> 为命题命名，并在之后引用它的名字。
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_2_2_is_4</span> :<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">plus_fact</span> : <span class="id" title="keyword">Prop</span> := <br/>
 &nbsp;&nbsp;2 + 2 = 4.<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-不过命题还可以用在其它地方。例如，我们可以用 <span class="inlinecode"><span class="id" title="keyword">Definition</span></span>
-    为命题取名，就像为其它表达式取名一样。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">plus_fact</span> : <span class="id" title="keyword">Prop</span> := 2 + 2 = 4.<br/>
 <span class="id" title="keyword">Check</span> <span class="id" title="var">plus_fact</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-之后我们可以在任何需要此命题的地方使用它们名字——例如，作为一个
-    <span class="inlinecode"><span class="id" title="keyword">Theorem</span></span> 声明中的断言： 
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_fact_is_true</span> :<br/>
@@ -150,11 +140,20 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-我们也可以写出<i>'参数化'</i>的命题 -- 也就是一个接受某些类型的参数，
-    然后返回一个命题的函数。 
+
 <div class="paragraph"> </div>
 
- 例如，以下函数接受某个数字，返回一个命题断言该数字等于 3： 
+  (2) 命题可以作为函数的返回值。这类函数接受某些类型的参数，返回一个命题。
+  实际上，这类函数定义了其参数的某种<i>'性质' (Property)_。 
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  例如，函数 <span class="inlinecode"><span class="id" title="var">is_three</span></span> 接受自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>，返回一个命题断言该数字等于 3。
+  它定义了自然数的"是否等于3"的性质 (是的，这个性质很无聊)。
+
 </div>
 <div class="code">
 
@@ -164,14 +163,24 @@ From LF Require Export Tactics.
 <span class="id" title="keyword">Check</span> <span class="id" title="var">is_three</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">three_is_three</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">is_three</span>(3).<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">is_three</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-在 Coq 中，返回命题的函数可以说是定义了其参数的<i>'性质'</i>。
+我们还没有介绍过 <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> 证明策略。但是聪明的你应该能猜出它的含义与用法。
+<div class="paragraph"> </div>
+
 
 <div class="paragraph"> </div>
 
-    例如，以下（多态的）性质定义了常见的 <i>'单射函数'</i> 的概念。 
+  函数 <span class="inlinecode"><span class="id" title="var">injective</span></span> 定义了一个函数是否是 <i>'单射函数' (Injective Functions)_。
+  定义中的 "<span class="inlinecode">{<span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span>}</span>" 表示 <span class="inlinecode"><span class="id" title="var">A</span></span>、<span class="inlinecode"><span class="id" title="var">B</span></span> 是两个参数化类型，
+  我们会在后续介绍，这里可以当作它们不存在。
+
 </div>
 <div class="code">
 
@@ -180,37 +189,31 @@ From LF Require Export Tactics.
 &nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">A</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">f</span> <span class="id" title="var">y</span> → <span class="id" title="var">x</span> = <span class="id" title="var">y</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">succ_inj</span> : <span class="id" title="var">injective</span> <span class="id" title="var">S</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">injection</span> <span class="id" title="var">H</span> <span class="id" title="keyword">as</span> <span class="id" title="var">H1</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H1</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
 </div>
 
 <div class="doc">
-相等关系运算符 <span class="inlinecode">=</span> 也是一个返回 <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> 的函数。
 
 <div class="paragraph"> </div>
 
-    表达式 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 只是 <span class="inlinecode"><span class="id" title="var">eq</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> 的语法糖（它使用 Coq 的 <span class="inlinecode"><span class="id" title="keyword">Notation</span></span>
-    机制来定义）。 由于 <span class="inlinecode"><span class="id" title="var">eq</span></span> 可被用于任何类型的元素，因此它也是多态的： 
+  相等关系运算符 <span class="inlinecode">=</span> 也是一个返回 <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> 的函数。
+  表达式 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 只是 <span class="inlinecode"><span class="id" title="var">eq</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> 的 <i>'语法糖' (Syntax Sugar?)_。
+
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Check</span> @<span class="id" title="var">eq</span>.<br/>
-
+<span class="id" title="keyword">Check</span> @<span class="id" title="var">eq</span>. 
 <br/>
 </div>
 
 <div class="doc">
-（注意我们写的是 <span class="inlinecode">@<span class="id" title="var">eq</span></span> 而非 <span class="inlinecode"><span class="id" title="var">eq</span></span>：<span class="inlinecode"><span class="id" title="var">eq</span></span> 的类型参数 <span class="inlinecode"><span class="id" title="var">A</span></span>
-    是隐式声明的，因此我们需要关掉隐式参数以便看到 <span class="inlinecode"><span class="id" title="var">eq</span></span> 的完整类型。） 
+
+<div class="paragraph"> </div>
+
+  你可以使用 <span class="inlinecode"><span class="id" title="keyword">Print</span></span> <span class="inlinecode"><span class="id" title="var">eq</span></span> 提前偷窥一下 <span class="inlinecode"><span class="id" title="var">eq</span></span> 的定义。
+  怎么样? 看不懂吧。稍安勿躁。
+
 </div>
 <div class="code">
-
-<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">eq</span>.<br/>
 </div>
 
 <div class="doc">
