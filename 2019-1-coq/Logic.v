@@ -124,7 +124,8 @@ Print eq.
 (** ** 合取 *)
 
 (** 
-  命题 [A /\ B] 表示命题 [A] 与 [B] 的_'合取'_（即_'逻辑与'_）。
+  命题 [A /\ B] 表示命题 [A] 与 [B] 的_'合取'_（即_'逻辑与'_）
+  [A /\ B] 为真当且仅当 [A] 与 [B] 均为真。
   [A /\ B] 是 [and A B] 的语法糖。
 *)
 
@@ -146,7 +147,7 @@ Qed.
 
 (**
   对于任意命题 [A] 和 [B]，如果 [A] 为真且 [B] 为真，则 [A /\ B] 也为真。
-  这个推理规则被称为 "and-intro"。
+  这个推理规则被称为 "/\-intro"。
   "intro" 表示在推导过程中 _引入_ 了 "and"。
 *)
 
@@ -211,9 +212,13 @@ Proof.
 Admitted.
 (** [] *)
 
-(** 显然，[A /\ B] 蕴含 [A]，也蕴含 [B]。*)
+(** 
+  显然，[A /\ B] 蕴含 [A]，也蕴含 [B]。
+  接下来两个引理 ([and_elim_left] 与 [and_elim_right])
+  构成 "/\-elimination" 规则。
+*)
 
-Lemma proj1 : forall P Q : Prop,
+Lemma and_elim_left : forall P Q : Prop,
   P /\ Q -> P.
 Proof.
   intros P Q [HP HQ].
@@ -221,7 +226,7 @@ Proof.
 Qed.
 
 (** **** 练习：1 星, standard, optional (proj2)  *)
-Lemma proj2 : forall P Q : Prop,
+Lemma and_elim_right : forall P Q : Prop,
   P /\ Q -> Q.
 Proof.
   (* 请在此处解答 *)
@@ -255,68 +260,86 @@ Admitted.
 (* ================================================================= *)
 (** ** 析取 *)
 
-(** 另一个重要的联结词是_析取_，即两个命题的_'逻辑或'_：若 [A] 或 [B]
-    二者之一为真，则 [A \/ B] 为真。（这中中缀记法表示 [or A B]，其中
-    [or : Prop -> Prop -> Prop]。） *)
+(** 
+  命题 [A \/ B] 表示 [A] 与 [B] 的 _'析取' (即 "逻辑或")_。
+  [A \/ B] 为真当且仅当 [A] 与 [B] 中至少有一个为真。
+  [A \/ B] 是 [or A B] 的语法糖。
+*)
+Check or. (* 你应该能猜得到。*)
+Print or. 
+(* 偷窥一下 [or] 的定义。你猜到了吗? 注意 [or_introl] 与 [or_intror]。*)
 
-(** 为了在证明中使用析取前提，我们需要分类讨论，它与 [nat]
-    或其它数据类型一样，都可以显示地通过 [destruct] 或隐式地通过 [intros]
-    模式来拆分： *)
+(** 
+  要证明 [A \/ B] 成立，只需要证明 [A] 成立或者 [B] 成立。
+  这就是 [\/-intro-left] 与 [\/-intro-right] 规则。
+  在 Coq 中，我们可以分别使用 [left] 与 [right] 策略选择要证明的子目标。
+*)
 
-Lemma or_example :
-  forall n m : nat, n = 0 \/ m = 0 -> n * m = 0.
-Proof.
-  (* [Hn | Hm] 会隐式地对 [n = 0 \/ m = 0] 进行分类讨论 *)
-  intros n m [Hn | Hm].
-  - (* 在这里 [n = 0] *)
-    rewrite Hn. reflexivity.
-  - (* 在这里 [m = 0] *)
-    rewrite Hm. rewrite <- mult_n_O.
-    reflexivity.
-Qed.
-
-(** 相应地，要证明某个析取命题成立，我们需要证明其任意一边的命题成立。
-    我们可以用 [left] 和 [right] 策略来选取命题。顾名思义，[left]
-    会选取待析取证命题的左边，而 [right] 则会选取它的右边。
-    下面是一种平凡的用法... *)
-
-Lemma or_intro : forall A B : Prop, A -> A \/ B.
+Lemma or_intro_left : forall A B : Prop, A -> A \/ B.
 Proof.
   intros A B HA.
   left.
   apply HA.
 Qed.
 
-(** ...而这个更有趣的例子则同时需要 [left] 和 [right]： *)
+(** **** 练习：1 星, standard (or_intro_right)  *)
+(* 请给出引理 [or_intro_right] 并证明。*)
+  (* 请在此处解答 *)
+(** [] *)
+
+(** 引理 [zero_or_succ] 需要同时使用 [left] 和 [right]。*)
 
 Lemma zero_or_succ :
   forall n : nat, n = 0 \/ n = S (pred n).
 Proof.
-  (* 课上已完成 *)
-  intros [|n].
+  intros [ | n].
   - left. reflexivity.
   - right. reflexivity.
 Qed.
 
-(** **** 练习：1 星, standard (mult_eq_0)  *)
+(** **** 练习：1 星, standard (mult_eq_0) *)
 Lemma mult_eq_0 :
   forall n m, n * m = 0 -> n = 0 \/ m = 0.
-Proof.
-  (* 请在此处解答 *) Admitted.
+Proof. 
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
+
+(** 
+  如果已知 [P \/ Q]，我们想证明目标 [R]。
+  我们只需证明 [P => R] 以及 [Q => R]。
+  这就是 "\/-elimination" 规则，类似于分情形讨论。
+  是的，在 Coq 中，我们可以使用 [destruct] 或者 [intros pattern]
+  将"已知 [P\/ Q]，证明目标 [G]" 转变成两个任务:
+  - 已知 [P]，证明 [G]
+  - 已知 [Q]，证明 [G]。
+*)
+
+Lemma or_example :
+  forall n m : nat, n = 0 \/ m = 0 -> n * m = 0.
+Proof.
+  (* [Hn | Hm] 隐式地对 [n = 0 \/ m = 0] 进行分情形讨论 *)
+  intros n m [Hn | Hm].
+  - (* 情形 [n = 0] *)
+    rewrite Hn. reflexivity.
+  - (* 情形 [m = 0] *)
+    rewrite Hm. rewrite <- mult_n_O.
+    reflexivity.
+Qed.
 
 (** **** 练习：1 星, standard (or_commut)  *)
 Theorem or_commut : forall P Q : Prop,
   P \/ Q  -> Q \/ P.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
 (* ================================================================= *)
 (** ** 假命题与否定 
 
-    目前为止，我们主要都在证明某些东西是_'真'_的：加法满足结合律，
-    列表的连接满足结合律，等等。当然，我们也关心_'否定'_的结果，
+    目前为止，我们主要都在证明某些东西是_'真'_的。
+    当然，我们也关心_'否定'_的结果，
     即证明某些给定的命题_'不是'_真的。在 Coq 中，这样的否定语句使用否定运算符
     [~] 来表达。 *)
 

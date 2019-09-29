@@ -18,7 +18,7 @@
 - [ ] Logic (`Logic.v`)
   - [x] Proposition
   - [x] and
-  - [ ] or
+  - [x] or
   - [ ] not, false
   - [ ] true
   - [ ] equivalence

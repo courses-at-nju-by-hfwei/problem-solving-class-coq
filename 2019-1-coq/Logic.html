@@ -238,7 +238,8 @@ From LF Require Export Tactics.
 
 <div class="paragraph"> </div>
 
-  命题 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∧</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 表示命题 <span class="inlinecode"><span class="id" title="var">A</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> 的<i>'合取'</i>（即<i>'逻辑与'</i>）。
+  命题 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∧</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 表示命题 <span class="inlinecode"><span class="id" title="var">A</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> 的<i>'合取'</i>（即<i>'逻辑与'</i>）
+  <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∧</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 为真当且仅当 <span class="inlinecode"><span class="id" title="var">A</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> 均为真。
   <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∧</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 是 <span class="inlinecode"><span class="id" title="var">and</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> 的语法糖。
 
 </div>
@@ -273,7 +274,7 @@ From LF Require Export Tactics.
 
 <div class="doc">
   对于任意命题 <span class="inlinecode"><span class="id" title="var">A</span></span> 和 <span class="inlinecode"><span class="id" title="var">B</span></span>，如果 <span class="inlinecode"><span class="id" title="var">A</span></span> 为真且 <span class="inlinecode"><span class="id" title="var">B</span></span> 为真，则 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∧</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 也为真。
-  这个推理规则被称为 "and-intro"。
+  这个推理规则被称为 "/\-intro"。
   "intro" 表示在推导过程中 _引入_ 了 "and"。
 
 </div>
@@ -373,12 +374,18 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
- 显然，<span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∧</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 蕴含 <span class="inlinecode"><span class="id" title="var">A</span></span>，也蕴含 <span class="inlinecode"><span class="id" title="var">B</span></span>。
+
+<div class="paragraph"> </div>
+
+  显然，<span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∧</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 蕴含 <span class="inlinecode"><span class="id" title="var">A</span></span>，也蕴含 <span class="inlinecode"><span class="id" title="var">B</span></span>。
+  接下来两个引理 (<span class="inlinecode"><span class="id" title="var">and_elim_left</span></span> 与 <span class="inlinecode"><span class="id" title="var">and_elim_right</span></span>)
+  构成 "/\-elimination" 规则。
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">proj1</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_elim_left</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">P</span> ∧ <span class="id" title="var">Q</span> → <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> [<span class="id" title="var">HP</span> <span class="id" title="var">HQ</span>].<br/>
@@ -393,7 +400,7 @@ From LF Require Export Tactics.
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">proj2</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">and_elim_right</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">P</span> ∧ <span class="id" title="var">Q</span> → <span class="id" title="var">Q</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="var">Admitted</span>.<br/>
@@ -450,14 +457,101 @@ From LF Require Export Tactics.
 
 <div class="paragraph"> </div>
 
- 另一个重要的联结词是_析取_，即两个命题的<i>'逻辑或'</i>：若 <span class="inlinecode"><span class="id" title="var">A</span></span> 或 <span class="inlinecode"><span class="id" title="var">B</span></span>
-    二者之一为真，则 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 为真。（这中中缀记法表示 <span class="inlinecode"><span class="id" title="var">or</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span>，其中
-    <span class="inlinecode"><span class="id" title="var">or</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>。） 
+
 <div class="paragraph"> </div>
 
- 为了在证明中使用析取前提，我们需要分类讨论，它与 <span class="inlinecode"><span class="id" title="var">nat</span></span>
-    或其它数据类型一样，都可以显示地通过 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 或隐式地通过 <span class="inlinecode"><span class="id" title="tactic">intros</span></span>
-    模式来拆分： 
+  命题 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 表示 <span class="inlinecode"><span class="id" title="var">A</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> 的 <i>'析取' (即 "逻辑或")_。
+  <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 为真当且仅当 <span class="inlinecode"><span class="id" title="var">A</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> 中至少有一个为真。
+  <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 是 <span class="inlinecode"><span class="id" title="var">or</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> 的语法糖。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <span class="id" title="var">or</span>. <span class="id" title="keyword">Print</span> <span class="id" title="var">or</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  要证明 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 成立，只需要证明 <span class="inlinecode"><span class="id" title="var">A</span></span> 成立或者 <span class="inlinecode"><span class="id" title="var">B</span></span> 成立。
+  这就是 <span class="inlinecode">\/-<span class="id" title="tactic">intro</span>-<span class="id" title="tactic">left</span></span> 与 <span class="inlinecode">\/-<span class="id" title="tactic">intro</span>-<span class="id" title="tactic">right</span></span> 规则。
+  在 Coq 中，我们可以分别使用 <span class="inlinecode"><span class="id" title="tactic">left</span></span> 与 <span class="inlinecode"><span class="id" title="tactic">right</span></span> 策略选择要证明的子目标。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_intro_left</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> → <span class="id" title="var">A</span> ∨ <span class="id" title="var">B</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">HA</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">left</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HA</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab9"></a><h4 class="section">练习：1 星, standard (or_intro_right)</h4>
+
+</div>
+<div class="code">
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+ 引理 <span class="inlinecode"><span class="id" title="var">zero_or_succ</span></span> 需要同时使用 <span class="inlinecode"><span class="id" title="tactic">left</span></span> 和 <span class="inlinecode"><span class="id" title="tactic">right</span></span>。
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_or_succ</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = 0 ∨ <span class="id" title="var">n</span> = <span class="id" title="var">S</span> (<span class="id" title="var">pred</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [ | <span class="id" title="var">n</span>].<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">left</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <span class="id" title="tactic">right</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab10"></a><h4 class="section">练习：1 星, standard (mult_eq_0)</h4>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_eq_0</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>, <span class="id" title="var">n</span> × <span class="id" title="var">m</span> = 0 → <span class="id" title="var">n</span> = 0 ∨ <span class="id" title="var">m</span> = 0.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  如果已知 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>，我们想证明目标 <span class="inlinecode"><span class="id" title="var">R</span></span>。
+  我们只需证明 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">⇒</span> <span class="inlinecode"><span class="id" title="var">R</span></span> 以及 <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">⇒</span> <span class="inlinecode"><span class="id" title="var">R</span></span>。
+  这就是 "\/-elimination" 规则，类似于分情形讨论。
+  是的，在 Coq 中，我们可以使用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 或者 <span class="inlinecode"><span class="id" title="tactic">intros</span></span> <span class="inlinecode"><span class="id" title="tactic">pattern</span></span>
+  将"已知 <span class="inlinecode"><span class="id" title="var">P</span>∨</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>，证明目标 <span class="inlinecode"><span class="id" title="var">G</span></span>" 转变成两个任务:
+<ul class="doclist">
+<li> 已知 <span class="inlinecode"><span class="id" title="var">P</span></span>，证明 <span class="inlinecode"><span class="id" title="var">G</span></span>
+
+</li>
+<li> 已知 <span class="inlinecode"><span class="id" title="var">Q</span></span>，证明 <span class="inlinecode"><span class="id" title="var">G</span></span>。
+
+</li>
+</ul>
+
 </div>
 <div class="code">
 
@@ -477,64 +571,14 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-相应地，要证明某个析取命题成立，我们需要证明其任意一边的命题成立。
-    我们可以用 <span class="inlinecode"><span class="id" title="tactic">left</span></span> 和 <span class="inlinecode"><span class="id" title="tactic">right</span></span> 策略来选取命题。顾名思义，<span class="inlinecode"><span class="id" title="tactic">left</span></span>
-    会选取待析取证命题的左边，而 <span class="inlinecode"><span class="id" title="tactic">right</span></span> 则会选取它的右边。
-    下面是一种平凡的用法... 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_intro</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">A</span> → <span class="id" title="var">A</span> ∨ <span class="id" title="var">B</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">HA</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">left</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HA</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-...而这个更有趣的例子则同时需要 <span class="inlinecode"><span class="id" title="tactic">left</span></span> 和 <span class="inlinecode"><span class="id" title="tactic">right</span></span>： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">zero_or_succ</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = 0 ∨ <span class="id" title="var">n</span> = <span class="id" title="var">S</span> (<span class="id" title="var">pred</span> <span class="id" title="var">n</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [|<span class="id" title="var">n</span>].<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">left</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">right</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab9"></a><h4 class="section">练习：1 星, standard (mult_eq_0)</h4>
-
-</div>
-<div class="code">
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_eq_0</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>, <span class="id" title="var">n</span> × <span class="id" title="var">m</span> = 0 → <span class="id" title="var">n</span> = 0 ∨ <span class="id" title="var">m</span> = 0.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab10"></a><h4 class="section">练习：1 星, standard (or_commut)</h4>
+<a name="lab11"></a><h4 class="section">练习：1 星, standard (or_commut)</h4>
 
 </div>
 <div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">or_commut</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">P</span> ∨ <span class="id" title="var">Q</span>  → <span class="id" title="var">Q</span> ∨ <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
@@ -546,13 +590,13 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab11"></a><h2 class="section">假命题与否定</h2>
+<a name="lab12"></a><h2 class="section">假命题与否定</h2>
 
 
 <div class="paragraph"> </div>
 
-    目前为止，我们主要都在证明某些东西是<i>'真'</i>的：加法满足结合律，
-    列表的连接满足结合律，等等。当然，我们也关心<i>'否定'</i>的结果，
+    目前为止，我们主要都在证明某些东西是<i>'真'</i>的。
+    当然，我们也关心<i>'否定'</i>的结果，
     即证明某些给定的命题<i>'不是'</i>真的。在 Coq 中，这样的否定语句使用否定运算符
     <span class="inlinecode">¬</span> 来表达。 
 <div class="paragraph"> </div>
@@ -610,7 +654,7 @@ From LF Require Export Tactics.
     你能够证明任何你想要的”，这也是爆炸原理的另一个广为人知的名字。 
 <div class="paragraph"> </div>
 
-<a name="lab12"></a><h4 class="section">练习：2 星, standard, optional (not_implies_our_not)</h4>
+<a name="lab13"></a><h4 class="section">练习：2 星, standard, optional (not_implies_our_not)</h4>
 
 
 <div class="paragraph"> </div>
@@ -704,7 +748,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab13"></a><h4 class="section">练习：2 星, advanced (double_neg_inf)</h4>
+<a name="lab14"></a><h4 class="section">练习：2 星, advanced (double_neg_inf)</h4>
 
 
 <div class="paragraph"> </div>
@@ -727,7 +771,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab14"></a><h4 class="section">练习：2 星, standard, recommended (contrapositive)</h4>
+<a name="lab15"></a><h4 class="section">练习：2 星, standard, recommended (contrapositive)</h4>
 
 </div>
 <div class="code">
@@ -741,7 +785,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab15"></a><h4 class="section">练习：1 星, standard (not_both_true_and_false)</h4>
+<a name="lab16"></a><h4 class="section">练习：1 星, standard (not_both_true_and_false)</h4>
 
 </div>
 <div class="code">
@@ -755,7 +799,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab16"></a><h4 class="section">练习：1 星, advanced (informal_not_PNP)</h4>
+<a name="lab17"></a><h4 class="section">练习：1 星, advanced (informal_not_PNP)</h4>
 
 
 <div class="paragraph"> </div>
@@ -819,7 +863,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab17"></a><h2 class="section">真值</h2>
+<a name="lab18"></a><h2 class="section">真值</h2>
 
 <div class="paragraph"> </div>
 
@@ -850,7 +894,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab18"></a><h2 class="section">逻辑等价</h2>
+<a name="lab19"></a><h2 class="section">逻辑等价</h2>
 
 <div class="paragraph"> </div>
 
@@ -896,7 +940,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab19"></a><h4 class="section">练习：1 星, standard, optional (iff_properties)</h4>
+<a name="lab20"></a><h4 class="section">练习：1 星, standard, optional (iff_properties)</h4>
 
 
 <div class="paragraph"> </div>
@@ -923,7 +967,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab20"></a><h4 class="section">练习：3 星, standard (or_distributes_over_and)</h4>
+<a name="lab21"></a><h4 class="section">练习：3 星, standard (or_distributes_over_and)</h4>
 
 </div>
 <div class="code">
@@ -1017,7 +1061,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab21"></a><h2 class="section">存在量化</h2>
+<a name="lab22"></a><h2 class="section">存在量化</h2>
 
 <div class="paragraph"> </div>
 
@@ -1061,7 +1105,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab22"></a><h4 class="section">练习：1 星, standard, recommended (dist_not_exists)</h4>
+<a name="lab23"></a><h4 class="section">练习：1 星, standard, recommended (dist_not_exists)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1082,7 +1126,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab23"></a><h4 class="section">练习：2 星, standard (dist_exists_or)</h4>
+<a name="lab24"></a><h4 class="section">练习：2 星, standard (dist_exists_or)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1107,7 +1151,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab24"></a><h1 class="section">使用命题编程</h1>
+<a name="lab25"></a><h1 class="section">使用命题编程</h1>
 
 <div class="paragraph"> </div>
 
@@ -1209,7 +1253,7 @@ From LF Require Export Tactics.
     这是一种与之不同的技巧，有着其独特的优势和限制。 
 <div class="paragraph"> </div>
 
-<a name="lab25"></a><h4 class="section">练习：2 星, standard (In_map_iff)</h4>
+<a name="lab26"></a><h4 class="section">练习：2 星, standard (In_map_iff)</h4>
 
 </div>
 <div class="code">
@@ -1225,7 +1269,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab26"></a><h4 class="section">练习：2 星, standard (In_app_iff)</h4>
+<a name="lab27"></a><h4 class="section">练习：2 星, standard (In_app_iff)</h4>
 
 </div>
 <div class="code">
@@ -1239,7 +1283,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab27"></a><h4 class="section">练习：3 星, standard, recommended (All)</h4>
+<a name="lab28"></a><h4 class="section">练习：3 星, standard, recommended (All)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1272,7 +1316,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab28"></a><h4 class="section">练习：3 星, standard (combine_odd_even)</h4>
+<a name="lab29"></a><h4 class="section">练习：3 星, standard (combine_odd_even)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1332,7 +1376,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab29"></a><h1 class="section">对参数应用定理</h1>
+<a name="lab30"></a><h1 class="section">对参数应用定理</h1>
 
 <div class="paragraph"> </div>
 
@@ -1546,7 +1590,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab30"></a><h1 class="section">Coq vs. 集合论</h1>
+<a name="lab31"></a><h1 class="section">Coq vs. 集合论</h1>
 
 <div class="paragraph"> </div>
 
@@ -1570,7 +1614,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab31"></a><h2 class="section">函数的外延性</h2>
+<a name="lab32"></a><h2 class="section">函数的外延性</h2>
 
 <div class="paragraph"> </div>
 
@@ -1678,7 +1722,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab32"></a><h4 class="section">练习：4 星, standard (tr_rev_correct)</h4>
+<a name="lab33"></a><h4 class="section">练习：4 星, standard (tr_rev_correct)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1724,7 +1768,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab33"></a><h2 class="section">命题与布尔值</h2>
+<a name="lab34"></a><h2 class="section">命题与布尔值</h2>
 
 <div class="paragraph"> </div>
 
@@ -1774,7 +1818,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab34"></a><h4 class="section">练习：3 星, standard (evenb_double_conv)</h4>
+<a name="lab35"></a><h4 class="section">练习：3 星, standard (evenb_double_conv)</h4>
 
 </div>
 <div class="code">
@@ -1991,7 +2035,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
     它是个很好的例子。 
 <div class="paragraph"> </div>
 
-<a name="lab35"></a><h4 class="section">练习：2 星, standard (logical_connectives)</h4>
+<a name="lab36"></a><h4 class="section">练习：2 星, standard (logical_connectives)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2017,7 +2061,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab36"></a><h4 class="section">练习：1 星, standard (eqb_neq)</h4>
+<a name="lab37"></a><h4 class="section">练习：1 星, standard (eqb_neq)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2038,7 +2082,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab37"></a><h4 class="section">练习：3 星, standard (eqb_list)</h4>
+<a name="lab38"></a><h4 class="section">练习：3 星, standard (eqb_list)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2068,7 +2112,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab38"></a><h4 class="section">练习：2 星, standard, recommended (All_forallb)</h4>
+<a name="lab39"></a><h4 class="section">练习：2 星, standard, recommended (All_forallb)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2113,7 +2157,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 </div>
 
 <div class="doc">
-<a name="lab39"></a><h2 class="section">经典逻辑 vs. 构造逻辑</h2>
+<a name="lab40"></a><h2 class="section">经典逻辑 vs. 构造逻辑</h2>
 
 <div class="paragraph"> </div>
 
@@ -2232,7 +2276,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
     就无法在 Coq 中编码此推理。 
 <div class="paragraph"> </div>
 
-<a name="lab40"></a><h4 class="section">练习：3 星, standard (excluded_middle_irrefutable)</h4>
+<a name="lab41"></a><h4 class="section">练习：3 星, standard (excluded_middle_irrefutable)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2257,7 +2301,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab41"></a><h4 class="section">练习：3 星, advanced (not_exists_dist)</h4>
+<a name="lab42"></a><h4 class="section">练习：3 星, advanced (not_exists_dist)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2289,7 +2333,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab42"></a><h4 class="section">练习：5 星, standard, optional (classical_axioms)</h4>
+<a name="lab43"></a><h4 class="section">练习：5 星, standard, optional (classical_axioms)</h4>
 
 
 <div class="paragraph"> </div>
