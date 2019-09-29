@@ -16,6 +16,14 @@
   - [x] `induction`
   - [x] Exercise
 - [ ] Logic (`Logic.v`)
+  - [x] Proposition
+  - [x] and
+  - [ ] or
+  - [ ] not, false
+  - [ ] true
+  - [ ] equivalence
+  - [ ] existence
+  - [ ] forall
 - [ ] More Basic Proof Tactics
   - [ ] `apply`
   - [ ] `injection`

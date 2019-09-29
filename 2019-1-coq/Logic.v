@@ -4,14 +4,14 @@ Set Warnings "-notation-overridden,-parsing".
 (** From LF Require Export Tactics. *)
 
 (**
-  "逻辑是不可战胜的，因为要想战胜它，你也要依靠逻辑" By 谁说的来着?
+  "逻辑是不可战胜的，因为反对逻辑还得使用逻辑。" By 谁说的来着?
   
   本节介绍一阶谓词逻辑 
   (说它是一阶谓词逻辑并不严格，我们在本节的最后部分讨论) 
-  的 _'自然推理系统' (Natural Inference? System)_。
+  的 _'自然推理系统' (Natural Deduction System)_。
   系统，封闭之结构也;
   推理，证明之路径也;
-  自然，“无它，唯手熟尔???”。
+  自然，“无他，但手熟尔”。
   这个推理系统，我们基本每天都在使用 (或者误用)。
   本节只不过是告诉你如何在 Coq 中使用这个推理系统证明定理 
   (有 Coq 盯着你，你就再也不会误用它们了)。
@@ -114,152 +114,144 @@ Check @eq. (* 暂时忽略 "[@]" 的含义与用法。*)
   怎么样? 看不懂吧。稍安勿躁。
 *)
 Print eq.
-(* ################################################################# *)
+(* ################################################################ *)
 (** * 逻辑联结词 *)
 
-(* ================================================================= *)
+(**
+  TODO: 作为引子，介绍一下自然推理系统的对称性特点。
+*)
+(* ================================================================ *)
 (** ** 合取 *)
 
-(** 命题 [A] 与 [B] 的_'合取'_（即_'逻辑与'_）写作 [A /\ B]，表示一个
-    [A] 与 [B] 均为真的断言。 *)
+(** 
+  命题 [A /\ B] 表示命题 [A] 与 [B] 的_'合取'_（即_'逻辑与'_）。
+  [A /\ B] 是 [and A B] 的语法糖。
+*)
+
+Check and.
+(* ===> and : Prop -> Prop -> Prop *)
+Print and. (* 偷窥一下 [and] 的定义 *)
+
+(** 
+  要证明 [A /\ B]，只需分别证明 [A] 与 [B]。
+  在 Coq 中，[split] 策略会为目标 [A /\ B] 生成两个子目标 [A] 与 [B]。 
+*)
 
 Example and_example : 3 + 4 = 7 /\ 2 * 2 = 4.
-
-(** 证明合取的命题通常使用 [split] 策略。它会分别为语句的两部分生成两个子目标： *)
-
 Proof.
   split.
   - (* 3 + 4 = 7 *) reflexivity.
   - (* 2 + 2 = 4 *) reflexivity.
 Qed.
 
-(** 对于任意命题 [A] 和 [B]，如果我们假设 [A] 为真且 [B] 为真，
-    那么就能得出 [A /\ B] 也为真的结论。 *)
+(**
+  对于任意命题 [A] 和 [B]，如果 [A] 为真且 [B] 为真，则 [A /\ B] 也为真。
+  这个推理规则被称为 "and-intro"。
+  "intro" 表示在推导过程中 _引入_ 了 "and"。
+*)
 
 Lemma and_intro : forall A B : Prop, A -> B -> A /\ B.
 Proof.
-  intros A B HA HB. split.
+  intros A B HA HB.
+  split.
   - apply HA.
   - apply HB.
 Qed.
 
-(** 由于按照前提对某个目标应用定理会产生与该定理的前提一样多的子目标。
-    因此我们可以应用 [and_intro] 来达到和 [split] 一样的效果。 *)
-
-Example and_example' : 3 + 4 = 7 /\ 2 * 2 = 4.
-Proof.
-  apply and_intro.
-  - (* 3 + 4 = 7 *) reflexivity.
-  - (* 2 + 2 = 4 *) reflexivity.
-Qed.
+(**
+  在上面的证明中，我们使用了一种新的证明策略 [apply]。
+  当证明目标 G 与上下文中的某个前提 H 完全相同时，
+  我们就可以使用 [apply H] 完成证明 
+  (也可以使用 [exact H] 或者 [assumption])。
+  关于 [apply] 的其余用法，我们在后续介绍。
+*)
 
 (** **** 练习：2 星, standard (and_exercise)  *)
 Example and_exercise :
   forall n m : nat, n + m = 0 -> n = 0 /\ m = 0.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** 以上就是证明合取语句的方法。要反过来使用，即_'使用'_合取前提来帮助证明时，
-    我们会采用 [destruct] 策略。
-
-    如果当前证明上下文中存在形如 [A /\ B] 的前提 [H]，那么
-    [destruct H as [HA HB]] 将会从上下文中移除 [H] 并增加 [HA] 和 [HB]
-    两个新的前提，前者断言 [A] 为真，而后者断言 [B] 为真。 *)
+(**
+  如果当前 _证明上下文_ 中存在形如 [A /\ B] 的前提 [H]，
+  我们可以使用 [destruct H as [HA HB]] 将 [H] 转化为 [HA] 和 [HB]
+  两个新的前提。这样，我们就可以单独使用 [A] 与 [B] 进行证明了。
+*)
 
 Lemma and_example2 :
   forall n m : nat, n = 0 /\ m = 0 -> n + m = 0.
 Proof.
-  (* 课上已完成 *)
   intros n m H.
   destruct H as [Hn Hm].
   rewrite Hn. rewrite Hm.
   reflexivity.
 Qed.
 
-(** 和往常一样，我们也可以在引入 [H] 的同时对其进行解构，
-    而不必先引入然后再解构： *)
+(** 你是否还记得 "intro pattern"? *)
 
 Lemma and_example2' :
   forall n m : nat, n = 0 /\ m = 0 -> n + m = 0.
 Proof.
-  intros n m [Hn Hm].
+  intros n m [Hn Hm]. (* "intro pattern " *)
   rewrite Hn. rewrite Hm.
   reflexivity.
 Qed.
 
-(** 为什么我们要麻烦地将 [n = 0] 和 [m = 0] 这两个前提放一条合取语句中呢？
-    完全可以用两条独立的前提来陈述此定理啊： *)
-
-Lemma and_example2'' :
-  forall n m : nat, n = 0 -> m = 0 -> n + m = 0.
-Proof.
-  intros n m Hn Hm.
-  rewrite Hn. rewrite Hm.
-  reflexivity.
-Qed.
-
-(** 就此定理而言，两种方式都可以。不过理解如何证明合取前提非常重要，
-    因为合取语句通常会在证明的中间步骤中出现，特别是在做大型开发的时候。
-    下面是个简单的例子： *)
-
+(** **** 练习：2 星, standard (and_example3) *)
+(**
+  证明如下定理。你可以需要使用 [and_exercise] 定理与 [assert] 策略 
+  (又忘了吧? 不要沮丧。学习就是不断重复、不断升华的过程。)。 
+*)
 Lemma and_example3 :
   forall n m : nat, n + m = 0 -> n * m = 0.
 Proof.
-  (* 课上已完成 *)
-  intros n m H.
-  assert (H' : n = 0 /\ m = 0).
-  { apply and_exercise. apply H. }
-  destruct H' as [Hn Hm].
-  rewrite Hn. reflexivity.
-Qed.
+  (* 请在此处解答 *)
+Admitted.
+(** [] *)
 
-(** 另一种经常遇到合取语句的场景是，我们已经知道了 [A /\ B]，
-    但在某些上下文中只需要 [A] 或者 [B]。此时以下引理会很有用： *)
+(** 显然，[A /\ B] 蕴含 [A]，也蕴含 [B]。*)
 
 Lemma proj1 : forall P Q : Prop,
   P /\ Q -> P.
 Proof.
   intros P Q [HP HQ].
-  apply HP.  Qed.
+  apply HP.
+Qed.
 
 (** **** 练习：1 星, standard, optional (proj2)  *)
 Lemma proj2 : forall P Q : Prop,
   P /\ Q -> Q.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** 最后，我们有时需要重新排列合取语句的顺序，或者对多部分的合取语句进行分组。
-    此时使用下面的交换律和结合律会很方便。 *)
+(** [and] 满足交换律。*)
 
 Theorem and_commut : forall P Q : Prop,
   P /\ Q -> Q /\ P.
 Proof.
   intros P Q [HP HQ].
   split.
-    - (* left *) apply HQ.
-    - (* right *) apply HP.  Qed.
+  - (* Q *) apply HQ.
+  - (* P *) apply HP.
+Qed.
 
-(** **** 练习：2 星, standard (and_assoc)  
-
-    （在以下结合律的证明中，注意_'嵌套'_的 [intros] 模式是如何将
-    [H : P /\ (Q /\ R)] 拆分为 [HP : P]、[HQ : Q] 和 [HR : R] 的。
-    请从那里开始完成证明。） *)
+(** **** 练习：2 星, standard (and_assoc) *)
+(**
+  [and]满足结合律。请完成定理 [and_assoc] 的证明。
+  请注意学习 [intros [HP [HQ HR]]] 的用法。
+*)
 
 Theorem and_assoc : forall P Q R : Prop,
   P /\ (Q /\ R) -> (P /\ Q) /\ R.
 Proof.
   intros P Q R [HP [HQ HR]].
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
-
-(** 顺便一提，中缀记法 [/\] 只是 [and A B] 的语法糖而已；
-    [and] 是 Coq 中将两个命题合并成一个命题的运算符。 *)
-
-Check and.
-(* ===> and : Prop -> Prop -> Prop *)
-
 (* ================================================================= *)
 (** ** 析取 *)
 
