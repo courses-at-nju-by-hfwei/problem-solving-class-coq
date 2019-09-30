@@ -337,152 +337,177 @@ Admitted.
 
 (* ================================================================= *)
 (** ** 假命题与否定 
-
-    目前为止，我们主要都在证明某些东西是_'真'_的。
-    当然，我们也关心_'否定'_的结果，
-    即证明某些给定的命题_'不是'_真的。在 Coq 中，这样的否定语句使用否定运算符
-    [~] 来表达。 *)
-
-(** 为了理解否定背后的原理，我们需要回想一下[Tactics]一章中的_'爆炸原理'_。
-    爆炸原理断言，当我们假设了矛盾存在时，就能推出任何命题。
-
-    遵循这一直觉，我们可以可以将 [~ P]（即非 [P]）定义为 [forall Q, P -> Q]。
-
-    不过 Coq 选择了稍有些不同（但等价）的做法，它将 [~ P] 定义为 [P -> False]，而
-    [False] 是在标准库中特别定义的矛盾性命题。 *)
-
-Module MyNot.
-
-Definition not (P:Prop) := P -> False.
-
-Notation "~ x" := (not x) : type_scope.
-
-Check not.
-(* ===> Prop -> Prop *)
-
-End MyNot.
-
-(** 由于 [False] 是个矛盾性命题，因此爆炸原理对它也适用。如果我们让 [False]
-    进入到了证明的上下文中，可以对它使用 [destruct] 来完成任何待证目标。 *)
-
-Theorem ex_falso_quodlibet : forall (P:Prop),
-  False -> P.
-Proof.
-  (* 课上已完成 *)
-  intros P contra.
-  destruct contra.  Qed.
-
-(** 拉丁文 _'ex falso quodlibet'_ 的字面意思是“从谬误出发，
-    你能够证明任何你想要的”，这也是爆炸原理的另一个广为人知的名字。 *)
-
-(** **** 练习：2 星, standard, optional (not_implies_our_not)  
-
-    证明 Coq 对否定的定义蕴含前面提到的直觉上的定义： *)
-
-Fact not_implies_our_not : forall (P:Prop),
-  ~ P -> (forall (Q:Prop), P -> Q).
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** 不等性是十分常见的否定句的例子，，它有一个特别的记法 [x <> y]：
-
-      Notation "x <> y" := (~(x = y)).
+  很多时候，我们需要证明某个命题 [A] 不成立，
+  即证明 [~A] 成立。
+  [~A] 是 [not A] 的语法糖。
+*)
+Check not. (* 恭喜你，猜对了。*)
+(* ===> not : Prop -> Prop *)
+Print not. (* 你猜到了吗? *)
+(**
+  ===> not = fun A : Prop => A -> False
+  
+  我们来解释一下这个定义。
+  - 首先，[not] 是一个函数 [fun A : Prop => A -> False]。
+  - [fun A : Prop => A -> False] 是匿名函数 (没有函数名)，
+    接受一个命题 [A : Prop]，返回 (=>) 一个命题 [A -> False]。
+  因此，[~A] 就是 [A -> False]。
+  换句话说，Coq 使用 [A] 能蕴含 False，来表示 [A] 不成立。
+  
+  那么，[False] 是什么呢?
+  [False] 是 Coq 标准库中定义的矛盾性命题。
 *)
 
-(** 我们可以用 [not] 来陈述 [0] 和 [1] 是不同的 [nat] 元素： *)
+Check False. (* [False] 也是个命题。*)
+(* ===> False : Prop *)
+Print False. (* 咦? 出 Bug 了吗? *)
+(**
+  ===> Inductive False : Prop :=
+  
+  [False] 的定义为空。
+  这意味着，你无法在 Coq 中证明它。
+*)
 
-Theorem zero_not_one : 0 <> 1.
+(**
+  定理 [ex_falso_quodlibet] (拉丁文) 描述了 [False-elimination] 规则，
+  它的含义是 "从谬误出发，你能够证明任何命题。"
+  (王小波关于"荒诞的年代"的那句话是怎么说的来着?)
+  
+  如果 [H : False] 作为前提出现在上下文中，
+  那么我们就可以使用 [destruct H] 来完成任何待证目标。 
+*)
+
+Theorem ex_falso_quodlibet : forall (P : Prop),
+  False -> P.
 Proof.
-  (** 性质 [0 <> 1] 就是 [~(0 = 1)]，即 [not (0 = 1)]，
-      它会展开为 [(0 = 1) -> False]。（这里显式地用 [unfold not]
-      展示了这一点，不过一般可以忽略。 *)
-  unfold not.
-  (** 要证明不等性，我们可以反过来假设其相等... *)
-  intros contra.
-  (** ... 然后从中推出矛盾。在这里，等式 [O = S O] 与构造子 [O] 和 [S]
-      的不交性相矛盾，因此用 [discriminate] 就能解决它。 *)
-  discriminate contra.
+  intros P contra.
+  destruct contra.
 Qed.
 
-(** 为了习惯用 Coq 处理否定命题，我们需要一些练习。
-    即便你十分清楚为什么某个否定命题成立，但一下就找到让 Coq 理解的方式
-    有点棘手。以下常见事实的证明留给你热身。 *)
+(** 
+  [ex falso quodlibet] (缩写 EFQ) 也称为 _"Principle of Explosion"_。
+  形象地讲，[False] 是枚炸弹，[destruct False] 就是在拆炸弹。
+  然后，Bang ……
+  
+  因此，一旦我们设法向上下文中引入了 [False]，我们也就完成了证明。
+*)
 
+(* 再看一个简单的例子 [not_False]。*)
 Theorem not_False :
   ~ False.
 Proof.
-  unfold not. intros H. destruct H. Qed.
+  unfold not. (* 我们经常需要展开 [not] 的定义。*)
+  intros H. (* 展开 [not] 之后，通常都会跟着一个 [intros]。*)
+  destruct H. (* 当然，这里也可以使用 [apply H]。*)
+Qed.
+
+(* [double_neg] 定理涉及 "双重否定"。*)
+Theorem double_neg : forall P : Prop,
+  P -> ~~P.
+Proof.
+  intros P H.
+  unfold not. intros G. (* [unfold not] + [intros] *)
+  apply G. (* 注意观察待证目标的变化。下面解释该行。*)
+  apply H.
+Qed.
+
+(**
+  定理 [double_neg] 的证明使用了 [apply] 策略的另一种用法。
+  
+  之前，当待证明的目标 [Goal] 与上下文中的某个前提 [A] 完全一样时，
+  我们使用 [apply A] 即可完成证明。
+  
+  在上面的证明中，[G] 是一个蕴含式 [G : P -> False]，
+  当前待证目标 [Goal] 是 [Goal : False]。
+  注意到待证目标与蕴含式 [G] 中的结论相同 
+  (更宽泛地讲，只需要它们可以匹配)，
+  此时，[apply G] 将 [G] 作用到当前待证目标上，
+  其效果相当于 _逆向 (Backward)_ 使用蕴含式 [G]:
+  它将待证目标 [False] 转化为 [P]。
+  背后的推理是: 要证明 [False] 成立，根据前提 [G : P -> False]，
+  只需证明 [P] 成立。
+  这实际上是 [->-elimination] 规则，也就是 _'modus ponens'_ 规则。
+*)
 
 Theorem contradiction_implies_anything : forall P Q : Prop,
   (P /\ ~P) -> Q.
 Proof.
-  (* 课上已完成 *)
-  intros P Q [HP HNA]. unfold not in HNA.
-  apply HNA in HP. destruct HP.  Qed.
+  intros P Q [HP HNP]. unfold not in HNP.
+  apply HNP in HP. (* 对 [HP] _正向 (Forward)_ 应用蕴含式。*)
+  destruct HP.
+Qed.
 
-Theorem double_neg : forall P : Prop,
-  P -> ~~P.
+(**
+  上面的证明使用了 [apply] 策略的第三种用法:
+  [HNP] 是蕴含式 [HNP : P -> False]。
+  [HP] 是 [HP : P]。
+  注意到 [HP] 与 [HNP] 的前件相同，
+  此时，[apply HNP in HP] 是在正向应用 _'modus ponens'_ 规则:
+  已知 [P -> False] 与 [P]，推导出 [False]。
+  
+  注意: [apply I in H] 会改变 [H]。
+  如果不想改变 [H]，可以使用 [apply I in H as ...] 变体。
+*)
+
+(** **** 练习：2 星, standard, optional (not_implies_our_not) *)  
+(**
+  了解了 [apply] 的用法，现在你可以证明定理 
+  [not_implies_our_not] 了。
+  它实际上指出了 [not] 的另一种定义方法:
+  我们可以使用 "[P] 可以蕴含一切命题 ([Q])" 定义 [not P]。  
+*)
+
+Fact not_implies_forall_implication : forall (P : Prop),
+  ~ P -> (forall (Q : Prop), P -> Q).
 Proof.
-  (* 课上已完成 *)
-  intros P H. unfold not. intros G. apply G. apply H.  Qed.
-
-(** **** 练习：2 星, advanced (double_neg_inf)  
-
-    请写出 [double_neg] 的非形式化证明：
-
-   _'定理'_：对于任何命题 [P] 而言，[P] 蕴含 [~~P]。 *)
-
-(* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_double_neg_inf : option (nat*string) := None.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
+
+Fact forall_implication_implies_not : forall (P : Prop),
+  (forall (Q : Prop), P -> Q) -> (~ P).
+Proof.
+  intros P PQ.
+  unfold not. intro HP.
+  apply (PQ False). (* 你还记得我们为什么可以这样使用 [PQ False] 吗? *)
+  apply HP.
+Qed.
 
 (** **** 练习：2 星, standard, recommended (contrapositive)  *)
 Theorem contrapositive : forall (P Q : Prop),
   (P -> Q) -> (~Q -> ~P).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
 (** **** 练习：1 星, standard (not_both_true_and_false)  *)
 Theorem not_both_true_and_false : forall P : Prop,
   ~ (P /\ ~P).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** **** 练习：1 星, advanced (informal_not_PNP)  
-
-    请写出 [forall P : Prop, ~(P /\ ~P)] 的非形式化证明。 *)
-
-(* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_informal_not_PNP : option (nat*string) := None.
-(** [] *)
-
-(** 类似地，由于不等性包含一个否定，因此在能够熟练地使用它前也需要一些练习。
-    这里有个有用的技巧：如果你需要证明某个目标不可能时（例如当前的目标陈述为
-    [false = true]），请使用 [ex_falso_quodlibet] 将该目标转换为 [False]。
-    如果在当前上下文中存在形如 [~P] 的假设（特别是形如 [x<>y] 的假设），
-    那么此技巧会让这些假设用起来更容易些。 *)
+(**  
+  我们用 [x <> y] 表示 (~ (x = y))。
+  Notation "x <> y" := (~(x = y)).
+*)
 
 Theorem not_true_is_false : forall b : bool,
   b <> true -> b = false.
 Proof.
-  intros [] H.
+  intros [] H. (* 注意: [] 对 [b] 作了分情形讨论。*)
   - (* b = true *)
     unfold not in H.
-    apply ex_falso_quodlibet.
+    apply ex_falso_quodlibet. (* 观察待证目标的变化。想想为什么? *)
     apply H. reflexivity.
   - (* b = false *)
     reflexivity.
 Qed.
 
-(** 由于用 [ex_falso_quodlibet] 推理十分常用，因此 Coq 提供了内建的策略
-    [exfalso]。 *)
+(** Coq 为 [ex_falso_quodlibet] 提供了内建的策略 [exfalso]。*)
+Print exfalso.
 
 Theorem not_true_is_false' : forall b : bool,
   b <> true -> b = false.
@@ -490,26 +515,35 @@ Proof.
   intros [] H.
   - (* b = true *)
     unfold not in H.
-    exfalso.                (* <=== *)
+    exfalso.  (* <=== *)
     apply H. reflexivity.
-  - (* b = false *) reflexivity.
+  - (* b = false *)
+    reflexivity.
 Qed.
-
 (* ================================================================= *)
 (** ** 真值 *)
 
-(** 除 [False] 外，Coq 的标准库中还定义了 [True]，一个明显真的命题。
-    为了证明它，我们使用了预定义的常量 [I : True]： *)
+(**
+  [True] 也是 Coq 预定义的命题，它代表真。
+  我们已经知道 [False] 的定义为空，那么 [True] 的定义是什么呢?
+*)
+Check True.
+(* ===> True : Prop *)
+Print True.
+(**
+  ===> [Inductive True : Prop := I : True]
+  
+  [True] 只有一种构造方式，那就是 [I]。
+  因此，要证明 [True]，我们只需要 [apply I] 即可。
+*)
 
 Lemma True_is_true : True.
 Proof. apply I. Qed.
 
-(** 与经常使用的 [False] 不同，[True] 很少使用，因为它作为证明目标来说过于平凡，
-    而作为前提又不携带任何有用的信息。 
-
-    然而在使用条件从句定义复杂的 [Prop]，或者作为高阶 [Prop] 的参数时，
-    它还是挺有用的。之后我们会看到 [True] 的这类用法。 *)
-
+(** 
+  [True] 作为前提不携带任何有用的信息，
+  因此没有必要引入 [True-elimination] 规则。
+*)
 (* ================================================================= *)
 (** ** 逻辑等价 *)
 

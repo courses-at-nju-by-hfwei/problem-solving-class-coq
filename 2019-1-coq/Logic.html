@@ -592,136 +592,91 @@ From LF Require Export Tactics.
 <div class="doc">
 <a name="lab12"></a><h2 class="section">假命题与否定</h2>
 
+  很多时候，我们需要证明某个命题 <span class="inlinecode"><span class="id" title="var">A</span></span> 不成立，
+  即证明 <span class="inlinecode">¬<span class="id" title="var">A</span></span> 成立。
+  <span class="inlinecode">¬<span class="id" title="var">A</span></span> 是 <span class="inlinecode"><span class="id" title="var">not</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> 的语法糖。
 
-<div class="paragraph"> </div>
-
-    目前为止，我们主要都在证明某些东西是<i>'真'</i>的。
-    当然，我们也关心<i>'否定'</i>的结果，
-    即证明某些给定的命题<i>'不是'</i>真的。在 Coq 中，这样的否定语句使用否定运算符
-    <span class="inlinecode">¬</span> 来表达。 
-<div class="paragraph"> </div>
-
- 为了理解否定背后的原理，我们需要回想一下<span class="inlinecode"><span class="id" title="var">Tactics</span></span>一章中的<i>'爆炸原理'</i>。
-    爆炸原理断言，当我们假设了矛盾存在时，就能推出任何命题。
-
-<div class="paragraph"> </div>
-
-    遵循这一直觉，我们可以可以将 <span class="inlinecode">¬</span> <span class="inlinecode"><span class="id" title="var">P</span></span>（即非 <span class="inlinecode"><span class="id" title="var">P</span></span>）定义为 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><span class="id" title="var">Q</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>。
-
-<div class="paragraph"> </div>
-
-    不过 Coq 选择了稍有些不同（但等价）的做法，它将 <span class="inlinecode">¬</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 定义为 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>，而
-    <span class="inlinecode"><span class="id" title="var">False</span></span> 是在标准库中特别定义的矛盾性命题。 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">MyNot</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">not</span> (<span class="id" title="var">P</span>:<span class="id" title="keyword">Prop</span>) := <span class="id" title="var">P</span> → <span class="id" title="var">False</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Notation</span> &quot;~ x" := (<span class="id" title="var">not</span> <span class="id" title="var">x</span>) : <span class="id" title="var">type_scope</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">not</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">MyNot</span>.<br/>
-
-<br/>
-</div>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">not</span>. <span class="id" title="keyword">Print</span> <span class="id" title="var">not</span>. </div>
 
 <div class="doc">
-由于 <span class="inlinecode"><span class="id" title="var">False</span></span> 是个矛盾性命题，因此爆炸原理对它也适用。如果我们让 <span class="inlinecode"><span class="id" title="var">False</span></span>
-    进入到了证明的上下文中，可以对它使用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 来完成任何待证目标。 
+  ===&gt; not = fun A : Prop =&gt; A -&gt; False
+
+<div class="paragraph"> </div>
+
+  我们来解释一下这个定义。
+<ul class="doclist">
+<li> 首先，<span class="inlinecode"><span class="id" title="var">not</span></span> 是一个函数 <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">⇒</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>。
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">⇒</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span> 是匿名函数 (没有函数名)，
+    接受一个命题 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>，返回 (=&gt;) 一个命题 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>。
+
+</li>
+</ul>
+  因此，<span class="inlinecode">¬<span class="id" title="var">A</span></span> 就是 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>。
+  换句话说，Coq 使用 <span class="inlinecode"><span class="id" title="var">A</span></span> 能蕴含 False，来表示 <span class="inlinecode"><span class="id" title="var">A</span></span> 不成立。
+
+<div class="paragraph"> </div>
+
+  那么，<span class="inlinecode"><span class="id" title="var">False</span></span> 是什么呢?
+  <span class="inlinecode"><span class="id" title="var">False</span></span> 是 Coq 标准库中定义的矛盾性命题。
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">ex_falso_quodlibet</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">P</span>:<span class="id" title="keyword">Prop</span>),<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">False</span>. <span class="id" title="keyword">Print</span> <span class="id" title="var">False</span>. </div>
+
+<div class="doc">
+  ===&gt; Inductive False : Prop :=
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">False</span></span> 的定义为空。
+  这意味着，你无法在 Coq 中证明它。
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  定理 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet</span></span> (拉丁文) 描述了 <span class="inlinecode"><span class="id" title="var">False</span>-<span class="id" title="var">elimination</span></span> 规则，
+  它的含义是 "从谬误出发，你能够证明任何命题。"
+  (王小波关于"荒诞的年代"的那句话是怎么说的来着?)
+
+<div class="paragraph"> </div>
+
+  如果 <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">False</span></span> 作为前提出现在上下文中，
+  那么我们就可以使用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> 来完成任何待证目标。 
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">ex_falso_quodlibet</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>),<br/>
 &nbsp;&nbsp;<span class="id" title="var">False</span> → <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">contra</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">contra</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-拉丁文 <i>'ex falso quodlibet'</i> 的字面意思是“从谬误出发，
-    你能够证明任何你想要的”，这也是爆炸原理的另一个广为人知的名字。 
-<div class="paragraph"> </div>
-
-<a name="lab13"></a><h4 class="section">练习：2 星, standard, optional (not_implies_our_not)</h4>
-
-
-<div class="paragraph"> </div>
-
-    证明 Coq 对否定的定义蕴含前面提到的直觉上的定义： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fact</span> <span class="id" title="var">not_implies_our_not</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">P</span>:<span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;¬ <span class="id" title="var">P</span> → (<span class="id" title="keyword">∀</span> (<span class="id" title="var">Q</span>:<span class="id" title="keyword">Prop</span>), <span class="id" title="var">P</span> → <span class="id" title="var">Q</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
- 不等性是十分常见的否定句的例子，，它有一个特别的记法 <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">≠</span> <span class="inlinecode"><span class="id" title="var">y</span></span>：
-
-<div class="paragraph"> </div>
-
-      Notation "x &lt;&gt; y" := (~(x = y)).
-
-<div class="paragraph"> </div>
-
- 我们可以用 <span class="inlinecode"><span class="id" title="var">not</span></span> 来陈述 <span class="inlinecode">0</span> 和 <span class="inlinecode">1</span> 是不同的 <span class="inlinecode"><span class="id" title="var">nat</span></span> 元素： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">zero_not_one</span> : 0 ≠ 1.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-</div>
-
-<div class="doc">
-性质 <span class="inlinecode">0</span> <span class="inlinecode">≠</span> <span class="inlinecode">1</span> 就是 <span class="inlinecode">~(0</span> <span class="inlinecode">=</span> <span class="inlinecode">1)</span>，即 <span class="inlinecode"><span class="id" title="var">not</span></span> <span class="inlinecode">(0</span> <span class="inlinecode">=</span> <span class="inlinecode">1)</span>，
-      它会展开为 <span class="inlinecode">(0</span> <span class="inlinecode">=</span> <span class="inlinecode">1)</span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>。（这里显式地用 <span class="inlinecode"><span class="id" title="tactic">unfold</span></span> <span class="inlinecode"><span class="id" title="var">not</span></span>
-      展示了这一点，不过一般可以忽略。 
-</div>
-<div class="code">
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>.<br/>
-</div>
-
-<div class="doc">
-要证明不等性，我们可以反过来假设其相等... 
-</div>
-<div class="code">
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">contra</span>.<br/>
-</div>
-
-<div class="doc">
-... 然后从中推出矛盾。在这里，等式 <span class="inlinecode"><span class="id" title="var">O</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span> 与构造子 <span class="inlinecode"><span class="id" title="var">O</span></span> 和 <span class="inlinecode"><span class="id" title="var">S</span></span>
-      的不交性相矛盾，因此用 <span class="inlinecode"><span class="id" title="tactic">discriminate</span></span> 就能解决它。 
-</div>
-<div class="code">
-&nbsp;&nbsp;<span class="id" title="tactic">discriminate</span> <span class="id" title="var">contra</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">contra</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-为了习惯用 Coq 处理否定命题，我们需要一些练习。
-    即便你十分清楚为什么某个否定命题成立，但一下就找到让 Coq 理解的方式
-    有点棘手。以下常见事实的证明留给你热身。 
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">ex</span></span> <span class="inlinecode"><span class="id" title="var">falso</span></span> <span class="inlinecode"><span class="id" title="var">quodlibet</span></span> (缩写 EFQ) 也称为 _"Principle of Explosion"_。
+  形象地讲，<span class="inlinecode"><span class="id" title="var">False</span></span> 是枚炸弹，<span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">False</span></span> 就是在拆炸弹。
+  然后，Bang ……
+
+<div class="paragraph"> </div>
+
+  因此，一旦我们设法向上下文中引入了 <span class="inlinecode"><span class="id" title="var">False</span></span>，我们也就完成了证明。
+
 </div>
 <div class="code">
 
@@ -729,100 +684,140 @@ From LF Require Export Tactics.
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">not_False</span> :<br/>
 &nbsp;&nbsp;¬ <span class="id" title="var">False</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">contradiction_implies_anything</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;(<span class="id" title="var">P</span> ∧ ¬<span class="id" title="var">P</span>) → <span class="id" title="var">Q</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> [<span class="id" title="var">HP</span> <span class="id" title="var">HNA</span>]. <span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span> <span class="id" title="tactic">in</span> <span class="id" title="var">HNA</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HNA</span> <span class="id" title="tactic">in</span> <span class="id" title="var">HP</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">HP</span>. <span class="id" title="keyword">Qed</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>. &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">double_neg</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">P</span> → ~~<span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">G</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">G</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="keyword">Qed</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">G</span>. &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">G</span>. &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab14"></a><h4 class="section">练习：2 星, advanced (double_neg_inf)</h4>
-
-
-<div class="paragraph"> </div>
-
-    请写出 <span class="inlinecode"><span class="id" title="var">double_neg</span></span> 的非形式化证明：
+  定理 <span class="inlinecode"><span class="id" title="var">double_neg</span></span> 的证明使用了 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> 策略的另一种用法。
 
 <div class="paragraph"> </div>
 
-   <i>'定理'</i>：对于任何命题 <span class="inlinecode"><span class="id" title="var">P</span></span> 而言，<span class="inlinecode"><span class="id" title="var">P</span></span> 蕴含 <span class="inlinecode">~~<span class="id" title="var">P</span></span>。 
+  之前，当待证明的目标 <span class="inlinecode"><span class="id" title="keyword">Goal</span></span> 与上下文中的某个前提 <span class="inlinecode"><span class="id" title="var">A</span></span> 完全一样时，
+  我们使用 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> 即可完成证明。
+
+<div class="paragraph"> </div>
+
+  在上面的证明中，<span class="inlinecode"><span class="id" title="var">G</span></span> 是一个蕴含式 <span class="inlinecode"><span class="id" title="var">G</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>，
+  当前待证目标 <span class="inlinecode"><span class="id" title="keyword">Goal</span></span> 是 <span class="inlinecode"><span class="id" title="keyword">Goal</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">False</span></span>。
+  注意到待证目标与蕴含式 <span class="inlinecode"><span class="id" title="var">G</span></span> 中的结论相同 
+  (更宽泛地讲，只需要它们可以匹配)，
+  此时，<span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">G</span></span> 将 <span class="inlinecode"><span class="id" title="var">G</span></span> 作用到当前待证目标上，
+  其效果相当于 _逆向 (Backward)_ 使用蕴含式 <span class="inlinecode"><span class="id" title="var">G</span></span>:
+  它将待证目标 <span class="inlinecode"><span class="id" title="var">False</span></span> 转化为 <span class="inlinecode"><span class="id" title="var">P</span></span>。
+  背后的推理是: 要证明 <span class="inlinecode"><span class="id" title="var">False</span></span> 成立，根据前提 <span class="inlinecode"><span class="id" title="var">G</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>，
+  只需证明 <span class="inlinecode"><span class="id" title="var">P</span></span> 成立。
+  这实际上是 <span class="inlinecode">-&gt;-<span class="id" title="var">elimination</span></span> 规则，也就是 <i>'modus ponens'</i> 规则。
+
 </div>
 <div class="code">
 
 <br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">contradiction_implies_anything</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
+&nbsp;&nbsp;(<span class="id" title="var">P</span> ∧ ¬<span class="id" title="var">P</span>) → <span class="id" title="var">Q</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> [<span class="id" title="var">HP</span> <span class="id" title="var">HNP</span>]. <span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span> <span class="id" title="tactic">in</span> <span class="id" title="var">HNP</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HNP</span> <span class="id" title="tactic">in</span> <span class="id" title="var">HP</span>. &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">HP</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_double_neg_inf</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+  上面的证明使用了 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> 策略的第三种用法:
+  <span class="inlinecode"><span class="id" title="var">HNP</span></span> 是蕴含式 <span class="inlinecode"><span class="id" title="var">HNP</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>。
+  <span class="inlinecode"><span class="id" title="var">HP</span></span> 是 <span class="inlinecode"><span class="id" title="var">HP</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>。
+  注意到 <span class="inlinecode"><span class="id" title="var">HP</span></span> 与 <span class="inlinecode"><span class="id" title="var">HNP</span></span> 的前件相同，
+  此时，<span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">HNP</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">HP</span></span> 是在正向应用 <i>'modus ponens'</i> 规则:
+  已知 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span> 与 <span class="inlinecode"><span class="id" title="var">P</span></span>，推导出 <span class="inlinecode"><span class="id" title="var">False</span></span>。
+
+<div class="paragraph"> </div>
+
+  注意: <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> 会改变 <span class="inlinecode"><span class="id" title="var">H</span></span>。
+  如果不想改变 <span class="inlinecode"><span class="id" title="var">H</span></span>，可以使用 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">...</span> 变体。
+
+<div class="paragraph"> </div>
+
+<a name="lab13"></a><h4 class="section">练习：2 星, standard, optional (not_implies_our_not)</h4>
+
+<div class="paragraph"> </div>
+
+  了解了 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> 的用法，现在你可以证明定理 
+  <span class="inlinecode"><span class="id" title="var">not_implies_our_not</span></span> 了。
+  它实际上指出了 <span class="inlinecode"><span class="id" title="var">not</span></span> 的另一种定义方法:
+  我们可以使用 "<span class="inlinecode"><span class="id" title="var">P</span></span> 可以蕴含一切命题 (<span class="inlinecode"><span class="id" title="var">Q</span></span>)" 定义 <span class="inlinecode"><span class="id" title="var">not</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span>。  
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fact</span> <span class="id" title="var">not_implies_forall_implication</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;¬ <span class="id" title="var">P</span> → (<span class="id" title="keyword">∀</span> (<span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>), <span class="id" title="var">P</span> → <span class="id" title="var">Q</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
-<a name="lab15"></a><h4 class="section">练习：2 星, standard, recommended (contrapositive)</h4>
+<br/>
+<span class="id" title="keyword">Fact</span> <span class="id" title="var">forall_implication_implies_not</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>),<br/>
+&nbsp;&nbsp;(<span class="id" title="keyword">∀</span> (<span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>), <span class="id" title="var">P</span> → <span class="id" title="var">Q</span>) → (~ <span class="id" title="var">P</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">PQ</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">HP</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">PQ</span> <span class="id" title="var">False</span>). &nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">HP</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab14"></a><h4 class="section">练习：2 星, standard, recommended (contrapositive)</h4>
 
 </div>
 <div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">contrapositive</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>),<br/>
 &nbsp;&nbsp;(<span class="id" title="var">P</span> → <span class="id" title="var">Q</span>) → (~<span class="id" title="var">Q</span> → ¬<span class="id" title="var">P</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab16"></a><h4 class="section">练习：1 星, standard (not_both_true_and_false)</h4>
+<a name="lab15"></a><h4 class="section">练习：1 星, standard (not_both_true_and_false)</h4>
 
 </div>
 <div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">not_both_true_and_false</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;¬ (<span class="id" title="var">P</span> ∧ ¬<span class="id" title="var">P</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab17"></a><h4 class="section">练习：1 星, advanced (informal_not_PNP)</h4>
-
 
 <div class="paragraph"> </div>
 
-    请写出 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span>,</span> <span class="inlinecode">~(<span class="id" title="var">P</span></span> <span class="inlinecode">∧</span> <span class="inlinecode">¬<span class="id" title="var">P</span>)</span> 的非形式化证明。 
-</div>
-<div class="code">
+  我们用 <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">≠</span> <span class="inlinecode"><span class="id" title="var">y</span></span> 表示 (~ (x = y))。
+  Notation "x &lt;&gt; y" := (~(x = y)).
 
-<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_informal_not_PNP</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
- 类似地，由于不等性包含一个否定，因此在能够熟练地使用它前也需要一些练习。
-    这里有个有用的技巧：如果你需要证明某个目标不可能时（例如当前的目标陈述为
-    <span class="inlinecode"><span class="id" title="var">false</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span>），请使用 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet</span></span> 将该目标转换为 <span class="inlinecode"><span class="id" title="var">False</span></span>。
-    如果在当前上下文中存在形如 <span class="inlinecode">¬<span class="id" title="var">P</span></span> 的假设（特别是形如 <span class="inlinecode"><span class="id" title="var">x</span>≠<span class="id" title="var">y</span></span> 的假设），
-    那么此技巧会让这些假设用起来更容易些。 
 </div>
 <div class="code">
 
@@ -830,11 +825,9 @@ From LF Require Export Tactics.
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">not_true_is_false</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">b</span> ≠ <span class="id" title="var">true</span> → <span class="id" title="var">b</span> = <span class="id" title="var">false</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [] <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;- <br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> [] <span class="id" title="var">H</span>. &nbsp;&nbsp;- <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ex_falso_quodlibet</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">ex_falso_quodlibet</span>. &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;- <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
@@ -843,10 +836,10 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-由于用 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet</span></span> 推理十分常用，因此 Coq 提供了内建的策略
-    <span class="inlinecode"><span class="id" title="var">exfalso</span></span>。 
+Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet</span></span> 提供了内建的策略 <span class="inlinecode"><span class="id" title="var">exfalso</span></span>。
 </div>
 <div class="code">
+<span class="id" title="keyword">Print</span> <span class="id" title="var">exfalso</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">not_true_is_false'</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>,<br/>
@@ -856,19 +849,36 @@ From LF Require Export Tactics.
 &nbsp;&nbsp;- <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">exfalso</span>. &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;-  <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;- <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
 </div>
 
 <div class="doc">
-<a name="lab18"></a><h2 class="section">真值</h2>
+<a name="lab16"></a><h2 class="section">真值</h2>
 
 <div class="paragraph"> </div>
 
- 除 <span class="inlinecode"><span class="id" title="var">False</span></span> 外，Coq 的标准库中还定义了 <span class="inlinecode"><span class="id" title="var">True</span></span>，一个明显真的命题。
-    为了证明它，我们使用了预定义的常量 <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">True</span></span>： 
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">True</span></span> 也是 Coq 预定义的命题，它代表真。
+  我们已经知道 <span class="inlinecode"><span class="id" title="var">False</span></span> 的定义为空，那么 <span class="inlinecode"><span class="id" title="var">True</span></span> 的定义是什么呢?
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <span class="id" title="var">True</span>.<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">True</span>.<br/>
+</div>
+
+<div class="doc">
+  ===&gt; <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> <span class="inlinecode"><span class="id" title="var">True</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> <span class="inlinecode">:=</span> <span class="inlinecode"><span class="id" title="var">I</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">True</span></span>
+
+<div class="paragraph"> </div>
+
+  <span class="inlinecode"><span class="id" title="var">True</span></span> 只有一种构造方式，那就是 <span class="inlinecode"><span class="id" title="var">I</span></span>。
+  因此，要证明 <span class="inlinecode"><span class="id" title="var">True</span></span>，我们只需要 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">I</span></span> 即可。
+
 </div>
 <div class="code">
 
@@ -880,21 +890,18 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-与经常使用的 <span class="inlinecode"><span class="id" title="var">False</span></span> 不同，<span class="inlinecode"><span class="id" title="var">True</span></span> 很少使用，因为它作为证明目标来说过于平凡，
-    而作为前提又不携带任何有用的信息。 
 
 <div class="paragraph"> </div>
 
-    然而在使用条件从句定义复杂的 <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>，或者作为高阶 <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> 的参数时，
-    它还是挺有用的。之后我们会看到 <span class="inlinecode"><span class="id" title="var">True</span></span> 的这类用法。 
+  <span class="inlinecode"><span class="id" title="var">True</span></span> 作为前提不携带任何有用的信息，
+  因此没有必要引入 <span class="inlinecode"><span class="id" title="var">True</span>-<span class="id" title="var">elimination</span></span> 规则。
+
 </div>
 <div class="code">
-
-<br/>
 </div>
 
 <div class="doc">
-<a name="lab19"></a><h2 class="section">逻辑等价</h2>
+<a name="lab17"></a><h2 class="section">逻辑等价</h2>
 
 <div class="paragraph"> </div>
 
@@ -940,7 +947,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab20"></a><h4 class="section">练习：1 星, standard, optional (iff_properties)</h4>
+<a name="lab18"></a><h4 class="section">练习：1 星, standard, optional (iff_properties)</h4>
 
 
 <div class="paragraph"> </div>
@@ -967,7 +974,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab21"></a><h4 class="section">练习：3 星, standard (or_distributes_over_and)</h4>
+<a name="lab19"></a><h4 class="section">练习：3 星, standard (or_distributes_over_and)</h4>
 
 </div>
 <div class="code">
@@ -1061,7 +1068,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab22"></a><h2 class="section">存在量化</h2>
+<a name="lab20"></a><h2 class="section">存在量化</h2>
 
 <div class="paragraph"> </div>
 
@@ -1105,7 +1112,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab23"></a><h4 class="section">练习：1 星, standard, recommended (dist_not_exists)</h4>
+<a name="lab21"></a><h4 class="section">练习：1 星, standard, recommended (dist_not_exists)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1126,7 +1133,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab24"></a><h4 class="section">练习：2 星, standard (dist_exists_or)</h4>
+<a name="lab22"></a><h4 class="section">练习：2 星, standard (dist_exists_or)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1151,7 +1158,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab25"></a><h1 class="section">使用命题编程</h1>
+<a name="lab23"></a><h1 class="section">使用命题编程</h1>
 
 <div class="paragraph"> </div>
 
@@ -1253,7 +1260,7 @@ From LF Require Export Tactics.
     这是一种与之不同的技巧，有着其独特的优势和限制。 
 <div class="paragraph"> </div>
 
-<a name="lab26"></a><h4 class="section">练习：2 星, standard (In_map_iff)</h4>
+<a name="lab24"></a><h4 class="section">练习：2 星, standard (In_map_iff)</h4>
 
 </div>
 <div class="code">
@@ -1269,7 +1276,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab27"></a><h4 class="section">练习：2 星, standard (In_app_iff)</h4>
+<a name="lab25"></a><h4 class="section">练习：2 星, standard (In_app_iff)</h4>
 
 </div>
 <div class="code">
@@ -1283,7 +1290,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab28"></a><h4 class="section">练习：3 星, standard, recommended (All)</h4>
+<a name="lab26"></a><h4 class="section">练习：3 星, standard, recommended (All)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1316,7 +1323,7 @@ From LF Require Export Tactics.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab29"></a><h4 class="section">练习：3 星, standard (combine_odd_even)</h4>
+<a name="lab27"></a><h4 class="section">练习：3 星, standard (combine_odd_even)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1376,7 +1383,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab30"></a><h1 class="section">对参数应用定理</h1>
+<a name="lab28"></a><h1 class="section">对参数应用定理</h1>
 
 <div class="paragraph"> </div>
 
@@ -1590,7 +1597,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab31"></a><h1 class="section">Coq vs. 集合论</h1>
+<a name="lab29"></a><h1 class="section">Coq vs. 集合论</h1>
 
 <div class="paragraph"> </div>
 
@@ -1614,7 +1621,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab32"></a><h2 class="section">函数的外延性</h2>
+<a name="lab30"></a><h2 class="section">函数的外延性</h2>
 
 <div class="paragraph"> </div>
 
@@ -1722,7 +1729,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab33"></a><h4 class="section">练习：4 星, standard (tr_rev_correct)</h4>
+<a name="lab31"></a><h4 class="section">练习：4 星, standard (tr_rev_correct)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1768,7 +1775,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab34"></a><h2 class="section">命题与布尔值</h2>
+<a name="lab32"></a><h2 class="section">命题与布尔值</h2>
 
 <div class="paragraph"> </div>
 
@@ -1818,7 +1825,7 @@ From LF Require Export Tactics.
 </div>
 
 <div class="doc">
-<a name="lab35"></a><h4 class="section">练习：3 星, standard (evenb_double_conv)</h4>
+<a name="lab33"></a><h4 class="section">练习：3 星, standard (evenb_double_conv)</h4>
 
 </div>
 <div class="code">
@@ -2035,7 +2042,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
     它是个很好的例子。 
 <div class="paragraph"> </div>
 
-<a name="lab36"></a><h4 class="section">练习：2 星, standard (logical_connectives)</h4>
+<a name="lab34"></a><h4 class="section">练习：2 星, standard (logical_connectives)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2061,7 +2068,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab37"></a><h4 class="section">练习：1 星, standard (eqb_neq)</h4>
+<a name="lab35"></a><h4 class="section">练习：1 星, standard (eqb_neq)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2082,7 +2089,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab38"></a><h4 class="section">练习：3 星, standard (eqb_list)</h4>
+<a name="lab36"></a><h4 class="section">练习：3 星, standard (eqb_list)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2112,7 +2119,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab39"></a><h4 class="section">练习：2 星, standard, recommended (All_forallb)</h4>
+<a name="lab37"></a><h4 class="section">练习：2 星, standard, recommended (All_forallb)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2157,7 +2164,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 </div>
 
 <div class="doc">
-<a name="lab40"></a><h2 class="section">经典逻辑 vs. 构造逻辑</h2>
+<a name="lab38"></a><h2 class="section">经典逻辑 vs. 构造逻辑</h2>
 
 <div class="paragraph"> </div>
 
@@ -2276,7 +2283,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
     就无法在 Coq 中编码此推理。 
 <div class="paragraph"> </div>
 
-<a name="lab41"></a><h4 class="section">练习：3 星, standard (excluded_middle_irrefutable)</h4>
+<a name="lab39"></a><h4 class="section">练习：3 星, standard (excluded_middle_irrefutable)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2301,7 +2308,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab42"></a><h4 class="section">练习：3 星, advanced (not_exists_dist)</h4>
+<a name="lab40"></a><h4 class="section">练习：3 星, advanced (not_exists_dist)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2333,7 +2340,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab43"></a><h4 class="section">练习：5 星, standard, optional (classical_axioms)</h4>
+<a name="lab41"></a><h4 class="section">练习：5 星, standard, optional (classical_axioms)</h4>
 
 
 <div class="paragraph"> </div>
