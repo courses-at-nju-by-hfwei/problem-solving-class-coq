@@ -547,112 +547,123 @@ Proof. apply I. Qed.
 (* ================================================================= *)
 (** ** 逻辑等价 *)
 
-(** 联结词“当且仅当”用起来十分方便，它是两个蕴含式的合取，
-    断言了两个命题拥有同样的真值。 *)
+(** 
+  命题 [A <-> B] 表示 [A] 成立当且仅当 [B] 成立。
+  [A <-> B] 是 [iff A B] 的语法糖。
+*)
+Check iff.
+(* ===> iff : Prop -> Prop -> Prop *)
+Print iff.
+(**
+  ===> iff = fun A B : Prop => (A -> B) /\ (B -> A)
+  
+  我们详细讲解过 [not] 的定义。
+  现在，你应该能独立理解 [iff] 的定义了。
+*)
 
-Module MyIff.
-
-Definition iff (P Q : Prop) := (P -> Q) /\ (Q -> P).
-
-Notation "P <-> Q" := (iff P Q)
-                      (at level 95, no associativity)
-                      : type_scope.
-
-End MyIff.
-
+(**
+  在 Coq 中，[A <-> B] 即为 [A -> B] 与 [B -> A] 的合取。
+  - 当 [A <-> B] 作为前提 [H] 出现在上下文中时，
+    我们可以使用 [destruct H as [HAB HBA]] 
+    将它拆成两个前提 [HAB : A -> B] 与 [HBA : B -> A]。
+  - 当 [A <-> B] 作为目标时，
+    我们可以使用 [split] 将它拆成两个子目标
+    [A -> B] 与 [B -> A]。
+    
+  依照上述证明方法，我们可以证明 [iff] 具有对称性 (定理 [iff_sym])。
+*)
 Theorem iff_sym : forall P Q : Prop,
   (P <-> Q) -> (Q <-> P).
 Proof.
-  (* 课上已完成 *)
   intros P Q [HAB HBA].
   split.
   - (* -> *) apply HBA.
-  - (* <- *) apply HAB.  Qed.
-
-Lemma not_true_iff_false : forall b,
-  b <> true <-> b = false.
-Proof.
-  (* 课上已完成 *)
-  intros b. split.
-  - (* -> *) apply not_true_is_false.
-  - (* <- *)
-    intros H. rewrite H. intros H'. discriminate H'.
+  - (* <- *) apply HAB.
 Qed.
 
-(** **** 练习：1 星, standard, optional (iff_properties)  
-
-    参照上面对 [<->] 对称性（[iff_sym]）的证明，
-    请证明它同时也有自反性和传递性。 *)
+(** **** 练习：1 星, standard, optional (iff_properties) *)
+(**
+  请证明 [iff] 具有自反性 (定理 [iff_refl]) 与传递性 (iff_trans)。
+  (你可能还不知道什么是自反性，什么是对称性，什么是传递性。不要紧。
+  我们会在后续课程介绍。)
+*)
 
 Theorem iff_refl : forall P : Prop,
   P <-> P.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem iff_trans : forall P Q R : Prop,
   (P <-> Q) -> (Q <-> R) -> (P <-> R).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
 (** **** 练习：3 星, standard (or_distributes_over_and)  *)
+(** 请证明如下分配律。*)
 Theorem or_distributes_over_and : forall P Q R : Prop,
   P \/ (Q /\ R) <-> (P \/ Q) /\ (P \/ R).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** Coq 的某些策略会特殊对待 [iff] 语句，以此来避免操作某些底层的证明状态。
-    特别来说，[rewrite] 和 [reflexivity] 不仅可以用于相等关系，还可用于
-    [iff] 语句。为了开启此行为，我们需要导入一个 Coq 的库来支持它： *)
-
+(** 
+  我们之前介绍过的 [rewrite] 和 [reflexivity] 
+  不仅可以用于相等关系，还可用于 [iff] 命题。
+  为了开启此行为，我们需要导入库 Setoids.Setoid。
+*)
 From Coq Require Import Setoids.Setoid.
 
-(** 下面是一个简单的例子，它展示了这些策略如何使用 [iff]。
-    首先，我们来证明一些基本的 [iff] 等价关系命题... *)
+(**
+  为了演示 [rewrite]、[reflexivity] 在 [iff] 上的作用，
+  我们先做一些准备工作。
+*)
 
 Lemma mult_0 : forall n m, n * m = 0 <-> n = 0 \/ m = 0.
 Proof.
   split.
-  - apply mult_eq_0.
-  - apply or_example.
-Qed.
+  - apply mult_eq_0. (* 我怎么能记得住这么琐碎的定理! *)
+  - apply or_example. (* 天呐，连 [Example] 都要记住吗?! *)
+Qed. (* 不需要记住。我们的大脑有更重要的事情要处理。这里只是为了演示。*)
 
+(**
+  我们将定理 [or_assoc] 的证明留作练习。
+  一点提示: [intro [HP | [HQ | HR]]]。
+*)
 Lemma or_assoc :
   forall P Q R : Prop, P \/ (Q \/ R) <-> (P \/ Q) \/ R.
 Proof.
-  intros P Q R. split.
-  - intros [H | [H | H]].
-    + left. left. apply H.
-    + left. right. apply H.
-    + right. apply H.
-  - intros [[H | H] | H].
-    + left. apply H.
-    + right. left. apply H.
-    + right. right. apply H.
-Qed.
+  (* 请在此处解答 *)
+Admitted.
+(** [] *)
 
-(** 现在我们可以用这些事实配合 [rewrite] 与 [reflexivity]
-    对涉及等价关系的陈述给出流畅的证明了。以下是之前 [mult_0]
-    包含三个变量的版本： *)
+(** 
+  现在，我们利用 [mult_0] 与 [or_assoc] 证明 [mult_0_3]。
+  注意，我们可以对 [iff] 命题使用 [rewrite] 与 [reflexivity]。
+*)
 
 Lemma mult_0_3 :
   forall n m p, n * m * p = 0 <-> n = 0 \/ m = 0 \/ p = 0.
 Proof.
   intros n m p.
-  rewrite mult_0. rewrite mult_0. rewrite or_assoc.
+  rewrite mult_0. rewrite mult_0.
+  rewrite or_assoc.
   reflexivity.
 Qed.
 
-(** [apply] 策略也可以用在 [<->] 上。当给定一个等价关系命题作为
-    [apply] 的参数时，它会试图应用正确的方向。 *)
+(** 
+  此外，[apply] 策略也可以用在 [<->] 上。
+  这时，Coq 会尝试应用正确的方向。
+*)
 
 Lemma apply_iff_example :
   forall n m : nat, n * m = 0 -> n = 0 \/ m = 0.
 Proof.
   intros n m H. apply mult_0. apply H.
 Qed.
-
 (* ================================================================= *)
 (** ** 存在量化 *)
 
@@ -691,7 +702,8 @@ Proof.
 Theorem dist_not_exists : forall (X:Type) (P : X -> Prop),
   (forall x, P x) -> ~ (exists x, ~ P x).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
 (** **** 练习：2 星, standard (dist_exists_or)  

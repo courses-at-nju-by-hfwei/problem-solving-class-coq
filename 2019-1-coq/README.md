@@ -19,10 +19,10 @@
   - [x] Proposition
   - [x] and
   - [x] or
-  - [ ] not, false
+  - [x] not, false
   - [ ] implication?
   - [x] true
-  - [ ] equivalence
+  - [x] equivalence
   - [ ] existence
   - [ ] forall
 - [ ] (Optional) Constructive Logic ([`ConsLogic.v`]())
