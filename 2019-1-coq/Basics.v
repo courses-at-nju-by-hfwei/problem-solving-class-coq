@@ -658,10 +658,11 @@ Fixpoint evenb (n:nat) : bool :=
   end.
 
 Example test_evenb1:   evenb 2019 = false.
-Proof. simpl. reflexivity.  Qed.
+Proof. simpl. reflexivity. Qed.
 
 (** 我们可以基于 [evenb] 定义 [oddb]。*)
-Definition oddb (n:nat) : bool   :=   negb (evenb n).
+Definition oddb (n:nat) : bool := 
+  negb (evenb n).
 
 Example test_oddb1:    oddb 2019 = true.
 Proof. simpl. reflexivity.  Qed.

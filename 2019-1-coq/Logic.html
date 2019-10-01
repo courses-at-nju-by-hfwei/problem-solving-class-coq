@@ -29,15 +29,12 @@
 
 <br/>
 <span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden,-parsing".<br/>
+<span class="id" title="var">From</span> <span class="id" title="var">LF</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">Basics</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-From LF Require Export Tactics. 
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
   "逻辑是不可战胜的，因为反对逻辑还得使用逻辑。" By 谁说的来着?
 
 <div class="paragraph"> </div>
@@ -905,42 +902,58 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 
 <div class="paragraph"> </div>
 
- 联结词“当且仅当”用起来十分方便，它是两个蕴含式的合取，
-    断言了两个命题拥有同样的真值。 
+
+<div class="paragraph"> </div>
+
+  命题 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">↔</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 表示 <span class="inlinecode"><span class="id" title="var">A</span></span> 成立当且仅当 <span class="inlinecode"><span class="id" title="var">B</span></span> 成立。
+  <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">↔</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 是 <span class="inlinecode"><span class="id" title="var">iff</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> 的语法糖。
+
 </div>
 <div class="code">
+<span class="id" title="keyword">Check</span> <span class="id" title="var">iff</span>.<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">iff</span>.<br/>
+</div>
 
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">MyIff</span>.<br/>
+<div class="doc">
+  ===&gt; iff = fun A B : Prop =&gt; (A -&gt; B) /\ (B -&gt; A)
 
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">iff</span> (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>) := (<span class="id" title="var">P</span> → <span class="id" title="var">Q</span>) ∧ (<span class="id" title="var">Q</span> → <span class="id" title="var">P</span>).<br/>
+<div class="paragraph"> </div>
 
-<br/>
-<span class="id" title="keyword">Notation</span> &quot;P &lt;-&gt; Q" := (<span class="id" title="var">iff</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 95, <span class="id" title="keyword">no</span> <span class="id" title="keyword">associativity</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">type_scope</span>.<br/>
+  我们详细讲解过 <span class="inlinecode"><span class="id" title="var">not</span></span> 的定义。
+  现在，你应该能独立理解 <span class="inlinecode"><span class="id" title="var">iff</span></span> 的定义了。
 
-<br/>
-<span class="id" title="keyword">End</span> <span class="id" title="var">MyIff</span>.<br/>
+<div class="paragraph"> </div>
 
-<br/>
+
+<div class="paragraph"> </div>
+
+  在 Coq 中，<span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">↔</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 即为 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">A</span></span> 的合取。
+<ul class="doclist">
+<li> 当 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">↔</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 作为前提 <span class="inlinecode"><span class="id" title="var">H</span></span> 出现在上下文中时，
+    我们可以使用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[<span class="id" title="var">HAB</span></span> <span class="inlinecode"><span class="id" title="var">HBA</span>]</span> 
+    将它拆成两个前提 <span class="inlinecode"><span class="id" title="var">HAB</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 与 <span class="inlinecode"><span class="id" title="var">HBA</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">A</span></span>。
+
+</li>
+<li> 当 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">↔</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 作为目标时，
+    我们可以使用 <span class="inlinecode"><span class="id" title="tactic">split</span></span> 将它拆成两个子目标
+    <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">A</span></span>。
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+  依照上述证明方法，我们可以证明 <span class="inlinecode"><span class="id" title="var">iff</span></span> 具有对称性 (定理 <span class="inlinecode"><span class="id" title="var">iff_sym</span></span>)。
+
+</div>
+<div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">iff_sym</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;(<span class="id" title="var">P</span> ↔ <span class="id" title="var">Q</span>) → (<span class="id" title="var">Q</span> ↔ <span class="id" title="var">P</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> [<span class="id" title="var">HAB</span> <span class="id" title="var">HBA</span>].<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
 &nbsp;&nbsp;-  <span class="id" title="tactic">apply</span> <span class="id" title="var">HBA</span>.<br/>
-&nbsp;&nbsp;-  <span class="id" title="tactic">apply</span> <span class="id" title="var">HAB</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">not_true_iff_false</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">b</span>,<br/>
-&nbsp;&nbsp;<span class="id" title="var">b</span> ≠ <span class="id" title="var">true</span> ↔ <span class="id" title="var">b</span> = <span class="id" title="var">false</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">b</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;-  <span class="id" title="tactic">apply</span> <span class="id" title="var">not_true_is_false</span>.<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">H'</span>. <span class="id" title="tactic">discriminate</span> <span class="id" title="var">H'</span>.<br/>
+&nbsp;&nbsp;-  <span class="id" title="tactic">apply</span> <span class="id" title="var">HAB</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
@@ -949,11 +962,12 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 <div class="doc">
 <a name="lab18"></a><h4 class="section">练习：1 星, standard, optional (iff_properties)</h4>
 
-
 <div class="paragraph"> </div>
 
-    参照上面对 <span class="inlinecode">↔</span> 对称性（<span class="inlinecode"><span class="id" title="var">iff_sym</span></span>）的证明，
-    请证明它同时也有自反性和传递性。 
+  请证明 <span class="inlinecode"><span class="id" title="var">iff</span></span> 具有自反性 (定理 <span class="inlinecode"><span class="id" title="var">iff_refl</span></span>) 与传递性 (iff_trans)。
+  (你可能还不知道什么是自反性，什么是对称性，什么是传递性。不要紧。
+  我们会在后续课程介绍。)
+
 </div>
 <div class="code">
 
@@ -961,13 +975,13 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">iff_refl</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">P</span> ↔ <span class="id" title="var">P</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">iff_trans</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;(<span class="id" title="var">P</span> ↔ <span class="id" title="var">Q</span>) → (<span class="id" title="var">Q</span> ↔ <span class="id" title="var">R</span>) → (<span class="id" title="var">P</span> ↔ <span class="id" title="var">R</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
@@ -975,34 +989,37 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 <div class="paragraph"> </div>
 
 <a name="lab19"></a><h4 class="section">练习：3 星, standard (or_distributes_over_and)</h4>
-
+ 请证明如下分配律。
 </div>
 <div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">or_distributes_over_and</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">P</span> ∨ (<span class="id" title="var">Q</span> ∧ <span class="id" title="var">R</span>) ↔ (<span class="id" title="var">P</span> ∨ <span class="id" title="var">Q</span>) ∧ (<span class="id" title="var">P</span> ∨ <span class="id" title="var">R</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
- Coq 的某些策略会特殊对待 <span class="inlinecode"><span class="id" title="var">iff</span></span> 语句，以此来避免操作某些底层的证明状态。
-    特别来说，<span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 和 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 不仅可以用于相等关系，还可用于
-    <span class="inlinecode"><span class="id" title="var">iff</span></span> 语句。为了开启此行为，我们需要导入一个 Coq 的库来支持它： 
+
+<div class="paragraph"> </div>
+
+  我们之前介绍过的 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 和 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 
+  不仅可以用于相等关系，还可用于 <span class="inlinecode"><span class="id" title="var">iff</span></span> 命题。
+  为了开启此行为，我们需要导入库 Setoids.Setoid。
+
 </div>
 <div class="code">
-
-<br/>
 <span class="id" title="var">From</span> <span class="id" title="var">Coq</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Setoids.Setoid</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-下面是一个简单的例子，它展示了这些策略如何使用 <span class="inlinecode"><span class="id" title="var">iff</span></span>。
-    首先，我们来证明一些基本的 <span class="inlinecode"><span class="id" title="var">iff</span></span> 等价关系命题... 
+  为了演示 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span>、<span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 在 <span class="inlinecode"><span class="id" title="var">iff</span></span> 上的作用，
+  我们先做一些准备工作。
+
 </div>
 <div class="code">
 
@@ -1010,32 +1027,32 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">mult_0</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>, <span class="id" title="var">n</span> × <span class="id" title="var">m</span> = 0 ↔ <span class="id" title="var">n</span> = 0 ∨ <span class="id" title="var">m</span> = 0.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">mult_eq_0</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">or_example</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_assoc</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> ∨ (<span class="id" title="var">Q</span> ∨ <span class="id" title="var">R</span>) ↔ (<span class="id" title="var">P</span> ∨ <span class="id" title="var">Q</span>) ∨ <span class="id" title="var">R</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span>. <span class="id" title="tactic">split</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [<span class="id" title="var">H</span> | [<span class="id" title="var">H</span> | <span class="id" title="var">H</span>]].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">left</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">left</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">intros</span> [[<span class="id" title="var">H</span> | <span class="id" title="var">H</span>] | <span class="id" title="var">H</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">left</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">right</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">right</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
+&nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">mult_eq_0</span>. &nbsp;&nbsp;- <span class="id" title="tactic">apply</span> <span class="id" title="var">or_example</span>. <span class="id" title="keyword">Qed</span>. 
 <br/>
 </div>
 
 <div class="doc">
-现在我们可以用这些事实配合 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 与 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span>
-    对涉及等价关系的陈述给出流畅的证明了。以下是之前 <span class="inlinecode"><span class="id" title="var">mult_0</span></span>
-    包含三个变量的版本： 
+  我们将定理 <span class="inlinecode"><span class="id" title="var">or_assoc</span></span> 的证明留作练习。
+  一点提示: <span class="inlinecode"><span class="id" title="tactic">intro</span></span> <span class="inlinecode">[<span class="id" title="var">HP</span></span> <span class="inlinecode">|</span> <span class="inlinecode">[<span class="id" title="var">HQ</span></span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">HR</span>]]</span>。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">or_assoc</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span> <span class="id" title="var">R</span> : <span class="id" title="keyword">Prop</span>, <span class="id" title="var">P</span> ∨ (<span class="id" title="var">Q</span> ∨ <span class="id" title="var">R</span>) ↔ (<span class="id" title="var">P</span> ∨ <span class="id" title="var">Q</span>) ∨ <span class="id" title="var">R</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  现在，我们利用 <span class="inlinecode"><span class="id" title="var">mult_0</span></span> 与 <span class="inlinecode"><span class="id" title="var">or_assoc</span></span> 证明 <span class="inlinecode"><span class="id" title="var">mult_0_3</span></span>。
+  注意，我们可以对 <span class="inlinecode"><span class="id" title="var">iff</span></span> 命题使用 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 与 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span>。
+
 </div>
 <div class="code">
 
@@ -1044,7 +1061,8 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 &nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span>, <span class="id" title="var">n</span> × <span class="id" title="var">m</span> × <span class="id" title="var">p</span> = 0 ↔ <span class="id" title="var">n</span> = 0 ∨ <span class="id" title="var">m</span> = 0 ∨ <span class="id" title="var">p</span> = 0.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">mult_0</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">mult_0</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">or_assoc</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">mult_0</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">mult_0</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">or_assoc</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
@@ -1052,8 +1070,12 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 </div>
 
 <div class="doc">
-<span class="inlinecode"><span class="id" title="tactic">apply</span></span> 策略也可以用在 <span class="inlinecode">↔</span> 上。当给定一个等价关系命题作为
-    <span class="inlinecode"><span class="id" title="tactic">apply</span></span> 的参数时，它会试图应用正确的方向。 
+
+<div class="paragraph"> </div>
+
+  此外，<span class="inlinecode"><span class="id" title="tactic">apply</span></span> 策略也可以用在 <span class="inlinecode">↔</span> 上。
+  这时，Coq 会尝试应用正确的方向。
+
 </div>
 <div class="code">
 
@@ -1063,40 +1085,67 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">mult_0</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
 </div>
 
 <div class="doc">
-<a name="lab20"></a><h2 class="section">存在量化</h2>
+<a name="lab20"></a><h2 class="section">存在量词</h2>
 
 <div class="paragraph"> </div>
 
- <i>'存在量化'</i>也是十分重要的逻辑联结词。我们说存在某个类型为 <span class="inlinecode"><span class="id" title="var">T</span></span>
-    的 <span class="inlinecode"><span class="id" title="var">x</span></span>，使得某些性质 <span class="inlinecode"><span class="id" title="var">P</span></span> 对于 <span class="inlinecode"><span class="id" title="var">x</span></span> 成立，写作 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span>。
-    和 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> 一样，如果 Coq 能从上下文中推断出 <span class="inlinecode"><span class="id" title="var">x</span></span> 的类型，那么类型标注
-    <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> 就可以省略。
+
 <div class="paragraph"> </div>
 
- 为了证明形如 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 的语句，我们必须证明 <span class="inlinecode"><span class="id" title="var">P</span></span> 对于某些特定的
-    <span class="inlinecode"><span class="id" title="var">x</span></span> 成立，这些特定的 <span class="inlinecode"><span class="id" title="var">x</span></span> 被称作存在性的<i>'例证'</i>。证明分为两步：
-    首先，我们调用 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> 策略向 Coq 指出已经知道了使 <span class="inlinecode"><span class="id" title="var">P</span></span>
-    成立的例证 <span class="inlinecode"><span class="id" title="var">t</span></span>，然后证明将所有出现的 <span class="inlinecode"><span class="id" title="var">x</span></span> 替换成 <span class="inlinecode"><span class="id" title="var">t</span></span> 的命题 <span class="inlinecode"><span class="id" title="var">P</span></span>。 
+  命题 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 表示存在类型为 <span class="inlinecode"><span class="id" title="var">T</span></span> 的 <span class="inlinecode"><span class="id" title="var">x</span></span>，
+  使得性质 <span class="inlinecode"><span class="id" title="var">P</span></span> 对 <span class="inlinecode"><span class="id" title="var">x</span></span> 成立 (或说，<span class="inlinecode"><span class="id" title="var">x</span></span> 满足性质 <span class="inlinecode"><span class="id" title="var">P</span></span>)。
+  <span class="inlinecode"><span class="id" title="tactic">∃</span></span> 是 <i>'存在量词_。
+  (如果 Coq 能从上下文中推断出 <span class="inlinecode"><span class="id" title="var">x</span></span> 的类型，那么 <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> 也可以省略。
+  但并不建议初学者这么做。)
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  要证明形如 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 的命题，
+  我们只需(而且"必须"; 下一节 "ConsLogic.v" 解释)
+  证明 <span class="inlinecode"><span class="id" title="var">P</span></span> 对于某个特定的 <span class="inlinecode"><span class="id" title="var">x</span></span> 成立。
+  我们称 <span class="inlinecode"><span class="id" title="var">x</span></span> 为 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 的例证。 
+  这对应于 (逆用) "exists-intro" 规则。
+
+<div class="paragraph"> </div>
+
+  在 Coq 中，上述证明分为两步:
+<ul class="doclist">
+<li> 使用 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> 策略告诉 Coq 我们认为 <span class="inlinecode"><span class="id" title="var">t</span></span> 是满足要求的 <span class="inlinecode"><span class="id" title="var">x</span></span>。
+    此时，证明目标变成 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。
+
+</li>
+<li> 证明新目标 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。
+
+</li>
+</ul>
+
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">four_is_even</span> : <span class="id" title="tactic">∃</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, 4 = <span class="id" title="var">n</span> + <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">∃</span> 2. <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">∃</span> 2. &nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-反之，如果我们的的上下文中有形如 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 的存在前提，
-    可以将其解构得到一个例证 <span class="inlinecode"><span class="id" title="var">x</span></span> 和一个陈述 <span class="inlinecode"><span class="id" title="var">P</span></span> 对于 <span class="inlinecode"><span class="id" title="var">x</span></span> 成立的前提。 
+  如果形如 <span class="inlinecode"><span class="id" title="var">H</span>:</span> <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 的命题作为前提出现在上下文中，
+  我们可以使用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[<span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">Px</span>]</span> (或者 intros) 将它拆分成
+  一个例证 <span class="inlinecode"><span class="id" title="var">x</span></span> 与 <span class="inlinecode"><span class="id" title="var">x</span></span> 满足性质 <span class="inlinecode"><span class="id" title="var">P</span></span> 的前提 <span class="inlinecode"><span class="id" title="var">Px</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。
+  在之后的证明中，我们就可以使用 <span class="inlinecode"><span class="id" title="var">x</span></span> 与前提 <span class="inlinecode"><span class="id" title="var">Px</span></span> 了。
+  这对应于 "exists-elimination" 规则。
+  (新引入的前提 <span class="inlinecode"><span class="id" title="var">Px</span></span> 在使用 "exists-elimination"规则时
+  会被 discharged (这个词该怎么翻译???) 掉。)
+
 </div>
 <div class="code">
 
@@ -1106,7 +1155,8 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 &nbsp;&nbsp;(<span class="id" title="tactic">∃</span> <span class="id" title="var">o</span>, <span class="id" title="var">n</span> = 2 + <span class="id" title="var">o</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> [<span class="id" title="var">m</span> <span class="id" title="var">Hm</span>]. &nbsp;&nbsp;<span class="id" title="tactic">∃</span> (2 + <span class="id" title="var">m</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Hm</span>. <span class="id" title="keyword">Qed</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">Hm</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
@@ -1114,19 +1164,24 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 <div class="doc">
 <a name="lab21"></a><h4 class="section">练习：1 星, standard, recommended (dist_not_exists)</h4>
 
+<div class="paragraph"> </div>
+
+  请证明定理 <span class="inlinecode"><span class="id" title="var">dist_not_exists</span></span>:
+  "<span class="inlinecode"><span class="id" title="var">P</span></span> 对所有 <span class="inlinecode"><span class="id" title="var">x</span></span> 成立" 蕴含 "不存在 <span class="inlinecode"><span class="id" title="var">x</span></span> 使得 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> 不成立"。
 
 <div class="paragraph"> </div>
 
-    请证明“<span class="inlinecode"><span class="id" title="var">P</span></span> 对所有 <span class="inlinecode"><span class="id" title="var">x</span></span> 成立”蕴含“不存在 <span class="inlinecode"><span class="id" title="var">x</span></span> 使 <span class="inlinecode"><span class="id" title="var">P</span></span> 不成立。”
-    （提示：<span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[<span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">E</span>]</span> 可以用于存在假设！） 
+  另外，请思考如何证明另一个方向的蕴含关系?
+  在 "ConsLogic.v" 中，我们会给出答案。
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">dist_not_exists</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">X</span> → <span class="id" title="keyword">Prop</span>),<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">dist_not_exists</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">X</span> → <span class="id" title="keyword">Prop</span>),<br/>
 &nbsp;&nbsp;(<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) → ¬ (<span class="id" title="tactic">∃</span> <span class="id" title="var">x</span>, ¬ <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
@@ -1134,215 +1189,59 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 <div class="paragraph"> </div>
 
 <a name="lab22"></a><h4 class="section">练习：2 星, standard (dist_exists_or)</h4>
-
-
-<div class="paragraph"> </div>
-
-    请证明存在量化对析取满足分配律。 
+ 请证明定理 <span class="inlinecode"><span class="id" title="var">dist_exists_or</span></span>: "存在"对"析取"满足分配律。
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">dist_exists_or</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="var">X</span> → <span class="id" title="keyword">Prop</span>),<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">dist_exists_or</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> <span class="id" title="var">Q</span> : <span class="id" title="var">X</span> → <span class="id" title="keyword">Prop</span>),<br/>
 &nbsp;&nbsp;(<span class="id" title="tactic">∃</span> <span class="id" title="var">x</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span> ∨ <span class="id" title="var">Q</span> <span class="id" title="var">x</span>) ↔ (<span class="id" title="tactic">∃</span> <span class="id" title="var">x</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>) ∨ (<span class="id" title="tactic">∃</span> <span class="id" title="var">x</span>, <span class="id" title="var">Q</span> <span class="id" title="var">x</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
-
-<br/>
 </div>
 
 <div class="doc">
-<a name="lab23"></a><h1 class="section">使用命题编程</h1>
+<a name="lab23"></a><h2 class="section">全称量词</h2>
 
 <div class="paragraph"> </div>
 
- 我们学过的逻辑联结词为我们提供了丰富的用简单命题构造复杂命题的词汇。
-    为了说明，我们来看一下如何表达“元素 <span class="inlinecode"><span class="id" title="var">x</span></span> 出现在列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 中”这一断言。
-    注意此性质有着简单的递归结构： 
+  命题 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 表示对于所有的类型为 <span class="inlinecode"><span class="id" title="var">T</span></span> 的 <span class="inlinecode"><span class="id" title="var">x</span></span>，
+  性质<span class="inlinecode"><span class="id" title="var">P</span></span> 都对 <span class="inlinecode"><span class="id" title="var">x</span></span> 成立 (或者说，<span class="inlinecode"><span class="id" title="var">x</span></span> 都满足性质 <span class="inlinecode"><span class="id" title="var">P</span></span>)。
+  我们已经见识过很多涉及全称量词的命题与证明了。
+  这里，我们从自然推理系统的角度重新审视之前使用的证明策略。
 
 <div class="paragraph"> </div>
 
-<ul class="doclist">
-<li> 若 <span class="inlinecode"><span class="id" title="var">l</span></span> 为空列表，则 <span class="inlinecode"><span class="id" title="var">x</span></span> 无法在其中出现，因此性质“<span class="inlinecode"><span class="id" title="var">x</span></span> 出现在 <span class="inlinecode"><span class="id" title="var">l</span></span> 中”
-         为假。 
+<a name="lab24"></a><h4 class="section">练习：3 星, standard (combine_odd_even)</h4>
 
-<div class="paragraph"> </div>
+  函数 <span class="inlinecode"><span class="id" title="var">combine_odd_even</span></span> 接受两个定义在自然数上的性质 
+  (类型为 <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>) <span class="inlinecode"><span class="id" title="var">Podd</span></span> 与 <span class="inlinecode"><span class="id" title="var">Peven</span></span>，
+  返回性质 (类型为 <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>) <span class="inlinecode"><span class="id" title="var">P</span></span>，
+  使得当 <span class="inlinecode"><span class="id" title="var">n</span></span> 为奇数时 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 等价于 <span class="inlinecode"><span class="id" title="var">Podd</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>，否则等价于 <span class="inlinecode"><span class="id" title="var">Peven</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>。
 
-
-</li>
-<li> 否则，若 <span class="inlinecode"><span class="id" title="var">l</span></span> 的形式为 <span class="inlinecode"><span class="id" title="var">x'</span></span> <span class="inlinecode">::</span> <span class="inlinecode"><span class="id" title="var">l'</span></span>，此时 <span class="inlinecode"><span class="id" title="var">x</span></span> 是否出现在 <span class="inlinecode"><span class="id" title="var">l</span></span> 中，
-         取决于它是否等于 <span class="inlinecode"><span class="id" title="var">x'</span></span> 或出现在 <span class="inlinecode"><span class="id" title="var">l'</span></span> 中。 
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
- 我们可以将此定义直接翻译成递归函数，它接受一个元素和一个列表，
-    返回一个命题： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">In</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| [] ⇒ <span class="id" title="var">False</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">x'</span> :: <span class="id" title="var">l'</span> ⇒ <span class="id" title="var">x'</span> = <span class="id" title="var">x</span> ∨ <span class="id" title="var">In</span> <span class="id" title="var">x</span> <span class="id" title="var">l'</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-当 <span class="inlinecode"><span class="id" title="var">In</span></span> 应用于具体的列表时，它会被展开为一系列具体的析取式。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">In_example_1</span> : <span class="id" title="var">In</span> 4 [1; 2; 3; 4; 5].<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">right</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">In_example_2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>, <span class="id" title="var">In</span> <span class="id" title="var">n</span> [2; 4] →<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">n'</span>, <span class="id" title="var">n</span> = 2 × <span class="id" title="var">n'</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> [<span class="id" title="var">H</span> | [<span class="id" title="var">H</span> | []]].<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">∃</span> 1. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">∃</span> 2. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-</div>
-
-<div class="doc">
-（注意我们用空模式<i>'无视'</i>了最后一种情况。） 
-<div class="paragraph"> </div>
-
- 我们也可证明关于 <span class="inlinecode"><span class="id" title="var">In</span></span> 的更一般，更高阶的引理。
-
-<div class="paragraph"> </div>
-
-    注意，接下来会 <span class="inlinecode"><span class="id" title="var">In</span></span> 被应用到一个变量上，只有当我们对它进行分类讨论时，
-    它才会被展开： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">In_map</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> → <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">In</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">In</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>) (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">B</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span> <span class="id" title="var">x</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [|<span class="id" title="var">x'</span> <span class="id" title="var">l'</span> <span class="id" title="var">IHl'</span>].<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">intros</span> [].<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">intros</span> [<span class="id" title="var">H</span> | <span class="id" title="var">H</span>].<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">left</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;+ <span class="id" title="tactic">right</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">IHl'</span>. <span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-虽然递归定义命题在某些情况下会很方便，但这种方式也有其劣势。特别是，
-    这类命题会受到 Coq 对递归函数要求的限制，例如，在 Coq 中递归函数必须是
-    “明显会终止”的。在下一章中，我们会了解如何<i>'归纳地'</i>定义命题，
-    这是一种与之不同的技巧，有着其独特的优势和限制。 
-<div class="paragraph"> </div>
-
-<a name="lab24"></a><h4 class="section">练习：2 星, standard (In_map_iff)</h4>
-
-</div>
-<div class="code">
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">In_map_iff</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">A</span> <span class="id" title="var">B</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">A</span> → <span class="id" title="var">B</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">B</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">In</span> <span class="id" title="var">y</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>) ↔<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">∃</span> <span class="id" title="var">x</span>, <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">y</span> ∧ <span class="id" title="var">In</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab25"></a><h4 class="section">练习：2 星, standard (In_app_iff)</h4>
-
-</div>
-<div class="code">
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">In_app_iff</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> <span class="id" title="var">l</span> <span class="id" title="var">l'</span> (<span class="id" title="var">a</span>:<span class="id" title="var">A</span>),<br/>
-&nbsp;&nbsp;<span class="id" title="var">In</span> <span class="id" title="var">a</span> (<span class="id" title="var">l</span>++<span class="id" title="var">l'</span>) ↔ <span class="id" title="var">In</span> <span class="id" title="var">a</span> <span class="id" title="var">l</span> ∨ <span class="id" title="var">In</span> <span class="id" title="var">a</span> <span class="id" title="var">l'</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab26"></a><h4 class="section">练习：3 星, standard, recommended (All)</h4>
-
-
-<div class="paragraph"> </div>
-
-    回忆一下，返回命题的函数可以视作对其参数<i>'性质'</i>的定义。例如，若
-    <span class="inlinecode"><span class="id" title="var">P</span></span> 的类型为 <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span>，那么 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 就陈述了性质 <span class="inlinecode"><span class="id" title="var">P</span></span> 对 <span class="inlinecode"><span class="id" title="var">n</span></span> 成立。
-
-<div class="paragraph"> </div>
-
-    以 <span class="inlinecode"><span class="id" title="var">In</span></span> 作为参考，请写出递归函数 <span class="inlinecode"><span class="id" title="keyword">All</span></span>，它陈述某个 <span class="inlinecode"><span class="id" title="var">P</span></span> 对列表 <span class="inlinecode"><span class="id" title="var">l</span></span>
-    中的所有元素成立。为了确定你的定义是正确的，请在下方证明 <span class="inlinecode"><span class="id" title="var">All_In</span></span> 引理。
-    （当然，你的定义<i>'不应该'</i>为了通过测试就把 <span class="inlinecode"><span class="id" title="var">All_In</span></span> 的左边复述一遍。 ） 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="keyword">All</span> {<span class="id" title="var">T</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">P</span> : <span class="id" title="var">T</span> → <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">T</span>) : <span class="id" title="keyword">Prop</span><br/>
-&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">All_In</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">T</span> (<span class="id" title="var">P</span> : <span class="id" title="var">T</span> → <span class="id" title="keyword">Prop</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">T</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span>, <span class="id" title="var">In</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> → <span class="id" title="var">P</span> <span class="id" title="var">x</span>) ↔<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">All</span> <span class="id" title="var">P</span> <span class="id" title="var">l</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab27"></a><h4 class="section">练习：3 星, standard (combine_odd_even)</h4>
-
-
-<div class="paragraph"> </div>
-
-    完成以下 <span class="inlinecode"><span class="id" title="var">combine_odd_even</span></span> 函数的定义。它接受两个对数字成立的性质
-    <span class="inlinecode"><span class="id" title="var">Podd</span></span> 与 <span class="inlinecode"><span class="id" title="var">Peven</span></span>，返回性质 <span class="inlinecode"><span class="id" title="var">P</span></span> 使得当 <span class="inlinecode"><span class="id" title="var">n</span></span> 为奇数时 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 等价于 <span class="inlinecode"><span class="id" title="var">Podd</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>，
-    否则等价于 <span class="inlinecode"><span class="id" title="var">Peven</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>。
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">combine_odd_even</span> (<span class="id" title="var">Podd</span> <span class="id" title="var">Peven</span> : <span class="id" title="var">nat</span> → <span class="id" title="keyword">Prop</span>) : <span class="id" title="var">nat</span> → <span class="id" title="keyword">Prop</span><br/>
-&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+&nbsp;&nbsp;:= (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> ⇒ (<span class="id" title="keyword">if</span> (<span class="id" title="var">oddb</span> <span class="id" title="var">n</span>) <span class="id" title="keyword">then</span> <span class="id" title="var">Podd</span> <span class="id" title="var">n</span> <span class="id" title="keyword">else</span> <span class="id" title="var">Peven</span> <span class="id" title="var">n</span>)).<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-为了测试你的定义，请证明以下事实： 
+
+<div class="paragraph"> </div>
+
+  请证明以下三个关于 <span class="inlinecode"><span class="id" title="var">combine_odd_even</span></span> 的定理。
+  注意定理的命名 (intro, elimination)。
+
 </div>
 <div class="code">
 
@@ -1353,7 +1252,7 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 &nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">oddb</span> <span class="id" title="var">n</span> = <span class="id" title="var">false</span> → <span class="id" title="var">Peven</span> <span class="id" title="var">n</span>) →<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">combine_odd_even</span> <span class="id" title="var">Podd</span> <span class="id" title="var">Peven</span> <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">combine_odd_even_elim_odd</span> :<br/>
@@ -1362,7 +1261,7 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">oddb</span> <span class="id" title="var">n</span> = <span class="id" title="var">true</span> →<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Podd</span> <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">combine_odd_even_elim_even</span> :<br/>
@@ -1371,411 +1270,17 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">oddb</span> <span class="id" title="var">n</span> = <span class="id" title="var">false</span> →<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">Peven</span> <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
-
-<br/>
 </div>
 
 <div class="doc">
-<a name="lab28"></a><h1 class="section">对参数应用定理</h1>
-
-<div class="paragraph"> </div>
-
- Coq 拥有一个不同于其它的证明助理（如 ACL2 和 Isabelle）的特性，
-    即它将<i>'证明'</i>本身也作为一等对象。
-
-<div class="paragraph"> </div>
-
-    关于这一点有很多地方值得着墨，不过了解所有的细节对于使用 Coq 来说不是必须的。
-    本节点到为止，深入的探讨参见 <span class="inlinecode"><span class="id" title="var">ProofObjects</span></span> 和 <span class="inlinecode"><span class="id" title="var">IndPrinciples</span></span>。 
-<div class="paragraph"> </div>
-
- 我们已经知道 <span class="inlinecode"><span class="id" title="keyword">Check</span></span> 可以用来显式表达式的类型了，
-    不过它还可以用来查找某个标识符所指代的定理。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Check</span> <span class="id" title="var">plus_comm</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-在显示对定理 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 的<i>'陈述'</i>时，Coq 使用了与显示某项的<i>'类型'</i>一样的方式。
-    这是为什么？ 
-<div class="paragraph"> </div>
-
- 原因在于标识符 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 其实指代的是被称作<i>'证明对象'</i>的数据结构，
-    它表示在命题 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> 的真实性上建立的逻辑推导。
-    此对象的类型<i>'就是'</i>其所证命题的陈述。 
-<div class="paragraph"> </div>
-
- 从直觉上来说，这很有道理，因为对定理的陈述说明了该定理可用来做什么，
-    正如可计算对象的类型告诉了我们可以对它做什么。例如，若我们有一个类型为
-    <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> 的项，就可以给它两个 <span class="inlinecode"><span class="id" title="var">nat</span></span> 作为参数并得到一个 <span class="inlinecode"><span class="id" title="var">nat</span></span>。
-    类似地，如果我们有一个类型为 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 的对象，
-    就能为它提供一个类型为 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 的“参数”并推导出 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span>。 
-<div class="paragraph"> </div>
-
- 从操作上来说，这种类比可以更进一步：由于定理可以作为函数应用到对应类型的前提上，
-    我们就可以直接产生结论而不必使用中间出现的 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 了。例如，假设我们想要证明以下结论： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_comm3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>, <span class="id" title="var">x</span> + (<span class="id" title="var">y</span> + <span class="id" title="var">z</span>) = (<span class="id" title="var">z</span> + <span class="id" title="var">y</span>) + <span class="id" title="var">x</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-乍看起来，我们似乎可以用 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 改写两次使两边匹配来证明它。
-    然而问题是，第二次 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> 会抵消第一次的效果。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-利用我们已知的工具，修复它的一种简单方法是使用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 导出一个
-    <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 的特殊版本，这样我们就能用它按照预期来改写。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_comm3_take2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>, <span class="id" title="var">x</span> + (<span class="id" title="var">y</span> + <span class="id" title="var">z</span>) = (<span class="id" title="var">z</span> + <span class="id" title="var">y</span>) + <span class="id" title="var">x</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">assert</span> (<span class="id" title="var">H</span> : <span class="id" title="var">y</span> + <span class="id" title="var">z</span> = <span class="id" title="var">z</span> + <span class="id" title="var">y</span>).<br/>
-&nbsp;&nbsp;{ <span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>. <span class="id" title="tactic">reflexivity</span>. }<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-一种更优雅的方式是直接把我们想要实例化的参数应用到 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 上，
-    正如我们将一个多态函数应用到类型参数上那样。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">plus_comm3_take3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>, <span class="id" title="var">x</span> + (<span class="id" title="var">y</span> + <span class="id" title="var">z</span>) = (<span class="id" title="var">z</span> + <span class="id" title="var">y</span>) + <span class="id" title="var">x</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">plus_comm</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> (<span class="id" title="var">plus_comm</span> <span class="id" title="var">y</span> <span class="id" title="var">z</span>).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-我们来展示另一个像函数那样使用定理或引理的例子。以下定理说明：
-    任何包含元素的列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 一定非空。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">in_not_nil</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> (<span class="id" title="var">x</span> : <span class="id" title="var">A</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>), <span class="id" title="var">In</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> → <span class="id" title="var">l</span> ≠ [].<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">A</span> <span class="id" title="var">x</span> <span class="id" title="var">l</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">unfold</span> <span class="id" title="var">not</span>. <span class="id" title="tactic">intro</span> <span class="id" title="var">Hl</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">discriminate</span> <span class="id" title="var">Hl</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-有趣的地方是一个量化的变量（<span class="inlinecode"><span class="id" title="var">x</span></span>）没有出现在结论（<span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">≠</span> <span class="inlinecode">[]</span>）中。 
-<div class="paragraph"> </div>
-
- 我们可以用此引理来证明 <span class="inlinecode"><span class="id" title="var">x</span></span> 为 <span class="inlinecode">42</span> 的特殊情况。直接用 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">in_not_nil</span></span>
-    会失败，因为它无法推出 <span class="inlinecode"><span class="id" title="var">x</span></span> 的值。有一些方法可以绕开它... 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">in_not_nil_42</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>, <span class="id" title="var">In</span> 42 <span class="id" title="var">l</span> → <span class="id" title="var">l</span> ≠ [].<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="var">Fail</span> <span class="id" title="tactic">apply</span> <span class="id" title="var">in_not_nil</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">in_not_nil_42_take2</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>, <span class="id" title="var">In</span> 42 <span class="id" title="var">l</span> → <span class="id" title="var">l</span> ≠ [].<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">in_not_nil</span> <span class="id" title="keyword">with</span> (<span class="id" title="var">x</span> := 42).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">in_not_nil_42_take3</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>, <span class="id" title="var">In</span> 42 <span class="id" title="var">l</span> → <span class="id" title="var">l</span> ≠ [].<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">in_not_nil</span> <span class="id" title="tactic">in</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">in_not_nil_42_take4</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>, <span class="id" title="var">In</span> 42 <span class="id" title="var">l</span> → <span class="id" title="var">l</span> ≠ [].<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">in_not_nil</span> <span class="id" title="var">nat</span> 42).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">in_not_nil_42_take5</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>, <span class="id" title="var">In</span> 42 <span class="id" title="var">l</span> → <span class="id" title="var">l</span> ≠ [].<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">in_not_nil</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">H</span>).<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-对于几乎所有将定理名作为参数的策略而言，你都可以“将定理作为函数”来使用。
-    注意，定理应用与函数应用使用了同样的类型推导机制，所以你可以将通配符作为定理的参数，
-    或者为定理声明默认的隐式前提。这些特性在以下证明中展示。（此证明如何工作的细节
-    不必关心，这里的目标只是为了展示它的用途。） 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">lemma_application_ex</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> {<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>} {<span class="id" title="var">ns</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>},<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">In</span> <span class="id" title="var">n</span> (<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">m</span> ⇒ <span class="id" title="var">m</span> × 0) <span class="id" title="var">ns</span>) →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = 0.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">ns</span> <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> (<span class="id" title="var">proj1</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> (<span class="id" title="var">In_map_iff</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span> <span class="id" title="var">_</span>) <span class="id" title="var">H</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">as</span> [<span class="id" title="var">m</span> [<span class="id" title="var">Hm</span> <span class="id" title="var">_</span>]].<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> <span class="id" title="var">mult_0_r</span> <span class="id" title="tactic">in</span> <span class="id" title="var">Hm</span>. <span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">Hm</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-在以后的章节中我们将会看到更多这方面的例子。 
-</div>
-<div class="code">
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab29"></a><h1 class="section">Coq vs. 集合论</h1>
-
-<div class="paragraph"> </div>
-
- Coq 的逻辑核心，即<i>'归纳构造演算（Calculus of Inductive Constructions）'</i>系统，
-    在很多重要的方面不同于数学家用来写下精确而严谨的证明的形式化系统。
-    例如，在主流的纸笔数学家中使用最普遍的<i>'策梅洛-弗兰克尔集合论（ZFC）'</i>中，
-    一个数学对象可同时属于不同的集合；而在 Coq 的逻辑中，一个项最多只属于一个类型。
-    这些不同之处需要人们用稍微不同的方式来描述非形式化的数学概念，但总的来说，
-    它们都是非常自然而易于使用的。例如，在 Coq 中我们一般不说某个自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>
-    属于偶数集合，而是说 <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 成立，其中的 <span class="inlinecode"><span class="id" title="var">even</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> 描述了偶数的性质。
-
-<div class="paragraph"> </div>
-
-    然而在某些情况下，将标准的数学论证翻译到 Coq 中会十分繁琐甚至是不可能的，
-    除非我们引入新的公理来丰富其逻辑核心。作为本章的结尾，
-    我们将探讨这两个世界之间最显著的区别。 
-</div>
-<div class="code">
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab30"></a><h2 class="section">函数的外延性</h2>
-
-<div class="paragraph"> </div>
-
- 目前为止我们所看见的相等关系断言基本上都只考虑了归纳类型的元素
-    （如 <span class="inlinecode"><span class="id" title="var">nat</span></span>、<span class="inlinecode"><span class="id" title="var">bool</span></span> 等等）。然而由于 Coq 的相等关系运算符是多态的，
-    因此它们并不是唯一的可能。特别是，我们可以写出宣称<i>'两个函数相等'</i>的命题： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">function_equality_ex1</span> :<br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ 3 + <span class="id" title="var">x</span>) = (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ (<span class="id" title="var">pred</span> 4) + <span class="id" title="var">x</span>).<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-在一般的数学研究中，对于任意的两个函数 <span class="inlinecode"><span class="id" title="var">f</span></span> 和 <span class="inlinecode"><span class="id" title="var">g</span></span>，只要它们产生的结果相等，
-    那么它们就被认为相等：
-
-<div class="paragraph"> </div>
-
-    (forall x, f x = g x) -&gt; f = g
-
-<div class="paragraph"> </div>
-
-    这被称作<i>'函数的外延性原理'</i>。 
-<div class="paragraph"> </div>
-
- 不甚严谨地说，所谓“外延性”是指某个对象可观察到的行为。
-    因此，函数的外延性就是指函数的标识完全由其行为来决定。
-    用 Coq 的术语来说，就是函数的身份视其被应用后的结果而定。 
-<div class="paragraph"> </div>
-
- 函数的外延性并不在 Coq 的基本公理之内，因此某些“合理”的命题是不可证明的： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">function_equality_ex2</span> :<br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">plus</span> <span class="id" title="var">x</span> 1) = (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">plus</span> 1 <span class="id" title="var">x</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-然而，我们可以用 <span class="inlinecode"><span class="id" title="keyword">Axiom</span></span> 指令将函数的外延性添加到 Coq 的核心逻辑系统中。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Axiom</span> <span class="id" title="var">functional_extensionality</span> : <span class="id" title="keyword">∀</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span>: <span class="id" title="keyword">Type</span>}<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span class="id" title="var">f</span> <span class="id" title="var">g</span> : <span class="id" title="var">X</span> → <span class="id" title="var">Y</span>},<br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">∀</span> (<span class="id" title="var">x</span>:<span class="id" title="var">X</span>), <span class="id" title="var">f</span> <span class="id" title="var">x</span> = <span class="id" title="var">g</span> <span class="id" title="var">x</span>) → <span class="id" title="var">f</span> = <span class="id" title="var">g</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-使用 <span class="inlinecode"><span class="id" title="keyword">Axiom</span></span> 的效果与陈述一个定理并用 <span class="inlinecode"><span class="id" title="var">Admitted</span></span> 跳过其证明相同，
-    不过它会提醒读者这是一个公理，我们无需证明！
-<div class="paragraph"> </div>
-
- 现在我们可以在证明中调用函数的外延性了： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">function_equality_ex2</span> :<br/>
-&nbsp;&nbsp;(<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">plus</span> <span class="id" title="var">x</span> 1) = (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">plus</span> 1 <span class="id" title="var">x</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">functional_extensionality</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">x</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">plus_comm</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-当然，在为 Coq 添加公理时必须十分小心，因为这有可能会导致系统
-    <i>'不一致'</i>，而当系统不一致的，任何命题都能在其中证明，包括 <span class="inlinecode"><span class="id" title="var">False</span></span>
-    和 <span class="inlinecode">2+2=5</span>！
-
-<div class="paragraph"> </div>
-
-    不幸的是，并没有一种简单的方式能够判断添加某条公理是否安全：
-    一般来说，确认任何一组公理的一致性都需要训练有素的专家付出艰辛的努力。
-
-<div class="paragraph"> </div>
-
-    然而，我们已经知道了添加函数外延性后的公理系统<i>'确实是'</i>一致的。 
-<div class="paragraph"> </div>
-
- 我们可以用 <span class="inlinecode"><span class="id" title="keyword">Print</span></span> <span class="inlinecode"><span class="id" title="keyword">Assumptions</span></span> 指令查看某个证明依赖的所有附加公理。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Print</span> <span class="id" title="keyword">Assumptions</span> <span class="id" title="var">function_equality_ex2</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab31"></a><h4 class="section">练习：4 星, standard (tr_rev_correct)</h4>
-
-
-<div class="paragraph"> </div>
-
-    列表反转函数 <span class="inlinecode"><span class="id" title="var">rev</span></span> 的定义有一个问题，它会在每一步都执行一次 <span class="inlinecode"><span class="id" title="var">app</span></span>
-    调用，而运行 <span class="inlinecode"><span class="id" title="var">app</span></span> 所需时间与列表的大小线性渐近，也就是说 <span class="inlinecode"><span class="id" title="var">rev</span></span>
-    的时间复杂度与列表长度成平方关系。我们可以用以下定义来改进它： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">rev_append</span> {<span class="id" title="var">X</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">list</span> <span class="id" title="var">X</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| [] ⇒ <span class="id" title="var">l2</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">x</span> :: <span class="id" title="var">l1'</span> ⇒ <span class="id" title="var">rev_append</span> <span class="id" title="var">l1'</span> (<span class="id" title="var">x</span> :: <span class="id" title="var">l2</span>)<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">tr_rev</span> {<span class="id" title="var">X</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">list</span> <span class="id" title="var">X</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">rev_append</span> <span class="id" title="var">l</span> [].<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-此版本是<i>'尾递归的'</i>，因为对函数自身的递归调用是需要执行的最后一步操作
-    （即，在递归调用之后我们并不执行  <span class="inlinecode">++</span> ）。
-    一个足够好的编译器会对此生成十分高效的代码。请证明以下两个定义等价。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">tr_rev_correct</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">X</span>, @<span class="id" title="var">tr_rev</span> <span class="id" title="var">X</span> = @<span class="id" title="var">rev</span> <span class="id" title="var">X</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-</div>
-<div class="code">
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab32"></a><h2 class="section">命题与布尔值</h2>
+<a name="lab25"></a><h2 class="section">命题与布尔值</h2>
 
 <div class="paragraph"> </div>
 
@@ -1825,7 +1330,7 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 </div>
 
 <div class="doc">
-<a name="lab33"></a><h4 class="section">练习：3 星, standard (evenb_double_conv)</h4>
+<a name="lab26"></a><h4 class="section">练习：3 星, standard (evenb_double_conv)</h4>
 
 </div>
 <div class="code">
@@ -2042,7 +1547,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
     它是个很好的例子。 
 <div class="paragraph"> </div>
 
-<a name="lab34"></a><h4 class="section">练习：2 星, standard (logical_connectives)</h4>
+<a name="lab27"></a><h4 class="section">练习：2 星, standard (logical_connectives)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2068,7 +1573,7 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab35"></a><h4 class="section">练习：1 星, standard (eqb_neq)</h4>
+<a name="lab28"></a><h4 class="section">练习：1 星, standard (eqb_neq)</h4>
 
 
 <div class="paragraph"> </div>
@@ -2082,300 +1587,13 @@ Coq 会抱怨 <span class="inlinecode"><span class="id" title="var">n</span></sp
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqb_neq</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">x</span> =? <span class="id" title="var">y</span> = <span class="id" title="var">false</span> ↔ <span class="id" title="var">x</span> ≠ <span class="id" title="var">y</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab36"></a><h4 class="section">练习：3 星, standard (eqb_list)</h4>
-
-
-<div class="paragraph"> </div>
-
-    给定一个用于测试类型为 <span class="inlinecode"><span class="id" title="var">A</span></span> 的元素相等关系的布尔操作符 <span class="inlinecode"><span class="id" title="var">eqb</span></span>，
-    我们可以定义函数 <span class="inlinecode"><span class="id" title="var">eqb_list</span></span> 来测试元素类型为 <span class="inlinecode"><span class="id" title="var">A</span></span> 的列表的相等关系。
-    请完成以下 <span class="inlinecode"><span class="id" title="var">eqb_list</span></span> 函数的定义。要确定你的定义是否正确，请证明引理
-    <span class="inlinecode"><span class="id" title="var">eqb_list_true_iff</span></span>。 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">eqb_list</span> {<span class="id" title="var">A</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">eqb</span> : <span class="id" title="var">A</span> → <span class="id" title="var">A</span> → <span class="id" title="var">bool</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">A</span>) : <span class="id" title="var">bool</span><br/>
-&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">eqb_list_true_iff</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> (<span class="id" title="var">eqb</span> : <span class="id" title="var">A</span> → <span class="id" title="var">A</span> → <span class="id" title="var">bool</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="keyword">∀</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span>, <span class="id" title="var">eqb</span> <span class="id" title="var">a1</span> <span class="id" title="var">a2</span> = <span class="id" title="var">true</span> ↔ <span class="id" title="var">a1</span> = <span class="id" title="var">a2</span>) →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>, <span class="id" title="var">eqb_list</span> <span class="id" title="var">eqb</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> = <span class="id" title="var">true</span> ↔ <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab37"></a><h4 class="section">练习：2 星, standard, recommended (All_forallb)</h4>
-
-
-<div class="paragraph"> </div>
-
-    回忆一下<span class="inlinecode"><span class="id" title="var">Tactics</span></span>一章中练习 <span class="inlinecode"><span class="id" title="var">forall_exists_challenge</span></span> 的函数
-    <span class="inlinecode"><span class="id" title="var">forallb</span></span>： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">forallb</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">test</span> : <span class="id" title="var">X</span> → <span class="id" title="var">bool</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">bool</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| [] ⇒ <span class="id" title="var">true</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">x</span> :: <span class="id" title="var">l'</span> ⇒ <span class="id" title="var">andb</span> (<span class="id" title="var">test</span> <span class="id" title="var">x</span>) (<span class="id" title="var">forallb</span> <span class="id" title="var">test</span> <span class="id" title="var">l'</span>)<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-请证明以下定理，它将 <span class="inlinecode"><span class="id" title="var">forallb</span></span> 与之前练习中 <span class="inlinecode"><span class="id" title="keyword">All</span></span> 的性质关联了起来。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">forallb_true_iff</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">X</span> <span class="id" title="var">test</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>),<br/>
-&nbsp;&nbsp;&nbsp;<span class="id" title="var">forallb</span> <span class="id" title="var">test</span> <span class="id" title="var">l</span> = <span class="id" title="var">true</span> ↔ <span class="id" title="keyword">All</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">test</span> <span class="id" title="var">x</span> = <span class="id" title="var">true</span>) <span class="id" title="var">l</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-函数 <span class="inlinecode"><span class="id" title="var">forallb</span></span> 是否还存在尚未被此规范捕获的重要性质？ 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab38"></a><h2 class="section">经典逻辑 vs. 构造逻辑</h2>
-
-<div class="paragraph"> </div>
-
- 我们已经知道了，在定义 Coq 函数时是无法判断命题 <span class="inlinecode"><span class="id" title="var">P</span></span> 是否成立。
-    然而<i>'证明'</i>也存在类似的限制！换句话说，以下推理原则即便符合直觉，
-    不过在 Coq 中它是不可证明的： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">excluded_middle</span> := <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> : <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;<span class="id" title="var">P</span> ∨ ¬ <span class="id" title="var">P</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-为了在操作上理解为何如此, 回忆一下，在证明形如 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">Q</span></span>
-    的陈述时，我们使用了 <span class="inlinecode"><span class="id" title="tactic">left</span></span> 与 <span class="inlinecode"><span class="id" title="tactic">right</span></span> 策略，它们能够有效地知道析取的哪边成立。
-    然而在 <span class="inlinecode"><span class="id" title="var">excluded_middle</span></span> 中，<span class="inlinecode"><span class="id" title="var">P</span></span> 是被全称量化的<i>'任意'</i>命题，我们对它一无所知。
-    我们没有足够的信息来选择使用 <span class="inlinecode"><span class="id" title="tactic">left</span></span> 或 <span class="inlinecode"><span class="id" title="tactic">right</span></span> 中的哪一个。就像 Coq
-    因为缺乏信息而无法在函数内部机械地确定 <span class="inlinecode"><span class="id" title="var">P</span></span> 是否成立一样。 
-<div class="paragraph"> </div>
-
- 然而，如果我们恰好知道 <span class="inlinecode"><span class="id" title="var">P</span></span> 与某个布尔项互映，那么就能很轻易地知道它是否成立了：
-    我们只需检查 <span class="inlinecode"><span class="id" title="var">b</span></span> 的值即可。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">restricted_excluded_middle</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">b</span>,<br/>
-&nbsp;&nbsp;(<span class="id" title="var">P</span> ↔ <span class="id" title="var">b</span> = <span class="id" title="var">true</span>) → <span class="id" title="var">P</span> ∨ ¬ <span class="id" title="var">P</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">P</span> [] <span class="id" title="var">H</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">left</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;- <span class="id" title="tactic">right</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">contra</span>. <span class="id" title="tactic">discriminate</span> <span class="id" title="var">contra</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-特别来说，对于自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 和 <span class="inlinecode"><span class="id" title="var">m</span></span> 的 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 而言，排中律是成立的。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">restricted_excluded_middle_eq</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span> ∨ <span class="id" title="var">n</span> ≠ <span class="id" title="var">m</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> (<span class="id" title="var">restricted_excluded_middle</span> (<span class="id" title="var">n</span> = <span class="id" title="var">m</span>) (<span class="id" title="var">n</span> =? <span class="id" title="var">m</span>)).<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">symmetry</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">eqb_eq</span>.<br/>
-<span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-通用的排中律默认在 Coq 中并不可用，这一点或许很奇怪，毕竟，
-    任何给定的断言都是非真即假的。尽管如此，不假设排中律的成立仍有其有限：
-    Coq 中的陈述可以构造出比标准数学中同样陈述更强的断言。特别是，
-    如果存在 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> 的 Coq 证明，那么我们就能直接给出一个使 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>
-    得证的值 <span class="inlinecode"><span class="id" title="var">x</span></span>。换言之，任何关于存在性的证明必定是<i>'构造性'</i>的。 
-<div class="paragraph"> </div>
-
- 像 Coq 一样不假设排中律成立的逻辑系统被称作<i>'构造逻辑'</i>。
-
-<div class="paragraph"> </div>
-
-    像 ZFC 这样更加传统的，排中律对于任何命题都成立的逻辑系统则被称作<i>'经典逻辑'</i>。 
-<div class="paragraph"> </div>
-
- 以下示例展示了为何假设排中律成立会导致非构造性证明：
-
-<div class="paragraph"> </div>
-
-    <i>'命题'</i>：存在无理数 <span class="inlinecode"><span class="id" title="var">a</span></span> 和 <span class="inlinecode"><span class="id" title="var">b</span></span> 使得 <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">^</span> <span class="inlinecode"><span class="id" title="var">b</span></span> 为有理数。
-
-<div class="paragraph"> </div>
-
-    <i>'证明'</i>：易知 <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> 为无理数。若 <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> <span class="inlinecode">^</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> 为有理数，
-    那么可以取 <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> 证明结束；否则 <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> <span class="inlinecode">^</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> 为无理数。
-    此时，我们可以取 <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> <span class="inlinecode">^</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> 和 <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span>，因为
-    <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">^</span> <span class="inlinecode"><span class="id" title="var">b</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> <span class="inlinecode">^</span> <span class="inlinecode">(<span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> <span class="inlinecode">^</span> <span class="inlinecode">2</span> <span class="inlinecode">=</span> <span class="inlinecode">2</span>.  <font size=-2>&#9744;</font>
-
-<div class="paragraph"> </div>
-
-    看到发生什么了吗？我们使用排中律在不知道 <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span> <span class="inlinecode">^</span> <span class="inlinecode"><span class="id" title="var">sqrt</span></span> <span class="inlinecode">2</span>
-    是否为有理数的情况下就分别考虑了这两种情况！因此，我们知道了这样的
-    <span class="inlinecode"><span class="id" title="var">a</span></span> 和 <span class="inlinecode"><span class="id" title="var">b</span></span> 存在，但却无法确切知道它们的值（至少使用此论据来说如此）。
-
-<div class="paragraph"> </div>
-
-    即便构造逻辑很有用，它也有自身的限制：存在很多容易用经典逻辑证明的命题，
-    用构造证明会更加复杂，而对于某些已知的命题而言这样的构造性证明甚至不存在！
-    幸运的是，排中律和函数外延性一样都是与 Coq 的逻辑系统兼容的，
-    我们可以安全地将它作为公理添加到 Coq 中。然而，在本书中我们不必如此：
-    我们所涉及的结构都可以完全用构造逻辑得到，所需的额外代价则微不足道。
-
-<div class="paragraph"> </div>
-
-    我们需要一定的实践才能理解哪些证明技巧不应在构造推理中使用，
-    而其中的反证法尤为臭名昭著，因为它会导向非构造性证明。这里有个典型的例子：
-    假设我们想要证明存在 <span class="inlinecode"><span class="id" title="var">x</span></span> 具有某种性质 <span class="inlinecode"><span class="id" title="var">P</span></span>，即存在 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。我们先假设结论为假，
-    也就是说 <span class="inlinecode">¬</span> <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。根据此前提，不难推出 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode">¬</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。
-    如果我们能够根据此中间事实得到矛盾，就能得到一个存在性证明而完全不必指出一个
-    <span class="inlinecode"><span class="id" title="var">x</span></span> 的值使得 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> 成立！
-
-<div class="paragraph"> </div>
-
-    从构造性的角度来看，这里存在着技术上的瑕疵，即我们试图通过对
-    <span class="inlinecode">¬</span> <span class="inlinecode">¬</span> <span class="inlinecode">(<span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span>)</span> 的证明来证明 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span>。从以下练习中我们会看到，
-    允许自己从任意陈述中去掉双重否定等价于引入排中律。因此，只要我们不引入排中律，
-    就无法在 Coq 中编码此推理。 
-<div class="paragraph"> </div>
-
-<a name="lab39"></a><h4 class="section">练习：3 星, standard (excluded_middle_irrefutable)</h4>
-
-
-<div class="paragraph"> </div>
-
-    证明通用排中律公理与 Coq 的一致性需要复杂的推理，而且并不能在 Coq
-    自身中进行。然而，以下定理蕴含了假设可判定性公理（即排中律的一个特例）
-    成立对于任何<i>'具体的'</i>命题 <span class="inlinecode"><span class="id" title="var">P</span></span> 而言总是安全的。之所以如此，
-    是因为我们无法证明这类公理的否定命题。假如我们可以的话，就会同时有
-    <span class="inlinecode">¬</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">∨</span> <span class="inlinecode">¬<span class="id" title="var">P</span>)</span> 和 <span class="inlinecode">¬</span> <span class="inlinecode">¬</span> <span class="inlinecode">(<span class="id" title="var">P</span></span> <span class="inlinecode">∨</span> <span class="inlinecode">¬<span class="id" title="var">P</span>)</span>（因为根据以下练习， <span class="inlinecode"><span class="id" title="var">P</span></span> 蕴含 <span class="inlinecode">¬</span> <span class="inlinecode">¬</span> <span class="inlinecode"><span class="id" title="var">P</span></span>），
-    而这会产生矛盾。但因为我们不能，所以将 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">∨</span> <span class="inlinecode">¬<span class="id" title="var">P</span></span> 作为公理加入是安全的。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">excluded_middle_irrefutable</span>: <span class="id" title="keyword">∀</span> (<span class="id" title="var">P</span>:<span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;¬ ¬ (<span class="id" title="var">P</span> ∨ ¬ <span class="id" title="var">P</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab40"></a><h4 class="section">练习：3 星, advanced (not_exists_dist)</h4>
-
-
-<div class="paragraph"> </div>
-
-    在经典逻辑中有这样一条定理，它断言以下两条命题是等价的：
-
-<div class="paragraph"> </div>
-
-    ~ (exists x, ~ P x)
-    forall x, P x
-
-<div class="paragraph"> </div>
-
-    之前的 <span class="inlinecode"><span class="id" title="var">dist_not_exists</span></span> 证明了此等价式的一个方向。有趣的是，
-    我们无法用构造逻辑证明另一个方向。你的任务就是证明排中律蕴含此方向的证明。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">not_exists_dist</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="var">excluded_middle</span> →<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>) (<span class="id" title="var">P</span> : <span class="id" title="var">X</span> → <span class="id" title="keyword">Prop</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;¬ (<span class="id" title="tactic">∃</span> <span class="id" title="var">x</span>, ¬ <span class="id" title="var">P</span> <span class="id" title="var">x</span>) → (<span class="id" title="keyword">∀</span> <span class="id" title="var">x</span>, <span class="id" title="var">P</span> <span class="id" title="var">x</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab41"></a><h4 class="section">练习：5 星, standard, optional (classical_axioms)</h4>
-
-
-<div class="paragraph"> </div>
-
-    对于喜欢挑战的读者，以下练习来自于 Bertot 与 Casteran 所著的
-    Coq'Art 一书中第 123 页。以下四条陈述的每一条，加上 <span class="inlinecode"><span class="id" title="var">excluded_middle</span></span>
-    可以认为刻画了经典逻辑。我们无法在 Coq 中证明其中的任意一条，
-    不过如果我们希望在经典逻辑下工作的话，可以安全地将其中任意一条作为公理添加到
-    Coq 中而不会造成不一致性。
-
-<div class="paragraph"> </div>
-
-    请证明所有五个命题都是等价的（这四个再加上 <span class="inlinecode"><span class="id" title="var">excluded_middle</span></span>）。
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">peirce</span> := <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>: <span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;((<span class="id" title="var">P</span>→<span class="id" title="var">Q</span>)-&gt;<span class="id" title="var">P</span>)-&gt;<span class="id" title="var">P</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">double_negation_elimination</span> := <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span>:<span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;~~<span class="id" title="var">P</span> → <span class="id" title="var">P</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">de_morgan_not_and_not</span> := <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>:<span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;~(~<span class="id" title="var">P</span> ∧ ¬<span class="id" title="var">Q</span>) → <span class="id" title="var">P</span>∨<span class="id" title="var">Q</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">implies_to_or</span> := <span class="id" title="keyword">∀</span> <span class="id" title="var">P</span> <span class="id" title="var">Q</span>:<span class="id" title="keyword">Prop</span>,<br/>
-&nbsp;&nbsp;(<span class="id" title="var">P</span>→<span class="id" title="var">Q</span>) → (~<span class="id" title="var">P</span>∨<span class="id" title="var">Q</span>).<br/>
-
-<br/>
-
-<br/>
 </div>
 </div>
 

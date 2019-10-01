@@ -44,7 +44,7 @@ CAMLFLAGS         := $(COQMF_CAMLFLAGS)
 HASNATDYNLINK     := $(COQMF_HASNATDYNLINK)
 
 makefile.conf: 
-	coq_makefile -o makefile Auto.v AutoTest.v Basics.v BasicsTest.v Bib.v BibTest.v Extraction.v ExtractionTest.v Imp.v ImpCEvalFun.v ImpCEvalFunTest.v ImpParser.v ImpParserTest.v ImpTest.v IndPrinciples.v IndPrinciplesTest.v IndProp.v IndPropTest.v Induction.v InductionTest.v Lists.v ListsTest.v Logic.v LogicTest.v Maps.v MapsTest.v Poly.v PolyTest.v Postscript.v PostscriptTest.v Preface.v PrefaceTest.v ProofObjects.v ProofObjectsTest.v Rel.v RelTest.v Tactics.v TacticsTest.v
+	coq_makefile -o makefile Auto.v AutoTest.v Basics.v BasicsTest.v Bib.v BibTest.v ConsLogic.v Extraction.v ExtractionTest.v Imp.v ImpCEvalFun.v ImpCEvalFunTest.v ImpParser.v ImpParserTest.v ImpTest.v IndPrinciples.v IndPrinciplesTest.v IndProp.v IndPropTest.v Induction.v InductionTest.v Lists.v ListsTest.v Logic.v LogicTest.v Maps.v MapsTest.v Poly.v PolyTest.v Postscript.v PostscriptTest.v Preface.v PrefaceTest.v ProofObjects.v ProofObjectsTest.v Rel.v RelTest.v Tactics.v TacticsTest.v
 
 # This file can be created by the user to hook into double colon rules or
 # add any other Makefile code he may need

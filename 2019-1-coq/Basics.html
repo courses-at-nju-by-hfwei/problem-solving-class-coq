@@ -1160,7 +1160,8 @@
 我们可以基于 <span class="inlinecode"><span class="id" title="var">evenb</span></span> 定义 <span class="inlinecode"><span class="id" title="var">oddb</span></span>。
 </div>
 <div class="code">
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">oddb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span>   :=   <span class="id" title="var">negb</span> (<span class="id" title="var">evenb</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">oddb</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">bool</span> := <br/>
+&nbsp;&nbsp;<span class="id" title="var">negb</span> (<span class="id" title="var">evenb</span> <span class="id" title="var">n</span>).<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_oddb1</span>:    <span class="id" title="var">oddb</span> 2019 = <span class="id" title="var">true</span>.<br/>

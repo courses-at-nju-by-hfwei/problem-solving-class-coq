@@ -1,7 +1,7 @@
 (** * Logic: Coq 中的逻辑系统 *)
 
 Set Warnings "-notation-overridden,-parsing".
-(** From LF Require Export Tactics. *)
+From LF Require Export Basics.
 
 (**
   "逻辑是不可战胜的，因为反对逻辑还得使用逻辑。" By 谁说的来着?
@@ -665,170 +665,102 @@ Proof.
   intros n m H. apply mult_0. apply H.
 Qed.
 (* ================================================================= *)
-(** ** 存在量化 *)
+(** ** 存在量词 *)
 
-(** _'存在量化'_也是十分重要的逻辑联结词。我们说存在某个类型为 [T]
-    的 [x]，使得某些性质 [P] 对于 [x] 成立，写作 [exists x : T, P]。
-    和 [forall] 一样，如果 Coq 能从上下文中推断出 [x] 的类型，那么类型标注
-    [: T] 就可以省略。*)
+(**
+  命题 [exists x : T, P] 表示存在类型为 [T] 的 [x]，
+  使得性质 [P] 对 [x] 成立 (或说，[x] 满足性质 [P])。
+  [exists] 是 _'存在量词_。
+  (如果 Coq 能从上下文中推断出 [x] 的类型，那么 [: T] 也可以省略。
+  但并不建议初学者这么做。)
+*)
 
-(** 为了证明形如 [exists x, P] 的语句，我们必须证明 [P] 对于某些特定的
-    [x] 成立，这些特定的 [x] 被称作存在性的_'例证'_。证明分为两步：
-    首先，我们调用 [exists t] 策略向 Coq 指出已经知道了使 [P]
-    成立的例证 [t]，然后证明将所有出现的 [x] 替换成 [t] 的命题 [P]。 *)
+(** 
+  要证明形如 [exists x, P] 的命题，
+  我们只需(而且"必须"; 下一节 "ConsLogic.v" 解释)
+  证明 [P] 对于某个特定的 [x] 成立。
+  我们称 [x] 为 [exists x, P] 的例证。 
+  这对应于 (逆用) "exists-intro" 规则。
+  
+  在 Coq 中，上述证明分为两步:
+  - 使用 [exists t] 策略告诉 Coq 我们认为 [t] 是满足要求的 [x]。
+    此时，证明目标变成 [P x]。
+  - 证明新目标 [P x]。
+*)
 
 Lemma four_is_even : exists n : nat, 4 = n + n.
 Proof.
-  exists 2. reflexivity.
+  exists 2. (* 注意待证目标的变化 *)
+  reflexivity.
 Qed.
 
-(** 反之，如果我们的的上下文中有形如 [exists x, P] 的存在前提，
-    可以将其解构得到一个例证 [x] 和一个陈述 [P] 对于 [x] 成立的前提。 *)
+(**
+  如果形如 [H: exists x, P] 的命题作为前提出现在上下文中，
+  我们可以使用 [destruct H as [x Px]] (或者 intros) 将它拆分成
+  一个例证 [x] 与 [x] 满足性质 [P] 的前提 [Px : P x]。
+  在之后的证明中，我们就可以使用 [x] 与前提 [Px] 了。
+  这对应于 "exists-elimination" 规则。
+  (新引入的前提 [Px] 在使用 "exists-elimination"规则时
+  会被 discharged (这个词该怎么翻译???) 掉。)
+*)
 
 Theorem exists_example_2 : forall n,
   (exists m, n = 4 + m) ->
   (exists o, n = 2 + o).
 Proof.
-  (* 课上已完成 *)
-  intros n [m Hm]. (* 注意这里隐式使用了 [destruct] *)
+  intros n [m Hm]. (* 注意观察上下文的变化 *)
   exists (2 + m).
-  apply Hm.  Qed.
+  apply Hm.
+Qed.
 
-(** **** 练习：1 星, standard, recommended (dist_not_exists)  
+(** **** 练习：1 星, standard, recommended (dist_not_exists) *) 
+(**
+  请证明定理 [dist_not_exists]:
+  "[P] 对所有 [x] 成立" 蕴含 "不存在 [x] 使得 [P x] 不成立"。
+  
+  另外，请思考如何证明另一个方向的蕴含关系?
+  在 "ConsLogic.v" 中，我们会给出答案。
+*)
 
-    请证明“[P] 对所有 [x] 成立”蕴含“不存在 [x] 使 [P] 不成立。”
-    （提示：[destruct H as [x E]] 可以用于存在假设！） *)
-
-Theorem dist_not_exists : forall (X:Type) (P : X -> Prop),
+Theorem dist_not_exists : forall (X : Type) (P : X -> Prop),
   (forall x, P x) -> ~ (exists x, ~ P x).
 Proof.
   (* 请在此处解答 *)
 Admitted.
 (** [] *)
 
-(** **** 练习：2 星, standard (dist_exists_or)  
+(** **** 练习：2 星, standard (dist_exists_or) *)  
+(** 请证明定理 [dist_exists_or]: "存在"对"析取"满足分配律。*)
 
-    请证明存在量化对析取满足分配律。 *)
-
-Theorem dist_exists_or : forall (X:Type) (P Q : X -> Prop),
+Theorem dist_exists_or : forall (X : Type) (P Q : X -> Prop),
   (exists x, P x \/ Q x) <-> (exists x, P x) \/ (exists x, Q x).
 Proof.
-   (* 请在此处解答 *) Admitted.
+   (* 请在此处解答 *) 
+Admitted.
 (** [] *)
-
-(* ################################################################# *)
-(** * 使用命题编程 *)
-
-(** 我们学过的逻辑联结词为我们提供了丰富的用简单命题构造复杂命题的词汇。
-    为了说明，我们来看一下如何表达“元素 [x] 出现在列表 [l] 中”这一断言。
-    注意此性质有着简单的递归结构： 
-
-       - 若 [l] 为空列表，则 [x] 无法在其中出现，因此性质“[x] 出现在 [l] 中”
-         为假。 
-
-       - 否则，若 [l] 的形式为 [x' :: l']，此时 [x] 是否出现在 [l] 中，
-         取决于它是否等于 [x'] 或出现在 [l'] 中。 *)
-
-(** 我们可以将此定义直接翻译成递归函数，它接受一个元素和一个列表，
-    返回一个命题： *)
-
-Fixpoint In {A : Type} (x : A) (l : list A) : Prop :=
-  match l with
-  | [] => False
-  | x' :: l' => x' = x \/ In x l'
-  end.
-
-(** 当 [In] 应用于具体的列表时，它会被展开为一系列具体的析取式。 *)
-
-Example In_example_1 : In 4 [1; 2; 3; 4; 5].
-Proof.
-  (* 课上已完成 *)
-  simpl. right. right. right. left. reflexivity.
-Qed.
-
-Example In_example_2 :
-  forall n, In n [2; 4] ->
-  exists n', n = 2 * n'.
-Proof.
-  (* 课上已完成 *)
-  simpl.
-  intros n [H | [H | []]].
-  - exists 1. rewrite <- H. reflexivity.
-  - exists 2. rewrite <- H. reflexivity.
-Qed.
-(** （注意我们用空模式_'无视'_了最后一种情况。） *)
-
-(** 我们也可证明关于 [In] 的更一般，更高阶的引理。
-
-    注意，接下来会 [In] 被应用到一个变量上，只有当我们对它进行分类讨论时，
-    它才会被展开： *)
-
-Lemma In_map :
-  forall (A B : Type) (f : A -> B) (l : list A) (x : A),
-    In x l ->
-    In (f x) (map f l).
-Proof.
-  intros A B f l x.
-  induction l as [|x' l' IHl'].
-  - (* l = nil，矛盾 *)
-    simpl. intros [].
-  - (* l = x' :: l' *)
-    simpl. intros [H | H].
-    + rewrite H. left. reflexivity.
-    + right. apply IHl'. apply H.
-Qed.
-
-(** 虽然递归定义命题在某些情况下会很方便，但这种方式也有其劣势。特别是，
-    这类命题会受到 Coq 对递归函数要求的限制，例如，在 Coq 中递归函数必须是
-    “明显会终止”的。在下一章中，我们会了解如何_'归纳地'_定义命题，
-    这是一种与之不同的技巧，有着其独特的优势和限制。 *)
-
-(** **** 练习：2 星, standard (In_map_iff)  *)
-Lemma In_map_iff :
-  forall (A B : Type) (f : A -> B) (l : list A) (y : B),
-    In y (map f l) <->
-    exists x, f x = y /\ In x l.
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：2 星, standard (In_app_iff)  *)
-Lemma In_app_iff : forall A l l' (a:A),
-  In a (l++l') <-> In a l \/ In a l'.
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：3 星, standard, recommended (All)  
-
-    回忆一下，返回命题的函数可以视作对其参数_'性质'_的定义。例如，若
-    [P] 的类型为 [nat -> Prop]，那么 [P n] 就陈述了性质 [P] 对 [n] 成立。
-
-    以 [In] 作为参考，请写出递归函数 [All]，它陈述某个 [P] 对列表 [l]
-    中的所有元素成立。为了确定你的定义是正确的，请在下方证明 [All_In] 引理。
-    （当然，你的定义_'不应该'_为了通过测试就把 [All_In] 的左边复述一遍。 ） *)
-
-Fixpoint All {T : Type} (P : T -> Prop) (l : list T) : Prop
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-Lemma All_In :
-  forall T (P : T -> Prop) (l : list T),
-    (forall x, In x l -> P x) <->
-    All P l.
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
+(* ================================================================= *)
+(** ** 全称量词 *)
+(**
+  命题 [forall x : T, P] 表示对于所有的类型为 [T] 的 [x]，
+  性质[P] 都对 [x] 成立 (或者说，[x] 都满足性质 [P])。
+  我们已经见识过很多涉及全称量词的命题与证明了。
+  这里，我们从自然推理系统的角度重新审视之前使用的证明策略。
+*)
 
 (** **** 练习：3 星, standard (combine_odd_even)  
-
-    完成以下 [combine_odd_even] 函数的定义。它接受两个对数字成立的性质
-    [Podd] 与 [Peven]，返回性质 [P] 使得当 [n] 为奇数时 [P n] 等价于 [Podd n]，
-    否则等价于 [Peven n]。*)
+  函数 [combine_odd_even] 接受两个定义在自然数上的性质 
+  (类型为 [nat -> Prop]) [Podd] 与 [Peven]，
+  返回性质 (类型为 [nat -> Prop]) [P]，
+  使得当 [n] 为奇数时 [P n] 等价于 [Podd n]，否则等价于 [Peven n]。
+*)
 
 Definition combine_odd_even (Podd Peven : nat -> Prop) : nat -> Prop
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+  := (fun n => (if (oddb n) then Podd n else Peven n)).
 
-(** 为了测试你的定义，请证明以下事实： *)
+(** 
+  请证明以下三个关于 [combine_odd_even] 的定理。
+  注意定理的命名 (intro, elimination)。
+*)
 
 Theorem combine_odd_even_intro :
   forall (Podd Peven : nat -> Prop) (n : nat),
@@ -836,7 +768,8 @@ Theorem combine_odd_even_intro :
     (oddb n = false -> Peven n) ->
     combine_odd_even Podd Peven n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem combine_odd_even_elim_odd :
   forall (Podd Peven : nat -> Prop) (n : nat),
@@ -844,7 +777,8 @@ Theorem combine_odd_even_elim_odd :
     oddb n = true ->
     Podd n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem combine_odd_even_elim_even :
   forall (Podd Peven : nat -> Prop) (n : nat),
@@ -852,261 +786,9 @@ Theorem combine_odd_even_elim_even :
     oddb n = false ->
     Peven n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
-
-(* ################################################################# *)
-(** * 对参数应用定理 *)
-
-(** Coq 拥有一个不同于其它的证明助理（如 ACL2 和 Isabelle）的特性，
-    即它将_'证明'_本身也作为一等对象。
-
-    关于这一点有很多地方值得着墨，不过了解所有的细节对于使用 Coq 来说不是必须的。
-    本节点到为止，深入的探讨参见 [ProofObjects] 和 [IndPrinciples]。 *)
-
-(** 我们已经知道 [Check] 可以用来显式表达式的类型了，
-    不过它还可以用来查找某个标识符所指代的定理。 *)
-
-Check plus_comm.
-(* ===> forall n m : nat, n + m = m + n *)
-
-(** 在显示对定理 [plus_comm] 的_'陈述'_时，Coq 使用了与显示某项的_'类型'_一样的方式。
-    这是为什么？ *)
-
-(** 原因在于标识符 [plus_comm] 其实指代的是被称作_'证明对象'_的数据结构，
-    它表示在命题 [forall n m : nat, n + m = m + n] 的真实性上建立的逻辑推导。
-    此对象的类型_'就是'_其所证命题的陈述。 *)
-
-(** 从直觉上来说，这很有道理，因为对定理的陈述说明了该定理可用来做什么，
-    正如可计算对象的类型告诉了我们可以对它做什么。例如，若我们有一个类型为
-    [nat -> nat -> nat] 的项，就可以给它两个 [nat] 作为参数并得到一个 [nat]。
-    类似地，如果我们有一个类型为 [n = m -> n + n = m + m] 的对象，
-    就能为它提供一个类型为 [n = m] 的“参数”并推导出 [n + n = m + m]。 *)
-
-(** 从操作上来说，这种类比可以更进一步：由于定理可以作为函数应用到对应类型的前提上，
-    我们就可以直接产生结论而不必使用中间出现的 [assert] 了。例如，假设我们想要证明以下结论： *)
-
-Lemma plus_comm3 :
-  forall x y z, x + (y + z) = (z + y) + x.
-
-(** 乍看起来，我们似乎可以用 [plus_comm] 改写两次使两边匹配来证明它。
-    然而问题是，第二次 [rewrite] 会抵消第一次的效果。 *)
-
-Proof.
-  (* 课上已完成 *)
-  intros x y z.
-  rewrite plus_comm.
-  rewrite plus_comm.
-  (* 我们又回到了开始的地方... *)
-Abort.
-
-(** 利用我们已知的工具，修复它的一种简单方法是使用 [assert] 导出一个
-    [plus_comm] 的特殊版本，这样我们就能用它按照预期来改写。 *)
-
-Lemma plus_comm3_take2 :
-  forall x y z, x + (y + z) = (z + y) + x.
-Proof.
-  intros x y z.
-  rewrite plus_comm.
-  assert (H : y + z = z + y).
-  { rewrite plus_comm. reflexivity. }
-  rewrite H.
-  reflexivity.
-Qed.
-
-(** 一种更优雅的方式是直接把我们想要实例化的参数应用到 [plus_comm] 上，
-    正如我们将一个多态函数应用到类型参数上那样。 *)
-
-Lemma plus_comm3_take3 :
-  forall x y z, x + (y + z) = (z + y) + x.
-Proof.
-  intros x y z.
-  rewrite plus_comm.
-  rewrite (plus_comm y z).
-  reflexivity.
-Qed.
-
-(** 我们来展示另一个像函数那样使用定理或引理的例子。以下定理说明：
-    任何包含元素的列表 [l] 一定非空。 *)
-
-Lemma in_not_nil :
-  forall A (x : A) (l : list A), In x l -> l <> [].
-Proof.
-  intros A x l H. unfold not. intro Hl. destruct l.
-  - simpl in H. destruct H.
-  - discriminate Hl.
-Qed.
-
-(** 有趣的地方是一个量化的变量（[x]）没有出现在结论（[l <> []]）中。 *)
-
-(** 我们可以用此引理来证明 [x] 为 [42] 的特殊情况。直接用 [apply in_not_nil]
-    会失败，因为它无法推出 [x] 的值。有一些方法可以绕开它... *)
-
-Lemma in_not_nil_42 :
-  forall l : list nat, In 42 l -> l <> [].
-Proof.
-  (* 课上已完成 *)
-  intros l H.
-  Fail apply in_not_nil.
-Abort.
-
-(* [apply ... with ...] *)
-Lemma in_not_nil_42_take2 :
-  forall l : list nat, In 42 l -> l <> [].
-Proof.
-  intros l H.
-  apply in_not_nil with (x := 42).
-  apply H.
-Qed.
-
-(* [apply ... in ...] *)
-Lemma in_not_nil_42_take3 :
-  forall l : list nat, In 42 l -> l <> [].
-Proof.
-  intros l H.
-  apply in_not_nil in H.
-  apply H.
-Qed.
-
-(* 显式地对 [x] 的值应用引理。 *)
-Lemma in_not_nil_42_take4 :
-  forall l : list nat, In 42 l -> l <> [].
-Proof.
-  intros l H.
-  apply (in_not_nil nat 42).
-  apply H.
-Qed.
-
-(* 显式地对假设应用引理。 *)
-Lemma in_not_nil_42_take5 :
-  forall l : list nat, In 42 l -> l <> [].
-Proof.
-  intros l H.
-  apply (in_not_nil _ _ _ H).
-Qed.
-
-(** 对于几乎所有将定理名作为参数的策略而言，你都可以“将定理作为函数”来使用。
-    注意，定理应用与函数应用使用了同样的类型推导机制，所以你可以将通配符作为定理的参数，
-    或者为定理声明默认的隐式前提。这些特性在以下证明中展示。（此证明如何工作的细节
-    不必关心，这里的目标只是为了展示它的用途。） *)
-
-Example lemma_application_ex :
-  forall {n : nat} {ns : list nat},
-    In n (map (fun m => m * 0) ns) ->
-    n = 0.
-Proof.
-  intros n ns H.
-  destruct (proj1 _ _ (In_map_iff _ _ _ _ _) H)
-           as [m [Hm _]].
-  rewrite mult_0_r in Hm. rewrite <- Hm. reflexivity.
-Qed.
-
-(** 在以后的章节中我们将会看到更多这方面的例子。 *)
-
-(* ################################################################# *)
-(** * Coq vs. 集合论 *)
-
-(** Coq 的逻辑核心，即_'归纳构造演算（Calculus of Inductive Constructions）'_系统，
-    在很多重要的方面不同于数学家用来写下精确而严谨的证明的形式化系统。
-    例如，在主流的纸笔数学家中使用最普遍的_'策梅洛-弗兰克尔集合论（ZFC）'_中，
-    一个数学对象可同时属于不同的集合；而在 Coq 的逻辑中，一个项最多只属于一个类型。
-    这些不同之处需要人们用稍微不同的方式来描述非形式化的数学概念，但总的来说，
-    它们都是非常自然而易于使用的。例如，在 Coq 中我们一般不说某个自然数 [n]
-    属于偶数集合，而是说 [even n] 成立，其中的 [even : nat -> Prop] 描述了偶数的性质。
-
-    然而在某些情况下，将标准的数学论证翻译到 Coq 中会十分繁琐甚至是不可能的，
-    除非我们引入新的公理来丰富其逻辑核心。作为本章的结尾，
-    我们将探讨这两个世界之间最显著的区别。 *)
-
-(* ================================================================= *)
-(** ** 函数的外延性 *)
-
-(** 目前为止我们所看见的相等关系断言基本上都只考虑了归纳类型的元素
-    （如 [nat]、[bool] 等等）。然而由于 Coq 的相等关系运算符是多态的，
-    因此它们并不是唯一的可能。特别是，我们可以写出宣称_'两个函数相等'_的命题： *)
-
-Example function_equality_ex1 :
-  (fun x => 3 + x) = (fun x => (pred 4) + x).
-Proof. reflexivity. Qed.
-
-(** 在一般的数学研究中，对于任意的两个函数 [f] 和 [g]，只要它们产生的结果相等，
-    那么它们就被认为相等：
-
-    (forall x, f x = g x) -> f = g
-
-    这被称作_'函数的外延性原理'_。 *)
-
-(** 不甚严谨地说，所谓“外延性”是指某个对象可观察到的行为。
-    因此，函数的外延性就是指函数的标识完全由其行为来决定。
-    用 Coq 的术语来说，就是函数的身份视其被应用后的结果而定。 *)
-
-(** 函数的外延性并不在 Coq 的基本公理之内，因此某些“合理”的命题是不可证明的： *)
-
-Example function_equality_ex2 :
-  (fun x => plus x 1) = (fun x => plus 1 x).
-Proof.
-   (* 卡住了 *)
-Abort.
-
-(** 然而，我们可以用 [Axiom] 指令将函数的外延性添加到 Coq 的核心逻辑系统中。 *)
-
-Axiom functional_extensionality : forall {X Y: Type}
-                                    {f g : X -> Y},
-  (forall (x:X), f x = g x) -> f = g.
-
-(** 使用 [Axiom] 的效果与陈述一个定理并用 [Admitted] 跳过其证明相同，
-    不过它会提醒读者这是一个公理，我们无需证明！*)
-
-(** 现在我们可以在证明中调用函数的外延性了： *)
-
-Example function_equality_ex2 :
-  (fun x => plus x 1) = (fun x => plus 1 x).
-Proof.
-  apply functional_extensionality. intros x.
-  apply plus_comm.
-Qed.
-
-(** 当然，在为 Coq 添加公理时必须十分小心，因为这有可能会导致系统
-    _'不一致'_，而当系统不一致的，任何命题都能在其中证明，包括 [False]
-    和 [2+2=5]！
-
-    不幸的是，并没有一种简单的方式能够判断添加某条公理是否安全：
-    一般来说，确认任何一组公理的一致性都需要训练有素的专家付出艰辛的努力。
-
-    然而，我们已经知道了添加函数外延性后的公理系统_'确实是'_一致的。 *)
-
-(** 我们可以用 [Print Assumptions] 指令查看某个证明依赖的所有附加公理。 *)
-
-Print Assumptions function_equality_ex2.
-(* ===>
-     Axioms:
-     functional_extensionality :
-         forall (X Y : Type) (f g : X -> Y),
-                (forall x : X, f x = g x) -> f = g *)
-
-(** **** 练习：4 星, standard (tr_rev_correct)  
-
-    列表反转函数 [rev] 的定义有一个问题，它会在每一步都执行一次 [app]
-    调用，而运行 [app] 所需时间与列表的大小线性渐近，也就是说 [rev]
-    的时间复杂度与列表长度成平方关系。我们可以用以下定义来改进它： *)
-
-Fixpoint rev_append {X} (l1 l2 : list X) : list X :=
-  match l1 with
-  | [] => l2
-  | x :: l1' => rev_append l1' (x :: l2)
-  end.
-
-Definition tr_rev {X} (l : list X) : list X :=
-  rev_append l [].
-
-(** 此版本是_'尾递归的'_，因为对函数自身的递归调用是需要执行的最后一步操作
-    （即，在递归调用之后我们并不执行  [++] ）。
-    一个足够好的编译器会对此生成十分高效的代码。请证明以下两个定义等价。 *)
-
-Lemma tr_rev_correct : forall X, @tr_rev X = @rev X.
-(* 请在此处解答 *) Admitted.
-(** [] *)
-
 (* ================================================================= *)
 (** ** 命题与布尔值 *)
 
@@ -1287,188 +969,7 @@ Proof.
 Theorem eqb_neq : forall x y : nat,
   x =? y = false <-> x <> y.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
-
-(** **** 练习：3 星, standard (eqb_list)  
-
-    给定一个用于测试类型为 [A] 的元素相等关系的布尔操作符 [eqb]，
-    我们可以定义函数 [eqb_list] 来测试元素类型为 [A] 的列表的相等关系。
-    请完成以下 [eqb_list] 函数的定义。要确定你的定义是否正确，请证明引理
-    [eqb_list_true_iff]。 *)
-
-Fixpoint eqb_list {A : Type} (eqb : A -> A -> bool)
-                  (l1 l2 : list A) : bool
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-Lemma eqb_list_true_iff :
-  forall A (eqb : A -> A -> bool),
-    (forall a1 a2, eqb a1 a2 = true <-> a1 = a2) ->
-    forall l1 l2, eqb_list eqb l1 l2 = true <-> l1 = l2.
-Proof.
-(* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：2 星, standard, recommended (All_forallb)  
-
-    回忆一下[Tactics]一章中练习 [forall_exists_challenge] 的函数
-    [forallb]： *)
-
-Fixpoint forallb {X : Type} (test : X -> bool) (l : list X) : bool :=
-  match l with
-  | [] => true
-  | x :: l' => andb (test x) (forallb test l')
-  end.
-
-(** 请证明以下定理，它将 [forallb] 与之前练习中 [All] 的性质关联了起来。 *)
-
-Theorem forallb_true_iff : forall X test (l : list X),
-   forallb test l = true <-> All (fun x => test x = true) l.
-Proof.
-  (* 请在此处解答 *) Admitted.
-
-(** 函数 [forallb] 是否还存在尚未被此规范捕获的重要性质？ *)
-
-(* 请在此处解答 
-
-    [] *)
-
-(* ================================================================= *)
-(** ** 经典逻辑 vs. 构造逻辑 *)
-
-(** 我们已经知道了，在定义 Coq 函数时是无法判断命题 [P] 是否成立。
-    然而_'证明'_也存在类似的限制！换句话说，以下推理原则即便符合直觉，
-    不过在 Coq 中它是不可证明的： *)
-
-Definition excluded_middle := forall P : Prop,
-  P \/ ~ P.
-
-(** 为了在操作上理解为何如此, 回忆一下，在证明形如 [P \/ Q]
-    的陈述时，我们使用了 [left] 与 [right] 策略，它们能够有效地知道析取的哪边成立。
-    然而在 [excluded_middle] 中，[P] 是被全称量化的_'任意'_命题，我们对它一无所知。
-    我们没有足够的信息来选择使用 [left] 或 [right] 中的哪一个。就像 Coq
-    因为缺乏信息而无法在函数内部机械地确定 [P] 是否成立一样。 *)
-
-(** 然而，如果我们恰好知道 [P] 与某个布尔项互映，那么就能很轻易地知道它是否成立了：
-    我们只需检查 [b] 的值即可。 *)
-
-Theorem restricted_excluded_middle : forall P b,
-  (P <-> b = true) -> P \/ ~ P.
-Proof.
-  intros P [] H.
-  - left. rewrite H. reflexivity.
-  - right. rewrite H. intros contra. discriminate contra.
-Qed.
-
-(** 特别来说，对于自然数 [n] 和 [m] 的 [n = m] 而言，排中律是成立的。 *)
-
-Theorem restricted_excluded_middle_eq : forall (n m : nat),
-  n = m \/ n <> m.
-Proof.
-  intros n m.
-  apply (restricted_excluded_middle (n = m) (n =? m)).
-  symmetry.
-  apply eqb_eq.
-Qed.
-
-(** 通用的排中律默认在 Coq 中并不可用，这一点或许很奇怪，毕竟，
-    任何给定的断言都是非真即假的。尽管如此，不假设排中律的成立仍有其有限：
-    Coq 中的陈述可以构造出比标准数学中同样陈述更强的断言。特别是，
-    如果存在 [exists x, P x] 的 Coq 证明，那么我们就能直接给出一个使 [P x]
-    得证的值 [x]。换言之，任何关于存在性的证明必定是_'构造性'_的。 *)
-
-(** 像 Coq 一样不假设排中律成立的逻辑系统被称作_'构造逻辑'_。
-
-    像 ZFC 这样更加传统的，排中律对于任何命题都成立的逻辑系统则被称作_'经典逻辑'_。 *)
-
-(** 以下示例展示了为何假设排中律成立会导致非构造性证明：
-
-    _'命题'_：存在无理数 [a] 和 [b] 使得 [a ^ b] 为有理数。
-
-    _'证明'_：易知 [sqrt 2] 为无理数。若 [sqrt 2 ^ sqrt 2] 为有理数，
-    那么可以取 [a = b = sqrt 2] 证明结束；否则 [sqrt 2 ^ sqrt 2] 为无理数。
-    此时，我们可以取 [a = sqrt 2 ^ sqrt 2] 和 [b = sqrt 2]，因为
-    [a ^ b = sqrt 2 ^ (sqrt 2 * sqrt 2) = sqrt 2 ^ 2 = 2].  []
-
-    看到发生什么了吗？我们使用排中律在不知道 [sqrt 2 ^ sqrt 2]
-    是否为有理数的情况下就分别考虑了这两种情况！因此，我们知道了这样的
-    [a] 和 [b] 存在，但却无法确切知道它们的值（至少使用此论据来说如此）。
-
-    即便构造逻辑很有用，它也有自身的限制：存在很多容易用经典逻辑证明的命题，
-    用构造证明会更加复杂，而对于某些已知的命题而言这样的构造性证明甚至不存在！
-    幸运的是，排中律和函数外延性一样都是与 Coq 的逻辑系统兼容的，
-    我们可以安全地将它作为公理添加到 Coq 中。然而，在本书中我们不必如此：
-    我们所涉及的结构都可以完全用构造逻辑得到，所需的额外代价则微不足道。
-
-    我们需要一定的实践才能理解哪些证明技巧不应在构造推理中使用，
-    而其中的反证法尤为臭名昭著，因为它会导向非构造性证明。这里有个典型的例子：
-    假设我们想要证明存在 [x] 具有某种性质 [P]，即存在 [P x]。我们先假设结论为假，
-    也就是说 [~ exists x, P x]。根据此前提，不难推出 [forall x, ~ P x]。
-    如果我们能够根据此中间事实得到矛盾，就能得到一个存在性证明而完全不必指出一个
-    [x] 的值使得 [P x] 成立！
-
-    从构造性的角度来看，这里存在着技术上的瑕疵，即我们试图通过对
-    [~ ~ (exists x, P x)] 的证明来证明 [exists x, P x]。从以下练习中我们会看到，
-    允许自己从任意陈述中去掉双重否定等价于引入排中律。因此，只要我们不引入排中律，
-    就无法在 Coq 中编码此推理。 *)
-
-(** **** 练习：3 星, standard (excluded_middle_irrefutable)  
-
-    证明通用排中律公理与 Coq 的一致性需要复杂的推理，而且并不能在 Coq
-    自身中进行。然而，以下定理蕴含了假设可判定性公理（即排中律的一个特例）
-    成立对于任何_'具体的'_命题 [P] 而言总是安全的。之所以如此，
-    是因为我们无法证明这类公理的否定命题。假如我们可以的话，就会同时有
-    [~ (P \/ ~P)] 和 [~ ~ (P \/ ~P)]（因为根据以下练习， [P] 蕴含 [~ ~ P]），
-    而这会产生矛盾。但因为我们不能，所以将 [P \/ ~P] 作为公理加入是安全的。 *)
-
-Theorem excluded_middle_irrefutable: forall (P:Prop),
-  ~ ~ (P \/ ~ P).
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：3 星, advanced (not_exists_dist)  
-
-    在经典逻辑中有这样一条定理，它断言以下两条命题是等价的：
-
-    ~ (exists x, ~ P x)
-    forall x, P x
-
-    之前的 [dist_not_exists] 证明了此等价式的一个方向。有趣的是，
-    我们无法用构造逻辑证明另一个方向。你的任务就是证明排中律蕴含此方向的证明。 *)
-
-Theorem not_exists_dist :
-  excluded_middle ->
-  forall (X:Type) (P : X -> Prop),
-    ~ (exists x, ~ P x) -> (forall x, P x).
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：5 星, standard, optional (classical_axioms)  
-
-    对于喜欢挑战的读者，以下练习来自于 Bertot 与 Casteran 所著的
-    Coq'Art 一书中第 123 页。以下四条陈述的每一条，加上 [excluded_middle]
-    可以认为刻画了经典逻辑。我们无法在 Coq 中证明其中的任意一条，
-    不过如果我们希望在经典逻辑下工作的话，可以安全地将其中任意一条作为公理添加到
-    Coq 中而不会造成不一致性。
-
-    请证明所有五个命题都是等价的（这四个再加上 [excluded_middle]）。*)
-
-Definition peirce := forall P Q: Prop,
-  ((P->Q)->P)->P.
-
-Definition double_negation_elimination := forall P:Prop,
-  ~~P -> P.
-
-Definition de_morgan_not_and_not := forall P Q:Prop,
-  ~(~P /\ ~Q) -> P\/Q.
-
-Definition implies_to_or := forall P Q:Prop,
-  (P->Q) -> (~P\/Q).
-
-(* 请在此处解答 
-
-    [] *)
-
 (* Fri Jul 19 00:32:20 UTC 2019 *)
