@@ -36,3 +36,4 @@ Rock on Coq for the Problem Solving Class at Nanjing University
 - [x] CoqIDE 安装指南
 - [ ] CoqIDE 使用手册
 - [ ] 获取 SF 授权
+- [ ] CoqDoc 斜体/粗体

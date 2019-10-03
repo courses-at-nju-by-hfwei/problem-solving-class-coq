@@ -1,24 +1,37 @@
 (** * Lists: 使用结构化的数据 *)
 
+(**
+  本节介绍_'列表'(List)_数据类型。
+  下一节介绍_'函数式程序设计' (Functional Programming; FP)_范型。
+  
+  为什么要先介绍列表呢?
+  列表是函数式程序设计中的基础数据类型。
+  最早的(?)的函数式程序设计语言 Lisp 的含义即是 "LISt Processor"。
+*)
+
 From LF Require Export Induction.
 Module NatList.
-
 (* ################################################################# *)
-(** * 数值序对 *)
+(** * 自然数序对 *)
 
-(** 在 [Inductive] 类型定义中，每个构造子（Constructor）可以有任意多个参数
-    —— 可以没有（如 [true] 和 [O]），可以只有一个（如 [S]），也可以更多
-    （如 [nybble]，以及下文所示）： *)
+(**
+  在定义列表数据类型之前，我们先热热身，
+  定义简单的自然数 _序对 (Ordered Pair)_。
+  它只有一种构造方式，即将构造函数 [pair] 作用到两个自然数 [n1 n2] 上。 
+*)
 
 Inductive natprod : Type :=
-| pair (n1 n2 : nat).
+  | pair (n1 n2 : nat).
 
-(** 此声明可以读作：“只有一种方式来构造一个数值序对：通过将构造子 [pair]
-    应用到两个 [nat] 类型的参数上”。 *)
-
+(**
+  注意: 我们将该类型命名为 natprod，
+  其中 prod 表示 _'乘积' (Product)_ 类型。
+*)
 Check (pair 3 5).
 
-(** 下述函数分别用于提取二元组中的第一个和第二个分量。 *)
+(**
+  函数 [fst] 与 [snd] 分别用于提取有序对的第一个和第二个分量。
+*)
 
 Definition fst (p : natprod) : nat :=
   match p with
@@ -33,19 +46,17 @@ Definition snd (p : natprod) : nat :=
 Compute (fst (pair 3 5)).
 (* ===> 3 *)
 
-(** 鉴于二元组较为常用，不妨以标准的数学记法 [(x,y)] 取代 [pair x y]。
-    通过 [Notation] 向 Coq 声明该记法： *)
+(**
+  在数学上，我们使用 [(x,y)] 表示有序对 [pair x y]。
+*)
 
 Notation "( x , y )" := (pair x y).
-
-(** The new pair notation can be used both in expressions and in
-    pattern matches. *)
 
 Compute (fst (3,5)).
 
 Definition fst' (p : natprod) : nat :=
   match p with
-  | (x,y) => x
+  | (x,y) => x (* [(x,y)] 即 [pair x y] *)
   end.
 
 Definition snd' (p : natprod) : nat :=
@@ -58,161 +69,140 @@ Definition swap_pair (p : natprod) : natprod :=
   | (x,y) => (y,x)
   end.
 
-(** Note that pattern-matching on a pair (with parentheses: [(x, y)])
-    is not to be confused with the "multiple pattern" syntax
-    (with no parentheses: [x, y]) that we have seen previously.
-
-    The above examples illustrate pattern matching on a pair with
-    elements [x] and [y], whereas [minus] below (taken from
-    [Basics]) performs pattern matching on the values [n]
-    and [m].
-
-       Fixpoint minus (n m : nat) : nat :=
-         match n, m with
-         | O   , _    => O
-         | S _ , O    => n
-         | S n', S m' => minus n' m'
-         end.
-
-    The distinction is minor, but it is worth knowing that they
-    are not the same. For instance, the following definitions are
-    ill-formed:
-
-        (* Can't match on a pair with multiple patterns: *)
-        Definition bad_fst (p : natprod) : nat :=
-          match p with
-          | x, y => x
-          end.
-
-        (* Can't match on multiple values with pair patterns: *)
-        Definition bad_minus (n m : nat) : nat :=
-          match n, m with
-          | (O   , _   ) => O
-          | (S _ , O   ) => n
-          | (S n', S m') => bad_minus n' m'
-          end.
+(**
+  由于 [natprod] 也是归纳类型 (使用 Inductive 定义)，
+  因此我们可以使用 [destruct] 对 [natprod] 类型的值分情形讨论。
+  又由于 [natprod] 只有一个构造函数 [pair]，
+  因此使用 [destruct] 时只会产生一个子目标。
+  另外，[pair] 有两个参数，
+  所以可以使用 [destruct] 的 [as [f s]] 子句
+  匹配并记录有序对的两个分量。 
 *)
-
-(** 我们现在来证明一些有关二元组的简单事实。
-
-    定理倘若以稍显古怪的方式书写，则只需 [reflexivity]（及其内建的简化）
-    即可完成证明。 *)
-
-Theorem surjective_pairing' : forall (n m : nat),
-  (n,m) = (fst (n,m), snd (n,m)).
-Proof.
-  reflexivity.  Qed.
-
-(** 但是，如果我们用一种更为自然的方式来陈述此引理的话，只用
-    [reflexivity] 还不够。 *)
-
-Theorem surjective_pairing_stuck : forall (p : natprod),
-  p = (fst p, snd p).
-Proof.
-  simpl. (* 啥也没有归约！ *)
-Abort.
-
-(** 我们必须要向 Coq 展示 [p] 的具体结构，这样 [simpl] 才能对
-    [fst] 和 [snd] 做模式匹配。通过 [destruct] 可以达到这个目的。 *)
-
 Theorem surjective_pairing : forall (p : natprod),
   p = (fst p, snd p).
 Proof.
-  intros p.  destruct p as [n m].  simpl.  reflexivity.  Qed.
+  intros p.
+  destruct p as [n m]. (* 仅产生一个子目标，[p] 被替换为 (n, m)。*)
+  simpl. reflexivity.
+Qed.
 
-(** 注意：不同于解构自然数产生两个子目标，[destruct] 在此只产生
-    一个子目标。这是因为 [natprod] 只有一种构造方法。 *)
-
-(** **** 练习：1 星, standard (snd_fst_is_swap)  *)
+(** **** 练习：1 星, standard (snd_fst_is_swap) *)
 Theorem snd_fst_is_swap : forall (p : natprod),
   (snd p, fst p) = swap_pair p.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** **** 练习：1 星, standard, optional (fst_swap_is_snd)  *)
+(** **** 练习：1 星, standard, optional (fst_swap_is_snd) *)
 Theorem fst_swap_is_snd : forall (p : natprod),
   fst (swap_pair p) = snd p.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
-
 (* ################################################################# *)
-(** * 数值列表 *)
+(** * 自然数列表 *)
 
-(** 通过推广序对的定义，数值_'列表'_类型可以这样描述：
-    “一个列表要么是空的，要么就是由一个数和另一个列表组成的序对。” *)
+(** 
+  由任意多个自然数构成的_'自然数列表'_类型
+  需要使用递归来定义。
+  一个自然数列表有且仅有两种构造方式:
+  - 空列表是自然数列表，记为 [nil];
+  - 如果 [l] 是自然数列表，[n] 是自然数，
+    把 [n] 添加到 [l] 的表头，可以构成新的列表，记为 [cons n l]。
+*)
 
 Inductive natlist : Type :=
   | nil
   | cons (n : nat) (l : natlist).
 
-(** 例如，这是一个三元素列表： *)
+(** 例如，[mylist] 是一个三元素列表。*)
 
 Definition mylist := cons 1 (cons 2 (cons 3 nil)).
 
-(** 和序对一样，使用熟悉的编程记法来表示列表会更方便些。
-    以下两个声明能让我们用 [::] 作为中缀的 [cons] 操作符，
-    用方括号作为构造列表的“外围（outfix）”记法。 *)
+(**
+  对于较长的列表，要写很多的 [cons] 与括号，繁琐易错。
+  以下三个 [Notation] 声明允许我们:
+  - 使用 [::] 中缀操作符代替 [cons]。注意: [::] 是右结合的。
+  - 使用 [[ ]] 代替 [nil]。
+  - 使用单重中括号记法代替多重圆括号记法。
+*)
 
 Notation "x :: l" := (cons x l)
                      (at level 60, right associativity).
 Notation "[ ]" := nil.
 Notation "[ x ; .. ; y ]" := (cons x .. (cons y nil) ..).
 
-(** 我们不必完全理解这些声明，但如果你感兴趣的话，我会大致说明一下
-    发生了什么。 [right associativity] 告诉 Coq 当遇到多个 [::]
-    时如何给表达式加括号，如此一来下面三个声明做的就是同一件事： *)
-
 Definition mylist1 := 1 :: (2 :: (3 :: nil)).
 Definition mylist2 := 1 :: 2 :: 3 :: nil.
 Definition mylist3 := [1;2;3].
 
-(** [at level 60] 告诉 Coq 当遇到表达式和其它中缀运算符时应该如何加括号。
-    例如，我们已经为 [plus] 函数定义了 [+] 中缀符号，它的优先级是 50：
+(**
+  接下来，我们定义一些常用的列表操作函数。
+*)
+(* ----------------------------------------------------------------- *)
+(** *** Head（带默认值）与 Tail *)
 
-  Notation "x + y" := (plus x y)
-                      (at level 50, left associativity).
+(**
+  [hd] 函数返回列表 [l] 的第一个元素（即“表头 (head)”）。
+  由于空表没有表头，[hd] 接受另一个参数 [default] 
+  作为这种特殊情况下的默认返回值。
+  (后面，我们会学习一种更优雅的处理方式。)
+  
+  该函数的定义展示了如何对列表进行模式匹配:
+  - 空列表 [nil];
+  - 非空列表 [l] 可以拆分为表头 [h]
+    与表尾 [t] (tail; 仍是列表) 两部分。
+  这种模式匹配很常用。
+*)
 
-    [+] 会比 [::] 结合的更紧密，所以 [1 + 2 :: [3]] 会被解析成
-    [(1 + 2) :: [3]] 而非 [1 + (2 :: [3])]。
+Definition hd (default : nat) (l : natlist) : nat :=
+  match l with
+  | nil => default
+  | h :: t => h
+  end.
 
-   (当你在 [.v] 文件中看到“[1 + (2 :: [3])]”这样的记法时可能会很疑惑。
-   最里面那个括住了 3 的方括号，标明了它是一个列表。而外层的方括号则是用来指示
-   “coqdoc”这部分要被显示为代码而非普通的文本；在生成的 HTML
-   文件中，外层的方括号是看不到的。)
+(** [tl] 函数返回列表 [l] 除表头以外的部分（即“表尾 (tail)”）。*)
+Definition tl (l : natlist) : natlist :=
+  match l with
+  | nil => nil
+  | h :: t => t
+  end.
 
-   上面的第二和第三个 [Notation] 声明引入了标准的方括号记法来表示列表；
-   第三个声明的右半部分展示了在 Coq 中声明 n 元记法的语法，
-   以及将它们翻译成嵌套的二元构造子序列的方法。 *)
-
+Example test_hd1 : hd 0 [1;2;3] = 1.
+Proof. reflexivity. Qed.
+Example test_hd2 : hd 0 [] = 0.
+Proof. reflexivity. Qed.
+Example test_tl : tl [1;2;3] = [2;3].
+Proof. reflexivity. Qed.
 (* ----------------------------------------------------------------- *)
 (** *** Repeat *)
 
-(** 有很多函数可以方便地操作列表。例如 [repeat] 函数接受一个数字
-    [n] 和一个 [count]，返回一个长度为 [count]，每个元素都是 [n] 的列表。 *)
+(**
+  [repeat] 函数接受自然数 [n] 和 [count]，
+  返回一个包含了 [count] 个 [n] 的列表。
+*)
 
 Fixpoint repeat (n count : nat) : natlist :=
   match count with
   | O => nil
   | S count' => n :: (repeat n count')
   end.
-
 (* ----------------------------------------------------------------- *)
 (** *** Length *)
 
-(** [length] 函数用来计算列表的长度。 *)
+(** [length] 函数返回列表 [l] 的长度。*)
 
-Fixpoint length (l:natlist) : nat :=
+Fixpoint length (l : natlist) : nat :=
   match l with
   | nil => O
   | h :: t => S (length t)
   end.
-
 (* ----------------------------------------------------------------- *)
 (** *** Append *)
 
-(** [app] 函数用来把两个列表联接起来。 *)
+(** [app] 函数将两个列表 [l1] [l2] 联接起来。 *)
 
 Fixpoint app (l1 l2 : natlist) : natlist :=
   match l1 with
@@ -220,180 +210,130 @@ Fixpoint app (l1 l2 : natlist) : natlist :=
   | h :: t => h :: (app t l2)
   end.
 
-(** 鉴于下文中 [app] 随处可见，不妨将其定义为中缀运算符。 *)
+(** 我们常用右结合的中缀运算符 [++] 代替 [app]。*)
 
 Notation "x ++ y" := (app x y)
                      (right associativity, at level 60).
 
-Example test_app1:             [1;2;3] ++ [4;5] = [1;2;3;4;5].
-Proof. reflexivity.  Qed.
-Example test_app2:             nil ++ [4;5] = [4;5].
-Proof. reflexivity.  Qed.
-Example test_app3:             [1;2;3] ++ nil = [1;2;3].
-Proof. reflexivity.  Qed.
-
-(* ----------------------------------------------------------------- *)
-(** *** Head（带默认值）与 Tail *)
-
-(** 下面介绍列表上的两种运算：[hd] 函数返回列表的第一个元素（即“表头”）；
-    [tl] 函数返回列表除去第一个元素以外的部分（即“表尾”）。考虑到空表没有表头，
-    传入一个参数作为返回的默认值。 *)
-
-Definition hd (default:nat) (l:natlist) : nat :=
-  match l with
-  | nil => default
-  | h :: t => h
-  end.
-
-Definition tl (l:natlist) : natlist :=
-  match l with
-  | nil => nil
-  | h :: t => t
-  end.
-
-Example test_hd1:             hd 0 [1;2;3] = 1.
-Proof. reflexivity.  Qed.
-Example test_hd2:             hd 0 [] = 0.
-Proof. reflexivity.  Qed.
-Example test_tl:              tl [1;2;3] = [2;3].
-Proof. reflexivity.  Qed.
-
+Example test_app1: [1;2;3] ++ [4;5] = [1;2;3;4;5].
+Proof. reflexivity. Qed.
+Example test_app2: nil ++ [4;5] = [4;5].
+Proof. reflexivity. Qed.
+Example test_app3: [1;2;3] ++ nil = [1;2;3].
+Proof. reflexivity. Qed.
 (* ----------------------------------------------------------------- *)
 (** *** 练习 *)
 
-(** **** 练习：2 星, standard, recommended (list_funs)  
+(** **** 练习：2 星, standard, recommended (list_funs) *) 
+(**
+  完成函数 [nonzeros]、[oddmembers] 和 [countoddmembers]
+  的定义。你可以通过测试用例来理解这些函数的功能。
+*)
 
-    完成以下 [nonzeros]、[oddmembers] 和 [countoddmembers] 的定义，
-    你可以查看测试函数来理解这些函数应该做什么。 *)
-
-Fixpoint nonzeros (l:natlist) : natlist
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+Fixpoint nonzeros (l : natlist) : natlist
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
 Example test_nonzeros:
   nonzeros [0;1;0;2;3;0;0] = [1;2;3].
-  (* 请在此处解答 *) Admitted.
+Proof.
+  (* 请在此处解答 *) 
+Admitted.
 
-Fixpoint oddmembers (l:natlist) : natlist
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+Fixpoint oddmembers (l : natlist) : natlist
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
 Example test_oddmembers:
   oddmembers [0;1;0;2;3;0;0] = [1;3].
-  (* 请在此处解答 *) Admitted.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
 
-Definition countoddmembers (l:natlist) : nat
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+Definition countoddmembers (l : natlist) : nat
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
 Example test_countoddmembers1:
   countoddmembers [1;0;3;1;4;5] = 4.
-  (* 请在此处解答 *) Admitted.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
 
 Example test_countoddmembers2:
   countoddmembers [0;2;4] = 0.
-  (* 请在此处解答 *) Admitted.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
 
 Example test_countoddmembers3:
   countoddmembers nil = 0.
-  (* 请在此处解答 *) Admitted.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** **** 练习：3 星, advanced (alternate)  
-
-    完成 [alternate] 的定义，它从两个列表中交替地取出元素并合并为一个列表，
-    就像把拉链“拉”起来一样。更多具体示例见后面的测试。
-
-    （注意：[alternate] 有一种自然而优雅的定义，但是这一定义无法满足 Coq
-    对于 [Fixpoint] 必须“显然会终止”的要求。如果你发现你被这种解法束缚住了，
-    可以试着换一种稍微啰嗦一点的解法，比如同时对两个列表中的元素进行操作。
-    有种可行的解法需要定义新的序对，但这并不是唯一的方法。） *)
+(** **** 练习：3 星, advanced (alternate) *)
+(**
+  请完成函数 [alternate] 的定义。
+  它交替地从两个列表 [l1] [l2] 取元素，
+  生成一个合并后的列表。你可以通过测试用例来理解它的功能。
+*)
 
 Fixpoint alternate (l1 l2 : natlist) : natlist
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
 Example test_alternate1:
   alternate [1;2;3] [4;5;6] = [1;4;2;5;3;6].
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Example test_alternate2:
   alternate [1] [4;5;6] = [1;4;5;6].
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Example test_alternate3:
   alternate [1;2;3] [4] = [1;4;2;3].
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Example test_alternate4:
   alternate [] [20;30] = [20;30].
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
+(** **** 练习：3 星, standard, recommended (more list functions) *)  
+(** 完成函数 [count] 的定义。*)
+Fixpoint count (v : nat) (l : natlist) : nat
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
-(* ================================================================= *)
-(** ** 用列表实现口袋（Bag） *)
+Example test_count1: count 1 [1;2;3;1;4;1] = 3.
+ (* 请在此处解答 *)
+Admitted.
+Example test_count2: count 6 [1;2;3;1;4;1] = 0.
+ (* 请在此处解答 *)
+Admitted.
 
-(** [bag]（或者叫 [multiset] 多重集）类似于集合，只是其中每个元素都能出现不止一次。
-   口袋的一种可行的表示是列表。 *)
+(** 完成函数 [member] 的定义。*)
+Fixpoint member (v : nat) (l : natlist) : bool
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
-Definition bag := natlist.
+Example test_member1: member 1 [1;4;1] = true.
+ (* 请在此处解答 *)
+Admitted.
 
-(** **** 练习：3 星, standard, recommended (bag_functions)  
+Example test_member2: member 2 [1;4;1] = false.
+(* 请在此处解答 *)
+Admitted.
 
-    为袋子完成以下 [count]、[sum]、[add]、和 [member] 函数的定义。 *)
-
-Fixpoint count (v:nat) (s:bag) : nat
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-(** 这些命题都能通过 [reflexivity] 来证明。 *)
-
-Example test_count1:              count 1 [1;2;3;1;4;1] = 3.
- (* 请在此处解答 *) Admitted.
-Example test_count2:              count 6 [1;2;3;1;4;1] = 0.
- (* 请在此处解答 *) Admitted.
-
-(** Multiset [sum] is similar to set [union]: [sum a b] contains all
-    the elements of [a] and of [b].  (Mathematicians usually define
-    [union] on multisets a little bit differently -- using max instead
-    of sum -- which is why we don't use that name for this operation.)
-    For [sum] we're giving you a header that does not give explicit
-    names to the arguments.  Moreover, it uses the keyword
-    [Definition] instead of [Fixpoint], so even if you had names for
-    the arguments, you wouldn't be able to process them recursively.
-    The point of stating the question this way is to encourage you to
-    think about whether [sum] can be implemented in another way --
-    perhaps by using functions that have already been defined.  *)
-
-Definition sum : bag -> bag -> bag
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-Example test_sum1:              count 1 (sum [1;2;3] [1;4;1]) = 3.
- (* 请在此处解答 *) Admitted.
-
-Definition add (v:nat) (s:bag) : bag
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-Example test_add1:                count 1 (add 1 [1;4;1]) = 3.
- (* 请在此处解答 *) Admitted.
-Example test_add2:                count 5 (add 1 [1;4;1]) = 0.
- (* 请在此处解答 *) Admitted.
-
-Definition member (v:nat) (s:bag) : bool
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-Example test_member1:             member 1 [1;4;1] = true.
- (* 请在此处解答 *) Admitted.
-
-Example test_member2:             member 2 [1;4;1] = false.
-(* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：3 星, standard, optional (bag_more_functions)  
-
-    你可以把下面这些和 [bag] 有关的函数当作额外的练习 *)
-
-(** 倘若某口袋不包含所要移除的数字，那么将 [remove_one] 作用其上不应改变其内容。
-    （本练习为选做，但高级班的学生为了完成后面的练习，需要写出 [remove_one]
-    的定义。） *)
-
-Fixpoint remove_one (v:nat) (s:bag) : bag
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+(** 完成函数 [remov_one] 的定义。*)
+Fixpoint remove_one (v : nat) (l : natlist) : natlist
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
 Example test_remove_one1:
   count 5 (remove_one 5 [2;1;5;4;1]) = 0.
@@ -411,49 +351,39 @@ Example test_remove_one4:
   count 5 (remove_one 5 [2;1;5;4;5;1;4]) = 1.
   (* 请在此处解答 *) Admitted.
 
-Fixpoint remove_all (v:nat) (s:bag) : bag
+(** 完成函数 [remov_all] 的定义。*)
+Fixpoint remove_all (v : nat) (l : natlist) : natlist
   (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
 
-Example test_remove_all1:  count 5 (remove_all 5 [2;1;5;4;1]) = 0.
- (* 请在此处解答 *) Admitted.
-Example test_remove_all2:  count 5 (remove_all 5 [2;1;4;1]) = 0.
- (* 请在此处解答 *) Admitted.
-Example test_remove_all3:  count 4 (remove_all 5 [2;1;4;5;1;4]) = 2.
- (* 请在此处解答 *) Admitted.
-Example test_remove_all4:  count 5 (remove_all 5 [2;1;5;4;5;1;4;5;1;4]) = 0.
- (* 请在此处解答 *) Admitted.
+Example test_remove_all1:
+  count 5 (remove_all 5 [2;1;5;4;1]) = 0.
+ (* 请在此处解答 *)
+Admitted.
+Example test_remove_all2:
+  count 5 (remove_all 5 [2;1;4;1]) = 0.
+ (* 请在此处解答 *)
+Admitted.
+Example test_remove_all3:
+  count 4 (remove_all 5 [2;1;4;5;1;4]) = 2.
+ (* 请在此处解答 *)
+Admitted.
+Example test_remove_all4:
+  count 5 (remove_all 5 [2;1;5;4;5;1;4;5;1;4]) = 0.
+ (* 请在此处解答 *)
+Admitted.
 
-Fixpoint subset (s1:bag) (s2:bag) : bool
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+(** 完成函数 [subset] 的定义。*)
+Fixpoint subset (l1 : natlist) (l2 : natlist) : bool
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
-Example test_subset1:              subset [1;2] [2;1;4;1] = true.
- (* 请在此处解答 *) Admitted.
-Example test_subset2:              subset [1;2;2] [2;1;4;1] = false.
- (* 请在此处解答 *) Admitted.
+Example test_subset1: subset [1;2] [2;1;4;1] = true.
+ (* 请在此处解答 *)
+Admitted.
+Example test_subset2: subset [1;2;2] [2;1;4;1] = false.
+ (* 请在此处解答 *)
+Admitted.
 (** [] *)
-
-(** **** 练习：2 星, standard, recommended (bag_theorem)  
-
-    写一个你认为有趣的关于袋子的定理 [bag_theorem]，然后证明它；
-    这个定理需要用到 [count] 和 [add]。注意，这是个开放性问题。
-    也许你写下的定理是正确的，但它可能会涉及到你尚未学过的技巧因而无法证明。
-    如果你遇到麻烦了，欢迎提问！ *)
-
-(*
-Theorem bag_theorem : ...
-Proof.
-  ...
-Qed.
-*)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_bag_theorem : option (nat*string) := None.
-(* Note to instructors: For silly technical reasons, in this
-   file (only) you will need to write [Some (Datatypes.pair 3 ""%string)]
-   rather than [Some (3,""%string)] to enter your grade and comments. 
-
-    [] *)
-
 (* ################################################################# *)
 (** * 有关列表的论证 *)
 
@@ -483,14 +413,6 @@ Proof.
     [cons] 构造子的两个参数（正在构造的列表的头和尾）。 *)
 
  (** 然而一般来说，许多关于列表的有趣定理都需要用到归纳法来证明。 *)
-
-(* ================================================================= *)
-(** ** 一点点说教 *)
-
-(** 只是阅读证明的话，你不会获得什么特别有用的东西。搞清楚每一个细节非常重要，
-    你应该在 Coq 中单步执行这些证明并思考每一步在整个证明中的作用，否则练习题将毫无用处。
-    啰嗦完毕。 *)
-
 (* ================================================================= *)
 (** ** 对列表进行归纳 *)
 
