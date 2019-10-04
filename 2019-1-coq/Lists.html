@@ -625,8 +625,12 @@
 
 <div class="paragraph"> </div>
 
- 和数字一样，有些列表处理函数的简单事实仅通过化简就能证明。
-    例如，对于下面这个例子，<span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 所做的简化就已经足够了... 
+  接下来，我们使用之前学习过的证明策略
+  论证与列表相关的定理。
+
+<div class="paragraph"> </div>
+
+ 对于定理 <span class="inlinecode"><span class="id" title="var">nil_app</span></span>，<span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 已足够。
 </div>
 <div class="code">
 
@@ -639,36 +643,20 @@
 </div>
 
 <div class="doc">
-...由于 <span class="inlinecode">[]</span> 被替换进了 <span class="inlinecode"><span class="id" title="var">app</span></span> 定义中相应的“被检”分支
-    （即经由匹配“仔细检查”过值的表达式），整个匹配得以被简化。 
-<div class="paragraph"> </div>
-
- 和数字一样，有时对一个列表做分类讨论（是否是空）是非常有用的。 
+定理 <span class="inlinecode"><span class="id" title="var">tl_length_pred</span></span> 需要分情况讨论。
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">tl_length_pred</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span>:<span class="id" title="var">natlist</span>,<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">tl_length_pred</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">pred</span> (<span class="id" title="var">length</span> <span class="id" title="var">l</span>) = <span class="id" title="var">length</span> (<span class="id" title="var">tl</span> <span class="id" title="var">l</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n</span> <span class="id" title="var">l'</span>].<br/>
 &nbsp;&nbsp;- <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-在这里 <span class="inlinecode"><span class="id" title="var">nil</span></span> 的情况能够工作是因为我们定义了 <span class="inlinecode"><span class="id" title="var">tl</span></span> <span class="inlinecode"><span class="id" title="var">nil</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">nil</span></span>，
-    而 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 策略中 <span class="inlinecode"><span class="id" title="keyword">as</span></span> 注解引入的两个名字，<span class="inlinecode"><span class="id" title="var">n</span></span> 和 <span class="inlinecode"><span class="id" title="var">l'</span></span>，分别对应了
-    <span class="inlinecode"><span class="id" title="var">cons</span></span> 构造子的两个参数（正在构造的列表的头和尾）。 
-<div class="paragraph"> </div>
-
- 然而一般来说，许多关于列表的有趣定理都需要用到归纳法来证明。 
-</div>
-<div class="code">
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 </div>
 
 <div class="doc">
@@ -676,122 +664,73 @@
 
 <div class="paragraph"> </div>
 
- 比起对自然数的归纳，读者可能对归纳证明 <span class="inlinecode"><span class="id" title="var">natlist</span></span> 这样的数据类型更加陌生。
-    不过基本思路同样简单。每个 <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> 声明定义了一组数据值，
-    这些值可以用声明过的构造子来构造：布尔值可以用 <span class="inlinecode"><span class="id" title="var">true</span></span> 或 <span class="inlinecode"><span class="id" title="var">false</span></span> 来构造；
-    自然数可以用 <span class="inlinecode"><span class="id" title="var">O</span></span> 或 <span class="inlinecode"><span class="id" title="var">S</span></span> 应用到另一个自然数上来构造；而列表可以用 <span class="inlinecode"><span class="id" title="var">nil</span></span>
-    或者将 <span class="inlinecode"><span class="id" title="var">cons</span></span> 应用到一个自然数和另一个列表上来构造。
 
 <div class="paragraph"> </div>
 
-    除此以外，归纳定义的集合中元素的形式 <i>'只能是'</i> 构造子对其它项的应用；
-    这一事实同时也给出了一种对归纳定义的集合进行论证的方法：一个自然数要么是
-    <span class="inlinecode"><span class="id" title="var">O</span></span>，要么就是 <span class="inlinecode"><span class="id" title="var">S</span></span> 应用到某个<i>'更小'</i>的自然数上；一个列表要么是 <span class="inlinecode"><span class="id" title="var">nil</span></span>，
-    要么就是 <span class="inlinecode"><span class="id" title="var">cons</span></span> 应用到某个数字和某个<i>'更小'</i>的列表上，诸如此类。
-    所以，如果我们有某个命题 <span class="inlinecode"><span class="id" title="var">P</span></span> 涉及列表 <span class="inlinecode"><span class="id" title="var">l</span></span>，而我们想证明 <span class="inlinecode"><span class="id" title="var">P</span></span> 对 <i>'一切'</i>
-    列表都成立，那么可以像这样推理：
+  <span class="inlinecode"><span class="id" title="var">natlist</span></span> 是归纳定义的，
+  因此，有关列表的很多定理，都可以使用数学归纳法证明。
 
 <div class="paragraph"> </div>
 
+  假设我们需要证明命题 <span class="inlinecode"><span class="id" title="var">P</span></span> 对任意列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 都成立。
+  我们可以对列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 作归纳:
 <ul class="doclist">
-<li> 首先，证明当 <span class="inlinecode"><span class="id" title="var">l</span></span> 为 <span class="inlinecode"><span class="id" title="var">nil</span></span> 时 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> 成立。
-
-<div class="paragraph"> </div>
-
+<li> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">=</span> <span class="inlinecode">[]</span>。此时，我们需要证明 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">[]</span> 成立。
 
 </li>
-<li> 然后，证明当 <span class="inlinecode"><span class="id" title="var">l</span></span> 为 <span class="inlinecode"><span class="id" title="var">cons</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">l'</span></span> 时 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> 成立，其中 <span class="inlinecode"><span class="id" title="var">n</span></span> 是某个自然数，<span class="inlinecode"><span class="id" title="var">l'</span></span>
-      是某个更小的列表，假设 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">l'</span></span> 成立.
+<li> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">::</span> <span class="inlinecode"><span class="id" title="var">l'</span></span>。
+    此时，我们需要在归纳假设 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">l'</span></span> 成立的条件下，
+    证明 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> 成立。
 
 </li>
 </ul>
 
 <div class="paragraph"> </div>
 
-    由于较大的列表只能通过较小的列表构造出来，最终这个较小的列表会变成
-    <span class="inlinecode"><span class="id" title="var">nil</span></span>，这两点合在一起就完成了 <span class="inlinecode"><span class="id" title="var">P</span></span> 对一切列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 成立的证明。下面是个具体的例子： 
+
+<div class="paragraph"> </div>
+
+  下面使用数学归纳法证明 <span class="inlinecode"><span class="id" title="var">app</span></span> 满足结合律。
+
 </div>
 <div class="code">
-
-<br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_assoc</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;(<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) ++ <span class="id" title="var">l3</span> = <span class="id" title="var">l1</span> ++ (<span class="id" title="var">l2</span> ++ <span class="id" title="var">l3</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n</span> <span class="id" title="var">l1'</span> <span class="id" title="var">IHl1'</span>].<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n</span> <span class="id" title="var">l1'</span> <span class="id" title="var">IHl1'</span>]. &nbsp;&nbsp;- <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">rewrite</span> → <span class="id" title="var">IHl1'</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">rewrite</span> → <span class="id" title="var">IHl1'</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-注意，和归纳自然数时一样，此处 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 策略的 <span class="inlinecode"><span class="id" title="keyword">as</span>...</span> 从句为在
-    “<span class="inlinecode"><span class="id" title="var">l1</span></span> 由构造子 <span class="inlinecode"><span class="id" title="var">cons</span></span> 构造而来”这一情况时出现的“更小的列表”和归纳假设取了名字。
-    再次强调，如果你把 Coq 的证明当做静态的文档，那么可能不会有特别多的收获 ——
-    如果你通过交互式的 Coq 会话来阅读证明，就能看到当前的目标和上下文，
-    而这些状态在你阅读写下来的脚本时是不可见的。所以一份用自然语言写成的证明 ——
-    写给人看的 —— 需要包含更多的提示来帮助读者理解当前的状态，
-    比如第二种情况下的归纳假设到底是什么。 
-<div class="paragraph"> </div>
-
- <i>'定理'</i>：对所有的列表 <span class="inlinecode"><span class="id" title="var">l1</span></span>, <span class="inlinecode"><span class="id" title="var">l2</span></span>, 和 <span class="inlinecode"><span class="id" title="var">l3</span></span>，
-   <span class="inlinecode">(<span class="id" title="var">l1</span></span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l2</span>)</span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l3</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode">++</span> <span class="inlinecode">(<span class="id" title="var">l2</span></span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l3</span>)</span>。
-
-<div class="paragraph"> </div>
-
-   <i>'证明'</i>: 通过对 <span class="inlinecode"><span class="id" title="var">l1</span></span> 使用归纳法。
-
-<div class="paragraph"> </div>
-
+  注意: <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">l1'</span></span> <span class="inlinecode"><span class="id" title="var">IHl1'</span>]</span> 的 <span class="inlinecode"><span class="id" title="keyword">as</span></span> 从句
+  对应于 <span class="inlinecode"><span class="id" title="var">l</span></span> 的两个构造函数:
 <ul class="doclist">
-<li> 首先, 假设 <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode">=</span> <span class="inlinecode">[]</span>。我们必须证明：
-
-<div class="paragraph"> </div>
-
-       (<font size=-2>&#9744;</font> ++ l2) ++ l3 = <font size=-2>&#9744;</font> ++ (l2 ++ l3),
-
-<div class="paragraph"> </div>
-
-     这可以通过展开 <span class="inlinecode">++</span> 的定义得到。
-
-<div class="paragraph"> </div>
-
+<li> <span class="inlinecode"></span> <span class="inlinecode">|</span> <span class="inlinecode"></span> 左边为空。这是因为构造函数 <span class="inlinecode"><span class="id" title="var">nil</span></span> 不含参数，
+    且在归纳证明中属于基本情形。
 
 </li>
-<li> 然后, 假设 <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span>::<span class="id" title="var">l1'</span></span>，有：
+<li> <span class="inlinecode"></span> <span class="inlinecode">|</span> <span class="inlinecode"></span> 右边有三个参数 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">l1'</span></span> <span class="inlinecode"><span class="id" title="var">IHl1'</span></span>。
+    前两个参数对应构造函数 <span class="inlinecode"><span class="id" title="var">cons</span></span> 的两个参数，
+    分别记录了 <span class="inlinecode"><span class="id" title="var">l1</span></span> 的表头 <span class="inlinecode"><span class="id" title="var">n</span></span> 与表尾 <span class="inlinecode"><span class="id" title="var">l1'</span></span>。
+    另外，<span class="inlinecode"><span class="id" title="var">IHl1'</span></span> 记录了针对 <span class="inlinecode"><span class="id" title="var">l1'</span></span> 的归纳假设，
+    即 <span class="inlinecode"><span class="id" title="var">IHl1'</span>:</span> <span class="inlinecode">(<span class="id" title="var">l1'</span></span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l2</span>)</span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l3</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">l1'</span></span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l2</span></span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l3</span></span>。
 
-<div class="paragraph"> </div>
-
-       (l1' ++ l2) ++ l3 = l1' ++ (l2 ++ l3)
-
-<div class="paragraph"> </div>
-
-     （归纳假设）。我们必须证明：
-
-<div class="paragraph"> </div>
-
-       ((n :: l1') ++ l2) ++ l3 = (n :: l1') ++ (l2 ++ l3).
-
-<div class="paragraph"> </div>
-
-     根据 <span class="inlinecode">++</span> 的定义, 上式等价于：
-
-<div class="paragraph"> </div>
-
-       n :: ((l1' ++ l2) ++ l3) = n :: (l1' ++ (l2 ++ l3)),
-
-<div class="paragraph"> </div>
-
-     该式可通过我们的归纳假设立即证得。  <font size=-2>&#9744;</font> 
 </li>
 </ul>
 
+<div class="paragraph"> </div>
+
+  请确保你真正理解了 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">l1'</span></span> <span class="inlinecode"><span class="id" title="var">IHl1'</span>]</span> 
+  的含义。后面，我们会看到更复杂的例子。
+
 </div>
 <div class="code">
-
-<br/>
 </div>
 
 <div class="doc">
@@ -799,270 +738,79 @@
 
 <div class="paragraph"> </div>
 
- 举一个更加深入的例子来说明对列表的归纳证明：假设我们使用 <span class="inlinecode"><span class="id" title="var">app</span></span>
-    来定义一个列表反转函数 <span class="inlinecode"><span class="id" title="var">rev</span></span>： 
+ 函数 <span class="inlinecode"><span class="id" title="var">rev</span></span> 将列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 反转，它的定义使用了 <span class="inlinecode"><span class="id" title="var">app</span></span> 函数。
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">rev</span> (<span class="id" title="var">l</span>:<span class="id" title="var">natlist</span>) : <span class="id" title="var">natlist</span> :=<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">rev</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>) : <span class="id" title="var">natlist</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;| <span class="id" title="var">nil</span>    ⇒ <span class="id" title="var">nil</span><br/>
 &nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> ⇒ <span class="id" title="var">rev</span> <span class="id" title="var">t</span> ++ [<span class="id" title="var">h</span>]<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">test_rev1</span>:            <span class="id" title="var">rev</span> [1;2;3] = [3;2;1].<br/>
-<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-<span class="id" title="keyword">Example</span> <span class="id" title="var">test_rev2</span>:            <span class="id" title="var">rev</span> <span class="id" title="var">nil</span> = <span class="id" title="var">nil</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_rev2</span>: <span class="id" title="var">rev</span> <span class="id" title="var">nil</span> = <span class="id" title="var">nil</span>.<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_rev1</span>: <span class="id" title="var">rev</span> [1;2;3] = [3;2;1].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 </div>
 
 <div class="doc">
-<a name="lab17"></a><h3 class="section"><span class="inlinecode"><span class="id" title="var">rev</span></span> 的性质</h3>
+<a name="lab17"></a><h4 class="section">练习：3 星, standard, recommended (more list functions)</h4>
 
 <div class="paragraph"> </div>
 
- Now, for something a bit more challenging than the proofs
-    we've seen so far, let's prove that reversing a list does not
-    change its length.  Our first attempt gets stuck in the successor
-    case... 
+  请证明定理 <span class="inlinecode"><span class="id" title="var">app_length</span></span>。
+
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">rev_length_firsttry</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>,<br/>
-&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n</span> <span class="id" title="var">l'</span> <span class="id" title="var">IHl'</span>].<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">rewrite</span> &lt;- <span class="id" title="var">IHl'</span>.<br/>
-<span class="id" title="keyword">Abort</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-不妨单独提出引理，阐述 <span class="inlinecode">++</span> 与 <span class="inlinecode"><span class="id" title="var">length</span></span> 形成的等式关系，
-    以推进证明。 
-</div>
-<div class="code">
-
-<br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_length</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = (<span class="id" title="var">length</span> <span class="id" title="var">l1</span>) + (<span class="id" title="var">length</span> <span class="id" title="var">l2</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n</span> <span class="id" title="var">l1'</span> <span class="id" title="var">IHl1'</span>].<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">rewrite</span> → <span class="id" title="var">IHl1'</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+</div>
+
+<div class="doc">
+请在此处解答 
+</div>
+<div class="code">
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-注意，为了让该引理尽可能 <i>'通用'</i>，我们不仅关心由 <span class="inlinecode"><span class="id" title="var">rev</span></span> 得到的列表，
-    还要对 <i>'所有'</i> 的 <span class="inlinecode"><span class="id" title="var">natlist</span></span> 进行全称量化。这很自然，因为这个证明目标
-    显然不依赖于被反转的列表。除此之外，证明这个更普遍的性质也更容易些。 
-<div class="paragraph"> </div>
+  请证明定理 <span class="inlinecode"><span class="id" title="var">rev_length</span></span>。
+  你可能需要使用 <span class="inlinecode"><span class="id" title="var">app_length</span></span> 与 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span>。
 
- 现在我们可以完成最初的证明了。 
 </div>
 <div class="code">
-
-<br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">rev_length</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">l</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">l</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n</span> <span class="id" title="var">l'</span> <span class="id" title="var">IHl'</span>].<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">rewrite</span> → <span class="id" title="var">app_length</span>, <span class="id" title="var">plus_comm</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">rewrite</span> → <span class="id" title="var">IHl'</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
 </div>
 
 <div class="doc">
-作为对比，以下是这两个定理的非形式化证明：
-
-<div class="paragraph"> </div>
-
-    <i>'定理'</i>：对于所有的列表 <span class="inlinecode"><span class="id" title="var">l1</span></span> 和 <span class="inlinecode"><span class="id" title="var">l2</span></span>，
-       <span class="inlinecode"><span class="id" title="var">length</span></span> <span class="inlinecode">(<span class="id" title="var">l1</span></span> <span class="inlinecode">++</span> <span class="inlinecode"><span class="id" title="var">l2</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">length</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">length</span></span> <span class="inlinecode"><span class="id" title="var">l2</span></span>.
-
-<div class="paragraph"> </div>
-
-    <i>'证明'</i>：对 <span class="inlinecode"><span class="id" title="var">l1</span></span> 进行归纳。
-
-<div class="paragraph"> </div>
-
-<ul class="doclist">
-<li> 首先，假设 <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode">=</span> <span class="inlinecode">[]</span>。我们必须证明
-
-<div class="paragraph"> </div>
-
-        length (<font size=-2>&#9744;</font> ++ l2) = length <font size=-2>&#9744;</font> + length l2,
-
-<div class="paragraph"> </div>
-
-      根据 <span class="inlinecode"><span class="id" title="var">length</span></span> 和 <span class="inlinecode">++</span> 的定义，上式显然可得。
-
-<div class="paragraph"> </div>
-
-
-</li>
-<li> 其次，假设 <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span>::<span class="id" title="var">l1'</span></span>，并且
-
-<div class="paragraph"> </div>
-
-        length (l1' ++ l2) = length l1' + length l2.
-
-<div class="paragraph"> </div>
-
-      我们必须证明
-
-<div class="paragraph"> </div>
-
-        length ((n::l1') ++ l2) = length (n::l1') + length l2).
-
-<div class="paragraph"> </div>
-
-      根据 <span class="inlinecode"><span class="id" title="var">length</span></span> 和 <span class="inlinecode">++</span> 的定义以及归纳假设，上式显然可得。 <font size=-2>&#9744;</font> 
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
- <i>'定理'</i>: 对于所有的列表 <span class="inlinecode"><span class="id" title="var">l</span></span>，<span class="inlinecode"><span class="id" title="var">length</span></span> <span class="inlinecode">(<span class="id" title="var">rev</span></span> <span class="inlinecode"><span class="id" title="var">l</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">length</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span>。
-
-<div class="paragraph"> </div>
-
-    <i>'证明'</i>: 对 <span class="inlinecode"><span class="id" title="var">l</span></span> 进行归纳。
-
-<div class="paragraph"> </div>
-
-<ul class="doclist">
-<li> 首先，假设 <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">=</span> <span class="inlinecode">[]</span>。我们必须证明
-
-<div class="paragraph"> </div>
-
-          length (rev <font size=-2>&#9744;</font>) = length <font size=-2>&#9744;</font>,
-
-<div class="paragraph"> </div>
-
-        根据 <span class="inlinecode"><span class="id" title="var">length</span></span> 和 <span class="inlinecode"><span class="id" title="var">rev</span></span> 的定义，上式显然可得。
-
-<div class="paragraph"> </div>
-
-
-</li>
-<li> 其次，假设 <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span>::<span class="id" title="var">l'</span></span>，并且
-
-<div class="paragraph"> </div>
-
-          length (rev l') = length l'.
-
-<div class="paragraph"> </div>
-
-        我们必须证明
-
-<div class="paragraph"> </div>
-
-          length (rev (n :: l')) = length (n :: l').
-
-<div class="paragraph"> </div>
-
-        根据 <span class="inlinecode"><span class="id" title="var">rev</span></span> 的定义，上式来自于
-
-<div class="paragraph"> </div>
-
-          length ((rev l') ++ <span class="inlinecode"><span class="id" title="var">n</span></span>) = S (length l')
-
-<div class="paragraph"> </div>
-
-        根据之前的引理，此式等同于
-
-<div class="paragraph"> </div>
-
-          length (rev l') + length <span class="inlinecode"><span class="id" title="var">n</span></span> = S (length l').
-
-<div class="paragraph"> </div>
-
-        根据归纳假设和 <span class="inlinecode"><span class="id" title="var">length</span></span> 的定义，上式显然可得。 <font size=-2>&#9744;</font> 
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
- 这些证明的风格实在是冗长而迂腐。几次练习之后，我们会发现减少细枝末节，
-    详述不太显然的步骤更有助于我们理解证明。毕竟细节更容易在大脑中思考，
-    必要时我们还可以在草稿纸上补全。下面我们以一种更加紧凑的方式呈现之前的证明： 
-<div class="paragraph"> </div>
-
- <i>'定理'</i>：
-     对于所有 <span class="inlinecode"><span class="id" title="var">l</span></span>，<span class="inlinecode"><span class="id" title="var">length</span></span> <span class="inlinecode">(<span class="id" title="var">rev</span></span> <span class="inlinecode"><span class="id" title="var">l</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">length</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span>。
-
-<div class="paragraph"> </div>
-
-    <i>'证明'</i>：首先，观察到 <span class="inlinecode"><span class="id" title="var">length</span></span> <span class="inlinecode">(<span class="id" title="var">l</span></span> <span class="inlinecode">++</span> <span class="inlinecode">[<span class="id" title="var">n</span>])</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">length</span></span> <span class="inlinecode"><span class="id" title="var">l</span>)</span> 对一切 <span class="inlinecode"><span class="id" title="var">l</span></span> 成立
-    （通过对 <span class="inlinecode"><span class="id" title="var">l</span></span> 的归纳直接可得）。当 <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n'</span>::<span class="id" title="var">l'</span></span> 时，通过再次对 <span class="inlinecode"><span class="id" title="var">l</span></span> 使用归纳，
-    然后同时使用之前观察得到的性质和归纳假设即可证明。 <font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
- 一般而言，在不同的情况下合适的风格也会不同：读者对这个问题了解程度，
-    以及当前的证明与读者熟悉的证明之间的相似度都会影响到这一点。
-    对于我们现在的目的而言，最好先用更加冗长的方式。 
-<div class="paragraph"> </div>
-
-<a name="lab18"></a><h2 class="section"><span class="inlinecode"><span class="id" title="keyword">Search</span></span> 搜索</h2>
-
-<div class="paragraph"> </div>
-
- 我们已经见过很多需要使用之前证明过的结论（例如通过 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span>）来证明的定理了。
-    但是在引用别的定理时，我们必须事先知道它们的名字。当然，即使是已被证明的定理本身
-    我们都不能全部记住，更不用提它们的名字了。
-
-<div class="paragraph"> </div>
-
-    Coq 的 <span class="inlinecode"><span class="id" title="keyword">Search</span></span> 指令在这时就非常有用了。执行 <span class="inlinecode"><span class="id" title="keyword">Search</span></span> <span class="inlinecode"><span class="id" title="var">foo</span></span> 会让 Coq
-    显示所有涉及到 <span class="inlinecode"><span class="id" title="var">foo</span></span> 的定理。例如，去掉下面的注释后，
-    你会看到一个我们证明过的所有关于 <span class="inlinecode"><span class="id" title="var">rev</span></span> 的定理的列表： 
+请在此处解答 
 </div>
 <div class="code">
-
-<br/>
-
-<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
-在接下来的学习中，你要记得使用 <span class="inlinecode"><span class="id" title="keyword">Search</span></span>，它能为你节约大量的时间！
-
-<div class="paragraph"> </div>
-
-    如果你正在使用 ProofGeneral，那么可以用 <span class="inlinecode"><span class="id" title="var">C</span>-<span class="id" title="var">c</span></span> <span class="inlinecode"><span class="id" title="var">C</span>-<span class="id" title="var">a</span></span> <span class="inlinecode"><span class="id" title="var">C</span>-<span class="id" title="var">a</span></span> 来运行 <span class="inlinecode"><span class="id" title="keyword">Search</span></span>。
-    通过 <span class="inlinecode"><span class="id" title="var">C</span>-<span class="id" title="var">c</span></span> <span class="inlinecode"><span class="id" title="var">C</span>-;</span> 可以将它返回的结果粘贴到缓冲区内。 
+<font size=-2>&#9744;</font> 
 </div>
 <div class="code">
-
-<br/>
 </div>
 
 <div class="doc">
-<a name="lab19"></a><h2 class="section">列表练习，第一部分</h2>
+<a name="lab18"></a><h2 class="section">列表练习，第一部分</h2>
 
 <div class="paragraph"> </div>
 
-<a name="lab20"></a><h4 class="section">练习：3 星, standard (list_exercises)</h4>
+<a name="lab19"></a><h4 class="section">练习：3 星, standard (list_exercises)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1123,7 +871,7 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab21"></a><h4 class="section">练习：2 星, standard (eqblist)</h4>
+<a name="lab20"></a><h4 class="section">练习：2 星, standard (eqblist)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1168,14 +916,14 @@
 </div>
 
 <div class="doc">
-<a name="lab22"></a><h2 class="section">列表练习, 第二部分</h2>
+<a name="lab21"></a><h2 class="section">列表练习, 第二部分</h2>
 
 <div class="paragraph"> </div>
 
  下面这组简单的定理用于证明你之前关于袋子的定义。 
 <div class="paragraph"> </div>
 
-<a name="lab23"></a><h4 class="section">练习：1 星, standard (count_member_nonzero)</h4>
+<a name="lab22"></a><h4 class="section">练习：1 星, standard (count_member_nonzero)</h4>
 
 </div>
 <div class="code">
@@ -1208,7 +956,7 @@
 
 <div class="doc">
 Before doing the next exercise, make sure you've filled in the
-   definition of <span class="inlinecode"><span class="id" title="var">remove_one</span></span> above. <a name="lab24"></a><h4 class="section">练习：3 星, advanced (remove_does_not_increase_count)</h4>
+   definition of <span class="inlinecode"><span class="id" title="var">remove_one</span></span> above. <a name="lab23"></a><h4 class="section">练习：3 星, advanced (remove_does_not_increase_count)</h4>
 
 </div>
 <div class="code">
@@ -1222,7 +970,7 @@ Before doing the next exercise, make sure you've filled in the
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab25"></a><h4 class="section">练习：3 星, standard, optional (bag_count_sum)</h4>
+<a name="lab24"></a><h4 class="section">练习：3 星, standard, optional (bag_count_sum)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1236,7 +984,7 @@ Before doing the next exercise, make sure you've filled in the
 </div>
 
 <div class="doc">
-<a name="lab26"></a><h4 class="section">练习：4 星, advanced (rev_injective)</h4>
+<a name="lab25"></a><h4 class="section">练习：4 星, advanced (rev_injective)</h4>
 
 
 <div class="paragraph"> </div>
@@ -1263,12 +1011,10 @@ Before doing the next exercise, make sure you've filled in the
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
-
-<br/>
 </div>
 
 <div class="doc">
-<a name="lab27"></a><h1 class="section">Options 可选类型</h1>
+<a name="lab26"></a><h1 class="section">Options 可选类型</h1>
 
 <div class="paragraph"> </div>
 
@@ -1378,7 +1124,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 </div>
 
 <div class="doc">
-<a name="lab28"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
+<a name="lab27"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
  用同样的思路修正之前的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 函数，使我们无需为 <span class="inlinecode"><span class="id" title="var">nil</span></span> 的情况提供默认元素。  
 </div>
 <div class="code">
@@ -1404,7 +1150,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab29"></a><h4 class="section">练习：1 星, standard, optional (option_elim_hd)</h4>
+<a name="lab28"></a><h4 class="section">练习：1 星, standard, optional (option_elim_hd)</h4>
  此练习能帮助你在新的 <span class="inlinecode"><span class="id" title="var">hd_error</span></span> 和旧的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 之间建立联系。 
 </div>
 <div class="code">
@@ -1428,7 +1174,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 </div>
 
 <div class="doc">
-<a name="lab30"></a><h1 class="section">偏映射（Partial Maps）</h1>
+<a name="lab29"></a><h1 class="section">偏映射（Partial Maps）</h1>
 
 <div class="paragraph"> </div>
 
@@ -1466,7 +1212,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 </div>
 
 <div class="doc">
-<a name="lab31"></a><h4 class="section">练习：1 星, standard (eqb_id_refl)</h4>
+<a name="lab30"></a><h4 class="section">练习：1 星, standard (eqb_id_refl)</h4>
 
 </div>
 <div class="code">
@@ -1535,7 +1281,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 </div>
 
 <div class="doc">
-<a name="lab32"></a><h4 class="section">练习：1 星, standard (update_eq)</h4>
+<a name="lab31"></a><h4 class="section">练习：1 星, standard (update_eq)</h4>
 
 </div>
 <div class="code">
@@ -1550,7 +1296,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab33"></a><h4 class="section">练习：1 星, standard (update_neq)</h4>
+<a name="lab32"></a><h4 class="section">练习：1 星, standard (update_neq)</h4>
 
 </div>
 <div class="code">
@@ -1571,7 +1317,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 </div>
 
 <div class="doc">
-<a name="lab34"></a><h4 class="section">练习：2 星, standard (baz_num_elts)</h4>
+<a name="lab33"></a><h4 class="section">练习：2 星, standard (baz_num_elts)</h4>
 
 
 <div class="paragraph"> </div>

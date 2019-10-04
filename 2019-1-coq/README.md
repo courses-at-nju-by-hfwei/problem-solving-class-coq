@@ -6,6 +6,7 @@
 - 介绍形式化方法，阅读并撰写课程/学术论文
 
 ## 内容 
+- [ ] Preface
 - [x] Data Types and Naturals ([`Basics.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Basics.v))
   - [x] Data Types
   - [x] Naturals
@@ -23,7 +24,8 @@
   - [ ] forall?
 - [ ] (Optional) Constructive Logic ([`ConsLogic.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/ConsLogic.v))
 - [x] Induction (I) ([`Induction.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Induction.v))
-  - [x] `induction`
+  - [x] induction
+  - [ ] Varying the Induction Hypothesis (Section 6.6)
   - [x] Exercise
 - [ ] More Basic Proof Tactics ([`Tactics.v`]())
   - [ ] `apply` (already covered by [`Logic.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Logic.v))

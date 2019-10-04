@@ -8,7 +8,6 @@ Rock on Coq for the Problem Solving Class at Nanjing University
 - [ ] [2019-4-coq]()
 
 ## Usage
-(*还不清楚规范流程；还在摸索中。*)
 
 ### Generate HTML
 以 `Basics.v` 为例:
@@ -30,10 +29,13 @@ Rock on Coq for the Problem Solving Class at Nanjing University
 以 `Basics.v` 为例:
 
 ### Makefile
-如何生成以及使用 Makefile 自动编译
+- 如何生成以及使用 Makefile 自动编译
+- 自动处理依赖关系
+- 自动完成上述任务
 
 ## TODO
 - [x] CoqIDE 安装指南
 - [ ] CoqIDE 使用手册
+- [ ] Preface: (Search, Check, Print, SearchAbout, ...)
 - [ ] 获取 SF 授权
 - [ ] CoqDoc 斜体/粗体

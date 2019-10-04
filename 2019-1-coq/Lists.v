@@ -304,7 +304,7 @@ Example test_alternate4:
   (* 请在此处解答 *)
 Admitted.
 (** [] *)
-(** **** 练习：3 星, standard, recommended (more list functions) *)  
+(** **** 练习：3 星, standard, recommended (more list functions) *)
 (** 完成函数 [count] 的定义。*)
 Fixpoint count (v : nat) (l : natlist) : nat
   (* 将本行替换成 ":= _你的_定义_ ." *).
@@ -386,252 +386,107 @@ Admitted.
 (** [] *)
 (* ################################################################# *)
 (** * 有关列表的论证 *)
+(**
+  接下来，我们使用之前学习过的证明策略
+  论证与列表相关的定理。
+*)
 
-(** 和数字一样，有些列表处理函数的简单事实仅通过化简就能证明。
-    例如，对于下面这个例子，[reflexivity] 所做的简化就已经足够了... *)
+(** 对于定理 [nil_app]，[reflexivity] 已足够。*)
 
 Theorem nil_app : forall l:natlist,
   [] ++ l = l.
 Proof. reflexivity. Qed.
 
-(** ...由于 [[]] 被替换进了 [app] 定义中相应的“被检”分支
-    （即经由匹配“仔细检查”过值的表达式），整个匹配得以被简化。 *)
+(** 定理 [tl_length_pred] 需要分情况讨论。*)
 
-(** 和数字一样，有时对一个列表做分类讨论（是否是空）是非常有用的。 *)
-
-Theorem tl_length_pred : forall l:natlist,
+Theorem tl_length_pred : forall l : natlist,
   pred (length l) = length (tl l).
 Proof.
   intros l. destruct l as [| n l'].
-  - (* l = nil *)
+  - (* l = [] *)
     reflexivity.
-  - (* l = cons n l' *)
-    reflexivity.  Qed.
-
-(** 在这里 [nil] 的情况能够工作是因为我们定义了 [tl nil = nil]，
-    而 [destruct] 策略中 [as] 注解引入的两个名字，[n] 和 [l']，分别对应了
-    [cons] 构造子的两个参数（正在构造的列表的头和尾）。 *)
-
- (** 然而一般来说，许多关于列表的有趣定理都需要用到归纳法来证明。 *)
+  - (* l = n :: l' *)
+    reflexivity.
+Qed.
 (* ================================================================= *)
 (** ** 对列表进行归纳 *)
 
-(** 比起对自然数的归纳，读者可能对归纳证明 [natlist] 这样的数据类型更加陌生。
-    不过基本思路同样简单。每个 [Inductive] 声明定义了一组数据值，
-    这些值可以用声明过的构造子来构造：布尔值可以用 [true] 或 [false] 来构造；
-    自然数可以用 [O] 或 [S] 应用到另一个自然数上来构造；而列表可以用 [nil]
-    或者将 [cons] 应用到一个自然数和另一个列表上来构造。
+(**
+  [natlist] 是归纳定义的，
+  因此，有关列表的很多定理，都可以使用数学归纳法证明。
+  
+  假设我们需要证明命题 [P] 对任意列表 [l] 都成立。
+  我们可以对列表 [l] 作归纳:
+  - [l = []]。此时，我们需要证明 [P []] 成立。
+  - [l = n :: l']。
+    此时，我们需要在归纳假设 [P l'] 成立的条件下，
+    证明 [P l] 成立。
+*)
 
-    除此以外，归纳定义的集合中元素的形式 _'只能是'_ 构造子对其它项的应用；
-    这一事实同时也给出了一种对归纳定义的集合进行论证的方法：一个自然数要么是
-    [O]，要么就是 [S] 应用到某个_'更小'_的自然数上；一个列表要么是 [nil]，
-    要么就是 [cons] 应用到某个数字和某个_'更小'_的列表上，诸如此类。
-    所以，如果我们有某个命题 [P] 涉及列表 [l]，而我们想证明 [P] 对 _'一切'_
-    列表都成立，那么可以像这样推理：
-
-    - 首先，证明当 [l] 为 [nil] 时 [P l] 成立。
-
-    - 然后，证明当 [l] 为 [cons n l'] 时 [P l] 成立，其中 [n] 是某个自然数，[l']
-      是某个更小的列表，假设 [P l'] 成立.
-
-    由于较大的列表只能通过较小的列表构造出来，最终这个较小的列表会变成
-    [nil]，这两点合在一起就完成了 [P] 对一切列表 [l] 成立的证明。下面是个具体的例子： *)
-
+(**
+  下面使用数学归纳法证明 [app] 满足结合律。
+*)
 Theorem app_assoc : forall l1 l2 l3 : natlist,
   (l1 ++ l2) ++ l3 = l1 ++ (l2 ++ l3).
 Proof.
-  intros l1 l2 l3. induction l1 as [| n l1' IHl1'].
-  - (* l1 = nil *)
-    reflexivity.
-  - (* l1 = cons n l1' *)
-    simpl. rewrite -> IHl1'. reflexivity.  Qed.
+  intros l1 l2 l3.
+  induction l1 as [| n l1' IHl1']. (* 注意这一步 *)
+  - (* l1 = [] *)
+    simpl. reflexivity.
+  - (* l1 = n :: l1' *)
+    simpl. rewrite -> IHl1'. reflexivity.
+Qed.
 
-(** 注意，和归纳自然数时一样，此处 [induction] 策略的 [as...] 从句为在
-    “[l1] 由构造子 [cons] 构造而来”这一情况时出现的“更小的列表”和归纳假设取了名字。
-    再次强调，如果你把 Coq 的证明当做静态的文档，那么可能不会有特别多的收获 ——
-    如果你通过交互式的 Coq 会话来阅读证明，就能看到当前的目标和上下文，
-    而这些状态在你阅读写下来的脚本时是不可见的。所以一份用自然语言写成的证明 ——
-    写给人看的 —— 需要包含更多的提示来帮助读者理解当前的状态，
-    比如第二种情况下的归纳假设到底是什么。 *)
-
-(** _'定理'_：对所有的列表 [l1], [l2], 和 [l3]，
-   [(l1 ++ l2) ++ l3 = l1 ++ (l2 ++ l3)]。
-
-   _'证明'_: 通过对 [l1] 使用归纳法。
-
-   - 首先, 假设 [l1 = []]。我们必须证明：
-
-       ([] ++ l2) ++ l3 = [] ++ (l2 ++ l3),
-
-     这可以通过展开 [++] 的定义得到。
-
-   - 然后, 假设 [l1 = n::l1']，有：
-
-       (l1' ++ l2) ++ l3 = l1' ++ (l2 ++ l3)
-
-     （归纳假设）。我们必须证明：
-
-       ((n :: l1') ++ l2) ++ l3 = (n :: l1') ++ (l2 ++ l3).
-
-     根据 [++] 的定义, 上式等价于：
-
-       n :: ((l1' ++ l2) ++ l3) = n :: (l1' ++ (l2 ++ l3)),
-
-     该式可通过我们的归纳假设立即证得。  [] *)
-
+(**
+  注意: [induction l1 as [ | n l1' IHl1']] 的 [as] 从句
+  对应于 [l] 的两个构造函数:
+  - [ | ] 左边为空。这是因为构造函数 [nil] 不含参数，
+    且在归纳证明中属于基本情形。
+  - [ | ] 右边有三个参数 [n l1' IHl1']。
+    前两个参数对应构造函数 [cons] 的两个参数，
+    分别记录了 [l1] 的表头 [n] 与表尾 [l1']。
+    另外，[IHl1'] 记录了针对 [l1'] 的归纳假设，
+    即 [IHl1': (l1' ++ l2) ++ l3 = l1' ++ l2 ++ l3]。
+    
+  请确保你真正理解了 [induction l1 as [ | n l1' IHl1']] 
+  的含义。后面，我们会看到更复杂的例子。
+*)
 (* ----------------------------------------------------------------- *)
 (** *** 反转列表 *)
 
-(** 举一个更加深入的例子来说明对列表的归纳证明：假设我们使用 [app]
-    来定义一个列表反转函数 [rev]： *)
+(** 函数 [rev] 将列表 [l] 反转，它的定义使用了 [app] 函数。*)
 
-Fixpoint rev (l:natlist) : natlist :=
+Fixpoint rev (l : natlist) : natlist :=
   match l with
   | nil    => nil
   | h :: t => rev t ++ [h]
   end.
 
-Example test_rev1:            rev [1;2;3] = [3;2;1].
-Proof. reflexivity.  Qed.
-Example test_rev2:            rev nil = nil.
-Proof. reflexivity.  Qed.
+Example test_rev2: rev nil = nil.
+Proof. reflexivity. Qed.
 
-(* ----------------------------------------------------------------- *)
-(** *** [rev] 的性质 *)
-
-(** Now, for something a bit more challenging than the proofs
-    we've seen so far, let's prove that reversing a list does not
-    change its length.  Our first attempt gets stuck in the successor
-    case... *)
-
-Theorem rev_length_firsttry : forall l : natlist,
-  length (rev l) = length l.
-Proof.
-  intros l. induction l as [| n l' IHl'].
-  - (* l = [] *)
-    reflexivity.
-  - (* l = n :: l' *)
-    (* 这种情况比较棘手。我们从一般的化简开始。 *)
-    simpl.
-    (* 现在我们好像卡住了：目标是要证明涉及 [++] 的等式，
-       但是我们在上下文和全局环境下并没有任何有用的等式！
-       通过用 IH 来重写目标，我们可以推进一点... *)
-    rewrite <- IHl'.
-    (* ...但也仅此而已。 *)
-Abort.
-
-(** 不妨单独提出引理，阐述 [++] 与 [length] 形成的等式关系，
-    以推进证明。 *)
-
+Example test_rev1: rev [1;2;3] = [3;2;1].
+Proof. reflexivity. Qed.
+(** **** 练习：3 星, standard, recommended (more list functions) *)
+(**
+  请证明定理 [app_length]。
+*)
 Theorem app_length : forall l1 l2 : natlist,
   length (l1 ++ l2) = (length l1) + (length l2).
 Proof.
-  (* 课上已完成 *)
-  intros l1 l2. induction l1 as [| n l1' IHl1'].
-  - (* l1 = nil *)
-    reflexivity.
-  - (* l1 = cons *)
-    simpl. rewrite -> IHl1'. reflexivity.  Qed.
+  (** 请在此处解答 *)
+Admitted.
 
-(** 注意，为了让该引理尽可能 _'通用'_，我们不仅关心由 [rev] 得到的列表，
-    还要对 _'所有'_ 的 [natlist] 进行全称量化。这很自然，因为这个证明目标
-    显然不依赖于被反转的列表。除此之外，证明这个更普遍的性质也更容易些。 *)
-
-(** 现在我们可以完成最初的证明了。 *)
-
+(**
+  请证明定理 [rev_length]。
+  你可能需要使用 [app_length] 与 [plus_comm]。
+*)
 Theorem rev_length : forall l : natlist,
   length (rev l) = length l.
 Proof.
-  intros l. induction l as [| n l' IHl'].
-  - (* l = nil *)
-    reflexivity.
-  - (* l = cons *)
-    simpl. rewrite -> app_length, plus_comm.
-    simpl. rewrite -> IHl'. reflexivity.  Qed.
-
-(** 作为对比，以下是这两个定理的非形式化证明：
-
-    _'定理'_：对于所有的列表 [l1] 和 [l2]，
-       [length (l1 ++ l2) = length l1 + length l2].
-
-    _'证明'_：对 [l1] 进行归纳。
-
-    - 首先，假设 [l1 = []]。我们必须证明
-
-        length ([] ++ l2) = length [] + length l2,
-
-      根据 [length] 和 [++] 的定义，上式显然可得。
-
-    - 其次，假设 [l1 = n::l1']，并且
-
-        length (l1' ++ l2) = length l1' + length l2.
-
-      我们必须证明
-
-        length ((n::l1') ++ l2) = length (n::l1') + length l2).
-
-      根据 [length] 和 [++] 的定义以及归纳假设，上式显然可得。 [] *)
-
-(** _'定理'_: 对于所有的列表 [l]，[length (rev l) = length l]。
-
-    _'证明'_: 对 [l] 进行归纳。
-
-      - 首先，假设 [l = []]。我们必须证明
-
-          length (rev []) = length [],
-
-        根据 [length] 和 [rev] 的定义，上式显然可得。
-
-      - 其次，假设 [l = n::l']，并且
-
-          length (rev l') = length l'.
-
-        我们必须证明
-
-          length (rev (n :: l')) = length (n :: l').
-
-        根据 [rev] 的定义，上式来自于
-
-          length ((rev l') ++ [n]) = S (length l')
-
-        根据之前的引理，此式等同于
-
-          length (rev l') + length [n] = S (length l').
-
-        根据归纳假设和 [length] 的定义，上式显然可得。 [] *)
-
-(** 这些证明的风格实在是冗长而迂腐。几次练习之后，我们会发现减少细枝末节，
-    详述不太显然的步骤更有助于我们理解证明。毕竟细节更容易在大脑中思考，
-    必要时我们还可以在草稿纸上补全。下面我们以一种更加紧凑的方式呈现之前的证明： *)
-
-(** _'定理'_：
-     对于所有 [l]，[length (rev l) = length l]。
-
-    _'证明'_：首先，观察到 [length (l ++ [n]) = S (length l)] 对一切 [l] 成立
-    （通过对 [l] 的归纳直接可得）。当 [l = n'::l'] 时，通过再次对 [l] 使用归纳，
-    然后同时使用之前观察得到的性质和归纳假设即可证明。 [] *)
-
-(** 一般而言，在不同的情况下合适的风格也会不同：读者对这个问题了解程度，
-    以及当前的证明与读者熟悉的证明之间的相似度都会影响到这一点。
-    对于我们现在的目的而言，最好先用更加冗长的方式。 *)
-
-(** ** [Search] 搜索*)
-
-(** 我们已经见过很多需要使用之前证明过的结论（例如通过 [rewrite]）来证明的定理了。
-    但是在引用别的定理时，我们必须事先知道它们的名字。当然，即使是已被证明的定理本身
-    我们都不能全部记住，更不用提它们的名字了。
-
-    Coq 的 [Search] 指令在这时就非常有用了。执行 [Search foo] 会让 Coq
-    显示所有涉及到 [foo] 的定理。例如，去掉下面的注释后，
-    你会看到一个我们证明过的所有关于 [rev] 的定理的列表： *)
-
-(*  Search rev. *)
-
-(** 在接下来的学习中，你要记得使用 [Search]，它能为你节约大量的时间！
-
-    如果你正在使用 ProofGeneral，那么可以用 [C-c C-a C-a] 来运行 [Search]。
-    通过 [C-c C-;] 可以将它返回的结果粘贴到缓冲区内。 *)
-
+  (** 请在此处解答 *)
+Admitted.
+(** [] *)
 (* ================================================================= *)
 (** ** 列表练习，第一部分 *)
 
@@ -749,7 +604,6 @@ Proof.
 (* 请勿修改下面这一行： *)
 Definition manual_grade_for_rev_injective : option (nat*string) := None.
 (** [] *)
-
 (* ################################################################# *)
 (** * Options 可选类型 *)
 
