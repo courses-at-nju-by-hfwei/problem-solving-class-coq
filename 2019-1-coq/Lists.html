@@ -810,39 +810,38 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab19"></a><h4 class="section">练习：3 星, standard (list_exercises)</h4>
-
 
 <div class="paragraph"> </div>
 
-    更多有关列表的实践： 
+  你需要通过大量的练习与思考 (练习之后的思考很重要!很重要!很重要!)
+  培养证明的直觉。
+  比如，分情形分析够不够用? 需不需要用数学归纳法? 对什么作归纳? 等等。
+<a name="lab19"></a><h4 class="section">练习：3 星, standard (list_exercises)</h4>
+
 </div>
 <div class="code">
-
-<br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_nil_r</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">l</span> ++ [] = <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">rev_app_distr</span>: <span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">rev</span> <span class="id" title="var">l2</span> ++ <span class="id" title="var">rev</span> <span class="id" title="var">l1</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">rev_involutive</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-下面的练习有简短的解法，如果你开始发现情况已经复杂到你无法理清的程度，
-    请后退一步并试着寻找更为简单的方法。 
+<span class="inlinecode"><span class="id" title="var">app_assoc4</span></span> 有简洁的证明。不要走了弯路。
 </div>
 <div class="code">
 
@@ -850,21 +849,13 @@
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_assoc4</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> <span class="id" title="var">l4</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">l1</span> ++ (<span class="id" title="var">l2</span> ++ (<span class="id" title="var">l3</span> ++ <span class="id" title="var">l4</span>)) = ((<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) ++ <span class="id" title="var">l3</span>) ++ <span class="id" title="var">l4</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-一个关于你对 <span class="inlinecode"><span class="id" title="var">nonzeros</span></span> 的实现的练习： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Lemma</span> <span class="id" title="var">nonzeros_app</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">natlist</span>,<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">nonzeros</span>. <span class="id" title="keyword">Lemma</span> <span class="id" title="var">nonzeros_app</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">nonzeros</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = (<span class="id" title="var">nonzeros</span> <span class="id" title="var">l1</span>) ++ (<span class="id" title="var">nonzeros</span> <span class="id" title="var">l2</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
@@ -873,138 +864,95 @@
 
 <a name="lab20"></a><h4 class="section">练习：2 星, standard (eqblist)</h4>
 
-
 <div class="paragraph"> </div>
 
-    填写 <span class="inlinecode"><span class="id" title="var">eqblist</span></span> 的定义，它通过比较列表中的数字来判断是否相等。
-    证明对于所有列表 <span class="inlinecode"><span class="id" title="var">l</span></span>，<span class="inlinecode"><span class="id" title="var">eqblist</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode"><span class="id" title="var">l</span></span> 返回 <span class="inlinecode"><span class="id" title="var">true</span></span>。 
+  请完成 <span class="inlinecode"><span class="id" title="var">eqblist</span></span> 的定义，它判断列表 <span class="inlinecode"><span class="id" title="var">l1</span></span>、<span class="inlinecode"><span class="id" title="var">l2</span></span> 是否相同。
+
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">eqblist</span> (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">natlist</span>) : <span class="id" title="var">bool</span><br/>
-&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+&nbsp;&nbsp;.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_eqblist1</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="var">eqblist</span> <span class="id" title="var">nil</span> <span class="id" title="var">nil</span> = <span class="id" title="var">true</span>).<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_eqblist2</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">eqblist</span> [1;2;3] [1;2;3] = <span class="id" title="var">true</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_eqblist3</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">eqblist</span> [1;2;3] [1;2;4] = <span class="id" title="var">false</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqblist_refl</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span>:<span class="id" title="var">natlist</span>,<br/>
+</div>
+
+<div class="doc">
+  如果我们将函数 <span class="inlinecode"><span class="id" title="var">eqblist</span></span> 看作两个列表之间的 _关系 (Relation)_,
+  那么它是 _自反的 (Reflexive)_。
+
+<div class="paragraph"> </div>
+
+  嗯，如果你现在还不明白上面那句话在说些什么，
+  不要紧，直接证明下面的定理 <span class="inlinecode"><span class="id" title="var">eqblist_refl</span></span> 就好了。 
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqblist_refl</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">true</span> = <span class="id" title="var">eqblist</span> <span class="id" title="var">l</span> <span class="id" title="var">l</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-</div>
-<div class="code">
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab21"></a><h2 class="section">列表练习, 第二部分</h2>
-
-<div class="paragraph"> </div>
-
- 下面这组简单的定理用于证明你之前关于袋子的定义。 
-<div class="paragraph"> </div>
-
-<a name="lab22"></a><h4 class="section">练习：1 星, standard (count_member_nonzero)</h4>
+<a name="lab21"></a><h4 class="section">练习：1 星, standard (count_member_nonzero)</h4>
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">count_member_nonzero</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">s</span> : <span class="id" title="var">bag</span>),<br/>
-&nbsp;&nbsp;1 &lt;=? (<span class="id" title="var">count</span> 1 (1 :: <span class="id" title="var">s</span>)) = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">count_member_nonzero</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>),<br/>
+&nbsp;&nbsp;1 &lt;=? (<span class="id" title="var">count</span> 1 (1 :: <span class="id" title="var">l</span>)) = <span class="id" title="var">true</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
- 下面这条关于 <span class="inlinecode"><span class="id" title="var">leb</span></span> 的引理可助你完成下一个证明。 
-</div>
-<div class="code">
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">leb_n_Sn</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>,<br/>
-&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;=? (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">remove_one</span>. </div>
+
+<div class="doc">
+<a name="lab22"></a><h4 class="section">练习：3 星, advanced (remove_does_not_increase_count)</h4>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">remove_does_not_increase_count</span>: <span class="id" title="keyword">∀</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>),<br/>
+&nbsp;&nbsp;(<span class="id" title="var">count</span> 0 (<span class="id" title="var">remove_one</span> 0 <span class="id" title="var">l</span>)) &lt;=? (<span class="id" title="var">count</span> 0 <span class="id" title="var">l</span>) = <span class="id" title="var">true</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span> <span class="id" title="var">IHn'</span>].<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">IHn'</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
-
-<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
-Before doing the next exercise, make sure you've filled in the
-   definition of <span class="inlinecode"><span class="id" title="var">remove_one</span></span> above. <a name="lab23"></a><h4 class="section">练习：3 星, advanced (remove_does_not_increase_count)</h4>
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab23"></a><h4 class="section">练习：4 星, advanced (rev_injective)</h4>
+
+<div class="paragraph"> </div>
+
+  请用尽可能简洁的方法证明定理 <span class="inlinecode"><span class="id" title="var">rev_injective</span></span>: <span class="inlinecode"><span class="id" title="var">rev</span></span> 是单射函数。
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">remove_does_not_increase_count</span>: <span class="id" title="keyword">∀</span> (<span class="id" title="var">s</span> : <span class="id" title="var">bag</span>),<br/>
-&nbsp;&nbsp;(<span class="id" title="var">count</span> 0 (<span class="id" title="var">remove_one</span> 0 <span class="id" title="var">s</span>)) &lt;=? (<span class="id" title="var">count</span> 0 <span class="id" title="var">s</span>) = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">rev_injective</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">natlist</span>), <br/>
+&nbsp;&nbsp;<span class="id" title="var">rev</span> <span class="id" title="var">l1</span> = <span class="id" title="var">rev</span> <span class="id" title="var">l2</span> → <span class="id" title="var">l1</span> = <span class="id" title="var">l2</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab24"></a><h4 class="section">练习：3 星, standard, optional (bag_count_sum)</h4>
-
-
-<div class="paragraph"> </div>
-
-    写下一个用到函数 <span class="inlinecode"><span class="id" title="var">count</span></span> 和 <span class="inlinecode"><span class="id" title="var">sum</span></span> 的，关于袋子的有趣定理 <span class="inlinecode"><span class="id" title="var">bag_count_sum</span></span>，
-    然后证明它。（你可能会发现该证明的难度取决于你如何定义 <span class="inlinecode"><span class="id" title="var">count</span></span>！） 
-</div>
-<div class="code">
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab25"></a><h4 class="section">练习：4 星, advanced (rev_injective)</h4>
-
-
-<div class="paragraph"> </div>
-
-    求证 <span class="inlinecode"><span class="id" title="var">rev</span></span> 是单射函数，即：
-
-<div class="paragraph"> </div>
-
-    forall (l1 l2 : natlist), rev l1 = rev l2 -&gt; l1 = l2.
-
-<div class="paragraph"> </div>
-
-    （这个问题既可以用简单的方式解决也可以用繁琐的方式来解决。） 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_rev_injective</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
@@ -1014,7 +962,7 @@ Before doing the next exercise, make sure you've filled in the
 </div>
 
 <div class="doc">
-<a name="lab26"></a><h1 class="section">Options 可选类型</h1>
+<a name="lab24"></a><h1 class="section">Options 可选类型</h1>
 
 <div class="paragraph"> </div>
 
@@ -1024,7 +972,7 @@ Before doing the next exercise, make sure you've filled in the
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth_bad</span> (<span class="id" title="var">l</span>:<span class="id" title="var">natlist</span>) (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth_bad</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;| <span class="id" title="var">nil</span> ⇒ 42  <br/>
 &nbsp;&nbsp;| <span class="id" title="var">a</span> :: <span class="id" title="var">l'</span> ⇒ <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> =? <span class="id" title="var">O</span> <span class="id" title="keyword">with</span><br/>
@@ -1082,11 +1030,7 @@ Before doing the next exercise, make sure you've filled in the
 </div>
 
 <div class="doc">
-（在 HTML 版本中隐藏了这些老套的证明。若你想看它请点击小方格。）
-
-<div class="paragraph"> </div>
-
-    本例也是个介绍 Coq 编程语言更多细微特性的机会，比如条件表达式... 
+本例也是个介绍 Coq 编程语言更多细微特性的机会，比如条件表达式... 
 </div>
 <div class="code">
 
@@ -1124,7 +1068,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 </div>
 
 <div class="doc">
-<a name="lab27"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
+<a name="lab25"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
  用同样的思路修正之前的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 函数，使我们无需为 <span class="inlinecode"><span class="id" title="var">nil</span></span> 的情况提供默认元素。  
 </div>
 <div class="code">
@@ -1150,7 +1094,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab28"></a><h4 class="section">练习：1 星, standard, optional (option_elim_hd)</h4>
+<a name="lab26"></a><h4 class="section">练习：1 星, standard, optional (option_elim_hd)</h4>
  此练习能帮助你在新的 <span class="inlinecode"><span class="id" title="var">hd_error</span></span> 和旧的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 之间建立联系。 
 </div>
 <div class="code">
@@ -1174,150 +1118,7 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 </div>
 
 <div class="doc">
-<a name="lab29"></a><h1 class="section">偏映射（Partial Maps）</h1>
-
-<div class="paragraph"> </div>
-
- 最后演示一下如何在 Coq 中定义基础的数据结构。这是一个简单的
-    <i>'偏映射'</i> 数据类型，它类似于大多数编程语言中的映射或字典数据结构。 
-<div class="paragraph"> </div>
-
- 首先，我们定义一个新的归纳数据类型 <span class="inlinecode"><span class="id" title="var">id</span></span> 来用作偏映射的“键”。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">id</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;| <span class="id" title="var">Id</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-本质上来说，<span class="inlinecode"><span class="id" title="var">id</span></span> 只是一个数。但通过 <span class="inlinecode"><span class="id" title="var">Id</span></span> 标签封装自然数来引入新的类型，
-    能让定义变得更加可读，同时我们也可以灵活地按需修改它的定义。 
-<div class="paragraph"> </div>
-
- 我们还需要一个 <span class="inlinecode"><span class="id" title="var">id</span></span> 的相等关系测试： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">eqb_id</span> (<span class="id" title="var">x1</span> <span class="id" title="var">x2</span> : <span class="id" title="var">id</span>) :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">x1</span>, <span class="id" title="var">x2</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">Id</span> <span class="id" title="var">n1</span>, <span class="id" title="var">Id</span> <span class="id" title="var">n2</span> ⇒ <span class="id" title="var">n1</span> =? <span class="id" title="var">n2</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab30"></a><h4 class="section">练习：1 星, standard (eqb_id_refl)</h4>
-
-</div>
-<div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqb_id_refl</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">x</span>, <span class="id" title="var">true</span> = <span class="id" title="var">eqb_id</span> <span class="id" title="var">x</span> <span class="id" title="var">x</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
- 现在我们定义偏映射的类型： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Module</span> <span class="id" title="var">PartialMap</span>.<br/>
-<span class="id" title="keyword">Export</span> <span class="id" title="var">NatList</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">partial_map</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;| <span class="id" title="var">empty</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">record</span> (<span class="id" title="var">i</span> : <span class="id" title="var">id</span>) (<span class="id" title="var">v</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">m</span> : <span class="id" title="var">partial_map</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-此声明可以读作：“有两种方式可以构造一个 <span class="inlinecode"><span class="id" title="var">partial_map</span></span>：用构造子 <span class="inlinecode"><span class="id" title="var">empty</span></span>
-    表示一个空的偏映射，或通过将构造子 <span class="inlinecode"><span class="id" title="var">record</span></span> 应用到一个键、一个值和一个既有的
-    <span class="inlinecode"><span class="id" title="var">partial_map</span></span> 来构造一个带“键-值”映射 的 <span class="inlinecode"><span class="id" title="var">partial_map</span></span>。”
-<div class="paragraph"> </div>
-
- <span class="inlinecode"><span class="id" title="var">update</span></span> 函数在部分映射中覆盖给定的键以取缔原值（如该键尚不存在，
-    则新建其记录）。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">update</span> (<span class="id" title="var">d</span> : <span class="id" title="var">partial_map</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">x</span> : <span class="id" title="var">id</span>) (<span class="id" title="var">value</span> : <span class="id" title="var">nat</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">partial_map</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="var">record</span> <span class="id" title="var">x</span> <span class="id" title="var">value</span> <span class="id" title="var">d</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-最后，<span class="inlinecode"><span class="id" title="var">find</span></span> 函数按照给定的键搜索一个 <span class="inlinecode"><span class="id" title="var">partial_map</span></span>。若该键无法找到，
-    它就返回 <span class="inlinecode"><span class="id" title="var">None</span></span>；若该键与 <span class="inlinecode"><span class="id" title="var">val</span></span> 相关联，则返回 <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">val</span></span>。
-    若同一个键被映到多个值，<span class="inlinecode"><span class="id" title="var">find</span></span> 就会返回它遇到的第一个值。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">find</span> (<span class="id" title="var">x</span> : <span class="id" title="var">id</span>) (<span class="id" title="var">d</span> : <span class="id" title="var">partial_map</span>) : <span class="id" title="var">natoption</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">d</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">empty</span>         ⇒ <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">record</span> <span class="id" title="var">y</span> <span class="id" title="var">v</span> <span class="id" title="var">d'</span> ⇒ <span class="id" title="keyword">if</span> <span class="id" title="var">eqb_id</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">then</span> <span class="id" title="var">Some</span> <span class="id" title="var">v</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">find</span> <span class="id" title="var">x</span> <span class="id" title="var">d'</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab31"></a><h4 class="section">练习：1 星, standard (update_eq)</h4>
-
-</div>
-<div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">update_eq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">d</span> : <span class="id" title="var">partial_map</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">id</span>) (<span class="id" title="var">v</span>: <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">find</span> <span class="id" title="var">x</span> (<span class="id" title="var">update</span> <span class="id" title="var">d</span> <span class="id" title="var">x</span> <span class="id" title="var">v</span>) = <span class="id" title="var">Some</span> <span class="id" title="var">v</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab32"></a><h4 class="section">练习：1 星, standard (update_neq)</h4>
-
-</div>
-<div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">update_neq</span> :<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">∀</span> (<span class="id" title="var">d</span> : <span class="id" title="var">partial_map</span>) (<span class="id" title="var">x</span> <span class="id" title="var">y</span> : <span class="id" title="var">id</span>) (<span class="id" title="var">o</span>: <span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">eqb_id</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span> = <span class="id" title="var">false</span> → <span class="id" title="var">find</span> <span class="id" title="var">x</span> (<span class="id" title="var">update</span> <span class="id" title="var">d</span> <span class="id" title="var">y</span> <span class="id" title="var">o</span>) = <span class="id" title="var">find</span> <span class="id" title="var">x</span> <span class="id" title="var">d</span>.<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-</div>
-<div class="code">
-<span class="id" title="keyword">End</span> <span class="id" title="var">PartialMap</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab33"></a><h4 class="section">练习：2 星, standard (baz_num_elts)</h4>
+<a name="lab27"></a><h4 class="section">练习：2 星, standard (baz_num_elts)</h4>
 
 
 <div class="paragraph"> </div>

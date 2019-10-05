@@ -33,8 +33,10 @@
   - [ ] `discriminate`
 - [ ] Functional Programming: The List Datatype
   - [ ] Programming with Propositions (+ list examples deleted from `Logic.v`)
+  - [ ] "Partial Map" in `Lists.v`??? (暂时删去)
 - [ ] Functional Programming
-  - [ ] 
+  - [ ] Poly
+  - [ ] Functions as Data
 - [ ] Induction (II): 
 - [ ] (Optional) Program vs. Proof 
 - [ ] Set Theory

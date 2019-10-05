@@ -416,6 +416,12 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 
+Theorem leb_n_Sn : forall n,
+  n <=? (S n) = true.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+
 (**
   关于乘法运算。我们终于可以证明乘法分配律和乘法结合律了。
 *)
@@ -453,6 +459,7 @@ Admitted.
 
   看下面的例子 (注意，低位 (low-order bit) 在左，高位 (high-order bit) 在右)：
 
+
         decimal            binary                           unary
            0                   Z                              O
            1                 B Z                            S O
@@ -463,6 +470,7 @@ Admitted.
            6           A (B (B Z))           S (S (S (S (S (S O)))))
            7           B (B (B Z))        S (S (S (S (S (S (S O))))))
            8        A (A (A (B Z)))    S (S (S (S (S (S (S (S O)))))))
+  
 *)
 
 Inductive bin : Type :=
@@ -493,6 +501,7 @@ Definition manual_grade_for_binary : option (nat*string) := None.
   在上一个练习中，你已经测试过 [incr] 与 [bin_to_nat] 的可交换性，
   如下图所示 (这种图被称为 _'交换图' (Commutative Digram???)_，
   在以后的课程中还会遇到)。
+
                             incr
               bin ----------------------> bin
                |                           |
@@ -501,6 +510,7 @@ Definition manual_grade_for_binary : option (nat*string) := None.
                v                           v
               nat ----------------------> nat
                              S
+
   现在，请将 [incr] 与 [bin_to_nat] 的可交换性表达成一个定理，
   名为 [bin_to_nat_preserve_incr]。
   你能给出它的证明吗?

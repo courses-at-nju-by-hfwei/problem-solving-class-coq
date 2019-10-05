@@ -490,119 +490,108 @@ Admitted.
 (* ================================================================= *)
 (** ** 列表练习，第一部分 *)
 
-(** **** 练习：3 星, standard (list_exercises)  
-
-    更多有关列表的实践： *)
-
+(**
+  你需要通过大量的练习与思考 (练习之后的思考很重要!很重要!很重要!)
+  培养证明的直觉。
+  比如，分情形分析够不够用? 需不需要用数学归纳法? 对什么作归纳? 等等。
+*)
+(** **** 练习：3 星, standard (list_exercises) *)
 Theorem app_nil_r : forall l : natlist,
   l ++ [] = l.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem rev_app_distr: forall l1 l2 : natlist,
   rev (l1 ++ l2) = rev l2 ++ rev l1.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem rev_involutive : forall l : natlist,
   rev (rev l) = l.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
-(** 下面的练习有简短的解法，如果你开始发现情况已经复杂到你无法理清的程度，
-    请后退一步并试着寻找更为简单的方法。 *)
+(** [app_assoc4] 有简洁的证明。不要走了弯路。*)
 
 Theorem app_assoc4 : forall l1 l2 l3 l4 : natlist,
   l1 ++ (l2 ++ (l3 ++ l4)) = ((l1 ++ l2) ++ l3) ++ l4.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
-(** 一个关于你对 [nonzeros] 的实现的练习： *)
-
+Print nonzeros. (* 你之前应该完成了 [nonzeros] 的定义。*)
 Lemma nonzeros_app : forall l1 l2 : natlist,
   nonzeros (l1 ++ l2) = (nonzeros l1) ++ (nonzeros l2).
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** **** 练习：2 星, standard (eqblist)  
-
-    填写 [eqblist] 的定义，它通过比较列表中的数字来判断是否相等。
-    证明对于所有列表 [l]，[eqblist l l] 返回 [true]。 *)
+(** **** 练习：2 星, standard (eqblist) *)
+(**
+  请完成 [eqblist] 的定义，它判断列表 [l1]、[l2] 是否相同。
+*)
 
 Fixpoint eqblist (l1 l2 : natlist) : bool
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
 Example test_eqblist1 :
   (eqblist nil nil = true).
- (* 请在此处解答 *) Admitted.
+ (* 请在此处解答 *)
+Admitted.
 
 Example test_eqblist2 :
   eqblist [1;2;3] [1;2;3] = true.
-(* 请在此处解答 *) Admitted.
+(* 请在此处解答 *)
+Admitted.
 
 Example test_eqblist3 :
   eqblist [1;2;3] [1;2;4] = false.
- (* 请在此处解答 *) Admitted.
+ (* 请在此处解答 *)
+Admitted.
 
-Theorem eqblist_refl : forall l:natlist,
+(**
+  如果我们将函数 [eqblist] 看作两个列表之间的 _关系 (Relation)_,
+  那么它是 _自反的 (Reflexive)_。
+  
+  嗯，如果你现在还不明白上面那句话在说些什么，
+  不要紧，直接证明下面的定理 [eqblist_refl] 就好了。 
+*)
+Theorem eqblist_refl : forall l : natlist,
   true = eqblist l l.
 Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
+  (* 请在此处解答 *)
+Admitted.
 
-(* ================================================================= *)
-(** ** 列表练习, 第二部分 *)
-
-(** 下面这组简单的定理用于证明你之前关于袋子的定义。 *)
-
-(** **** 练习：1 星, standard (count_member_nonzero)  *)
-Theorem count_member_nonzero : forall (s : bag),
-  1 <=? (count 1 (1 :: s)) = true.
+(** **** 练习：1 星, standard (count_member_nonzero) *)
+Theorem count_member_nonzero : forall (l : natlist),
+  1 <=? (count 1 (1 :: l)) = true.
 Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
+  (* 请在此处解答 *)
+Admitted.
 
-(** 下面这条关于 [leb] 的引理可助你完成下一个证明。 *)
-
-Theorem leb_n_Sn : forall n,
-  n <=? (S n) = true.
-Proof.
-  intros n. induction n as [| n' IHn'].
-  - (* 0 *)
-    simpl.  reflexivity.
-  - (* S n' *)
-    simpl.  rewrite IHn'.  reflexivity.  Qed.
-
-(** Before doing the next exercise, make sure you've filled in the
-   definition of [remove_one] above. *)
+Print remove_one. (* 你之前应该完成了 [remove_one] 的定义。*)
 (** **** 练习：3 星, advanced (remove_does_not_increase_count)  *)
-Theorem remove_does_not_increase_count: forall (s : bag),
-  (count 0 (remove_one 0 s)) <=? (count 0 s) = true.
+Theorem remove_does_not_increase_count: forall (l : natlist),
+  (count 0 (remove_one 0 l)) <=? (count 0 l) = true.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
-(** **** 练习：3 星, standard, optional (bag_count_sum)  
-
-    写下一个用到函数 [count] 和 [sum] 的，关于袋子的有趣定理 [bag_count_sum]，
-    然后证明它。（你可能会发现该证明的难度取决于你如何定义 [count]！） *)
-(* 请在此处解答 
-
-    [] *)
-
-(** **** 练习：4 星, advanced (rev_injective)  
-
-    求证 [rev] 是单射函数，即：
-
-    forall (l1 l2 : natlist), rev l1 = rev l2 -> l1 = l2.
-
-    （这个问题既可以用简单的方式解决也可以用繁琐的方式来解决。） *)
-
-(* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_rev_injective : option (nat*string) := None.
+(** **** 练习：4 星, advanced (rev_injective) *)  
+(**
+  请用尽可能简洁的方法证明定理 [rev_injective]: [rev] 是单射函数。
+*)
+Theorem rev_injective : forall (l1 l2 : natlist), 
+  rev l1 = rev l2 -> l1 = l2.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 (* ################################################################# *)
 (** * Options 可选类型 *)
@@ -610,7 +599,7 @@ Definition manual_grade_for_rev_injective : option (nat*string) := None.
 (** 假设我们想要写一个返回某个列表中第 [n] 个元素的函数。如果我们为它赋予类型
     [nat -> natlist -> nat]，那么当列表太短时我们仍须返回某个数... *)
 
-Fixpoint nth_bad (l:natlist) (n:nat) : nat :=
+Fixpoint nth_bad (l : natlist) (n : nat) : nat :=
   match l with
   | nil => 42  (* 任意值！ *)
   | a :: l' => match n =? O with
@@ -649,9 +638,7 @@ Proof. reflexivity. Qed.
 Example test_nth_error3 : nth_error [4;5;6;7] 9 = None.
 Proof. reflexivity. Qed.
 
-(** （在 HTML 版本中隐藏了这些老套的证明。若你想看它请点击小方格。）
-
-    本例也是个介绍 Coq 编程语言更多细微特性的机会，比如条件表达式... *)
+(** 本例也是个介绍 Coq 编程语言更多细微特性的机会，比如条件表达式... *)
 
 Fixpoint nth_error' (l:natlist) (n:nat) : natoption :=
   match l with
@@ -700,83 +687,6 @@ Proof.
 (** [] *)
 
 End NatList.
-
-(* ################################################################# *)
-(** * 偏映射（Partial Maps） *)
-
-(** 最后演示一下如何在 Coq 中定义基础的数据结构。这是一个简单的
-    _'偏映射'_ 数据类型，它类似于大多数编程语言中的映射或字典数据结构。 *)
-
-(** 首先，我们定义一个新的归纳数据类型 [id] 来用作偏映射的“键”。 *)
-
-Inductive id : Type :=
-  | Id (n : nat).
-
-(** 本质上来说，[id] 只是一个数。但通过 [Id] 标签封装自然数来引入新的类型，
-    能让定义变得更加可读，同时我们也可以灵活地按需修改它的定义。 *)
-
-(** 我们还需要一个 [id] 的相等关系测试： *)
-
-Definition eqb_id (x1 x2 : id) :=
-  match x1, x2 with
-  | Id n1, Id n2 => n1 =? n2
-  end.
-
-(** **** 练习：1 星, standard (eqb_id_refl)  *)
-Theorem eqb_id_refl : forall x, true = eqb_id x x.
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** 现在我们定义偏映射的类型： *)
-
-Module PartialMap.
-Export NatList.
-  
-Inductive partial_map : Type :=
-  | empty
-  | record (i : id) (v : nat) (m : partial_map).
-
-(** 此声明可以读作：“有两种方式可以构造一个 [partial_map]：用构造子 [empty]
-    表示一个空的偏映射，或通过将构造子 [record] 应用到一个键、一个值和一个既有的
-    [partial_map] 来构造一个带“键-值”映射 的 [partial_map]。”*)
-
-(** [update] 函数在部分映射中覆盖给定的键以取缔原值（如该键尚不存在，
-    则新建其记录）。 *)
-
-Definition update (d : partial_map)
-                  (x : id) (value : nat)
-                  : partial_map :=
-  record x value d.
-
-(** 最后，[find] 函数按照给定的键搜索一个 [partial_map]。若该键无法找到，
-    它就返回 [None]；若该键与 [val] 相关联，则返回 [Some val]。
-    若同一个键被映到多个值，[find] 就会返回它遇到的第一个值。 *)
-
-Fixpoint find (x : id) (d : partial_map) : natoption :=
-  match d with
-  | empty         => None
-  | record y v d' => if eqb_id x y
-                     then Some v
-                     else find x d'
-  end.
-
-(** **** 练习：1 星, standard (update_eq)  *)
-Theorem update_eq :
-  forall (d : partial_map) (x : id) (v: nat),
-    find x (update d x v) = Some v.
-Proof.
- (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：1 星, standard (update_neq)  *)
-Theorem update_neq :
-  forall (d : partial_map) (x y : id) (o: nat),
-    eqb_id x y = false -> find x (update d y o) = find x d.
-Proof.
- (* 请在此处解答 *) Admitted.
-(** [] *)
-End PartialMap.
 
 (** **** 练习：2 星, standard (baz_num_elts)  
 

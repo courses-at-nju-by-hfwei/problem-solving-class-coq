@@ -677,6 +677,12 @@
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">leb_n_Sn</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">n</span> &lt;=? (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -739,6 +745,9 @@
            7           B (B (B Z))        S (S (S (S (S (S (S O))))))
            8        A (A (A (B Z)))    S (S (S (S (S (S (S (S O)))))))
 
+<div class="paragraph"> </div>
+
+
 </div>
 <div class="code">
 
@@ -792,6 +801,9 @@
   在上一个练习中，你已经测试过 <span class="inlinecode"><span class="id" title="var">incr</span></span> 与 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> 的可交换性，
   如下图所示 (这种图被称为 <i>'交换图' (Commutative Digram???)_，
   在以后的课程中还会遇到)。
+
+<div class="paragraph"> </div>
+
                             incr
               bin ----------------------&gt; bin
                |                           |
@@ -800,6 +812,9 @@
                v                           v
               nat ----------------------&gt; nat
                              S
+
+<div class="paragraph"> </div>
+
   现在，请将 <span class="inlinecode"><span class="id" title="var">incr</span></span> 与 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> 的可交换性表达成一个定理，
   名为 <span class="inlinecode"><span class="id" title="var">bin_to_nat_preserve_incr</span></span>。
   你能给出它的证明吗?
