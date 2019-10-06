@@ -1,7 +1,7 @@
 (** * Lists: 使用结构化的数据 *)
 
 (**
-  本节介绍_'列表'(List)_数据类型。
+  本节介绍 _'列表'(List)_ 数据类型。
   下一节介绍_'函数式程序设计' (Functional Programming; FP)_范型。
   
   为什么要先介绍列表呢?
@@ -596,8 +596,21 @@ Admitted.
 (* ################################################################# *)
 (** * Options 可选类型 *)
 
-(** 假设我们想要写一个返回某个列表中第 [n] 个元素的函数。如果我们为它赋予类型
-    [nat -> natlist -> nat]，那么当列表太短时我们仍须返回某个数... *)
+Print hd.
+(**
+  在本节的最后，我们回到一开始对 [hd] (head) 函数的定义:
+  [Definition hd (default : nat) (l : natlist) : nat]。
+  为了处理 [l] 为空的情况，[hd] 要求调用者提供默认返回值 [default : nat]。
+  然而，这种处理方式不够优雅:
+  - 破坏了 [hd] 的语义。
+  - 返回值为 [default] 时，无法区分 [l] 的表头确实为 [default] 
+    与 [l] 为空的情况。
+  - 给调用者增加负担。
+  
+  函数 [nth-bad] 是对 [hd] 的扩展，它返回列表 [l] 中的第 [n] 个元素。
+  当 [l] 过短时，它返回一个任意值，这里选择返回 [42]。
+  它存在与 [hd] 类似的不足。
+*)
 
 Fixpoint nth_bad (l : natlist) (n : nat) : nat :=
   match l with
@@ -608,25 +621,42 @@ Fixpoint nth_bad (l : natlist) (n : nat) : nat :=
                end
   end.
 
-(** 这种方案并不好：如果 [nth_bad] 返回了 [42]，那么不经过进一步处理的话，
-    我们无法得知该值是否真的出现在了输入中。（译注：我们无法判断是什么因素让它返回了
-    [42]，因为它可能是列表过短时的返回值，同时也可能是（此时列表足够长）在列表中找到的值）
-    一种更好的方式是改变 [nth_bad] 的返回类型，使其包含一个错误值作为可能的结果。
-    我们将此类型命名为 [natoption]。 *)
+Print option.
+(**
+  为了解决该类问题，Coq 提供了 [option] 类型。
+  [option] 类型是对 _可选值 (Optional Value)_ 的一种封装。
+  作为函数的返回值类型，它表示该函数可能会返回一个无意义的值，
+  用以标识错误处理。
+  它包含两个构造函数:
+  - Some A: 表示值 A。
+  - None: 表示空值。
+  
+  很多程序设计语言里都有类似的 [option] 类型，
+  如 Java 8 中的 [Optional]，Scala 中的 [Option]，
+  Haskell 中的 [Maybe] 等。
+
+  Coq 中的 [option] 是 _多态类型 (Polymorphic Type)_
+  (下一节会介绍这个概念)。
+  本节我们将被封装的值 A 的类型限定为 [nat]。
+*)
 
 Inductive natoption : Type :=
   | Some (n : nat)
   | None.
 
-(** 然后我们可以修改前面 [nth_bad] 的定义，使其在列表太短时返回 [None]，
-    在列表足够长且 [a] 在 [n] 处时返回 [Some a]。我们将这个新函数称为
-    [nth_error] 来表明它可以产生带错误的结果。 *)
+(**
+  [nth_error] 是对 [nth_bad] 的改进。
+  注意，[nth_error] 的返回类型是 [natoption]:
+  - 当列表 [l] 过短时，它返回 [None]，
+  - 否则它将元素 [a] 封装成类型为 [natoption] 的 [Some a]，
+    然后返回 [Some a]。
+*)
 
-Fixpoint nth_error (l:natlist) (n:nat) : natoption :=
+Fixpoint nth_error (l : natlist) (n : nat) : natoption :=
   match l with
-  | nil => None
+  | nil => None (* 类型为 [natoption] *)
   | a :: l' => match n =? O with
-               | true => Some a
+               | true => Some a (* 类型为 [natoption] *)
                | false => nth_error l' (pred n)
                end
   end.
@@ -638,34 +668,33 @@ Proof. reflexivity. Qed.
 Example test_nth_error3 : nth_error [4;5;6;7] 9 = None.
 Proof. reflexivity. Qed.
 
-(** 本例也是个介绍 Coq 编程语言更多细微特性的机会，比如条件表达式... *)
+(**
+  [nth_error] 中的嵌套模式匹配 [match n=? O]
+  也可以换成条件表达式，
+  如下面的 [nth_error_if] 所示。
+*)
 
-Fixpoint nth_error' (l:natlist) (n:nat) : natoption :=
+Fixpoint nth_error_if (l : natlist) (n : nat) : natoption :=
   match l with
   | nil => None
-  | a :: l' => if n =? O then Some a
-               else nth_error' l' (pred n)
+  | a :: l' => 
+      if n =? O then Some a (* 替换 [nth_error] 中的模式匹配 *)
+                else nth_error_if l' (pred n)
   end.
 
- (** Coq 的条件语句和其它语言中的一样，不过加上了一点更为一般化的特性。
-    由于布尔类型不是内建的，因此 Coq 实际上支持在_'任何'_带有两个构造子的，
-    归纳定义的类型上使用条件表达式。当断言（guard）求值为 [Inductive]
-    定义中的第一个构造子时，它被认为是真的；当它被求值到第二个构造子时，
-    则被认为是假的。 *)
+(**
+  接收到类型为 [natoption] 的值 [v] 以后，
+  我们通常会对其进行模式匹配 [match v with]:
+  - 如果为 [None]，则做特殊处理。
+  - 如果为 [Some a]，则对 [a] 做处理。
+*)
 
-(** 以下函数从 [natoption] 中取出一个 [nat]，在遇到 [None] 时它将返回提供的默认值。 *)
-
-Definition option_elim (d : nat) (o : natoption) : nat :=
-  match o with
-  | Some n' => n'
-  | None => d
-  end.
-
-(** **** 练习：2 星, standard (hd_error)  *)
- (** 用同样的思路修正之前的 [hd] 函数，使我们无需为 [nil] 的情况提供默认元素。  *)
+(** **** 练习：2 星, standard (hd_error) *)
+(** 请使用 [natoption] 思想修改之前定义的 [hd] 函数。*)
 
 Definition hd_error (l : natlist) : natoption
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+  (* 将本行替换成 ":= _你的_定义_ ." *).
+Admitted.
 
 Example test_hd_error1 : hd_error [] = None.
  (* 请在此处解答 *) Admitted.
@@ -676,32 +705,5 @@ Example test_hd_error2 : hd_error [1] = Some 1.
 Example test_hd_error3 : hd_error [5;6] = Some 5.
  (* 请在此处解答 *) Admitted.
 (** [] *)
-
-(** **** 练习：1 星, standard, optional (option_elim_hd)  *)
- (** 此练习能帮助你在新的 [hd_error] 和旧的 [hd] 之间建立联系。 *)
-
-Theorem option_elim_hd : forall (l:natlist) (default:nat),
-  hd default l = option_elim default (hd_error l).
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
 End NatList.
-
-(** **** 练习：2 星, standard (baz_num_elts)  
-
-    考虑以下归纳定义： *)
-
-Inductive baz : Type :=
-  | Baz1 (x : baz)
-  | Baz2 (y : baz) (b : bool).
-
-(** 有_'多少'_个表达式具备类型 [baz]？（以注释说明。） *)
-
-(* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_baz_num_elts : option (nat*string) := None.
-(** [] *)
-
 (* Fri Jul 19 00:32:19 UTC 2019 *)

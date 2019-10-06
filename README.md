@@ -17,6 +17,17 @@ Rock on Coq for the Problem Solving Class at Nanjing University
 - `coqdoc --html -toc Basics.v`
   - 如果含有中文，则使用 `coqdoc --html --utf8 -toc Basics.v`
 
+### Generate LaTeX
+以 `Basics.v` 为例:
+
+- `[Compile] => [Compile buffer]` in CoqIDE
+- `[Compile] => [Make makefile]` in CoqIDE
+- `coqdoc --latex -toc Basics.v`
+  - 如果含有中文，则使用 `coqdoc --latex --utf8 -toc Basics.v`
+- [ ] 如何自动编译生成 pdf?
+  - [ ] `coqdoc --pdf -toc Basics.v`
+  - [ ] `coqdoc --pdf --utf8 -toc Basics.v`
+
 ### AutoTest
 (*还不清楚如何操作*)
 

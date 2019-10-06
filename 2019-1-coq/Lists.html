@@ -29,7 +29,7 @@
 
 <div class="paragraph"> </div>
 
-  本节介绍<i>'列表'(List)_数据类型。
+  本节介绍 <i>'列表'(List)_ 数据类型。
   下一节介绍<i>'函数式程序设计' (Functional Programming; FP)_范型。
 
 <div class="paragraph"> </div>
@@ -964,10 +964,37 @@
 <div class="doc">
 <a name="lab24"></a><h1 class="section">Options 可选类型</h1>
 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">hd</span>.<br/>
+</div>
+
+<div class="doc">
+  在本节的最后，我们回到一开始对 <span class="inlinecode"><span class="id" title="var">hd</span></span> (head) 函数的定义:
+  <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> <span class="inlinecode"><span class="id" title="var">hd</span></span> <span class="inlinecode">(<span class="id" title="var">default</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">(<span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">natlist</span>)</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>。
+  为了处理 <span class="inlinecode"><span class="id" title="var">l</span></span> 为空的情况，<span class="inlinecode"><span class="id" title="var">hd</span></span> 要求调用者提供默认返回值 <span class="inlinecode"><span class="id" title="var">default</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>。
+  然而，这种处理方式不够优雅:
+<ul class="doclist">
+<li> 破坏了 <span class="inlinecode"><span class="id" title="var">hd</span></span> 的语义。
+
+</li>
+<li> 返回值为 <span class="inlinecode"><span class="id" title="var">default</span></span> 时，无法区分 <span class="inlinecode"><span class="id" title="var">l</span></span> 的表头确实为 <span class="inlinecode"><span class="id" title="var">default</span></span> 
+    与 <span class="inlinecode"><span class="id" title="var">l</span></span> 为空的情况。
+
+</li>
+<li> 给调用者增加负担。
+
+</li>
+</ul>
+
 <div class="paragraph"> </div>
 
- 假设我们想要写一个返回某个列表中第 <span class="inlinecode"><span class="id" title="var">n</span></span> 个元素的函数。如果我们为它赋予类型
-    <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">natlist</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>，那么当列表太短时我们仍须返回某个数... 
+  函数 <span class="inlinecode"><span class="id" title="var">nth</span>-<span class="id" title="var">bad</span></span> 是对 <span class="inlinecode"><span class="id" title="var">hd</span></span> 的扩展，它返回列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 中的第 <span class="inlinecode"><span class="id" title="var">n</span></span> 个元素。
+  当 <span class="inlinecode"><span class="id" title="var">l</span></span> 过短时，它返回一个任意值，这里选择返回 <span class="inlinecode">42</span>。
+  它存在与 <span class="inlinecode"><span class="id" title="var">hd</span></span> 类似的不足。
+
 </div>
 <div class="code">
 
@@ -982,14 +1009,36 @@
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">option</span>.<br/>
 </div>
 
 <div class="doc">
-这种方案并不好：如果 <span class="inlinecode"><span class="id" title="var">nth_bad</span></span> 返回了 <span class="inlinecode">42</span>，那么不经过进一步处理的话，
-    我们无法得知该值是否真的出现在了输入中。（译注：我们无法判断是什么因素让它返回了
-    <span class="inlinecode">42</span>，因为它可能是列表过短时的返回值，同时也可能是（此时列表足够长）在列表中找到的值）
-    一种更好的方式是改变 <span class="inlinecode"><span class="id" title="var">nth_bad</span></span> 的返回类型，使其包含一个错误值作为可能的结果。
-    我们将此类型命名为 <span class="inlinecode"><span class="id" title="var">natoption</span></span>。 
+  为了解决该类问题，Coq 提供了 <span class="inlinecode"><span class="id" title="var">option</span></span> 类型。
+  <span class="inlinecode"><span class="id" title="var">option</span></span> 类型是对 _可选值 (Optional Value)_ 的一种封装。
+  作为函数的返回值类型，它表示该函数可能会返回一个无意义的值，
+  用以标识错误处理。
+  它包含两个构造函数:
+<ul class="doclist">
+<li> Some A: 表示值 A。
+
+</li>
+<li> None: 表示空值。
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+  很多程序设计语言里都有类似的 <span class="inlinecode"><span class="id" title="var">option</span></span> 类型，
+  如 Java 8 中的 <span class="inlinecode"><span class="id" title="var">Optional</span></span>，Scala 中的 <span class="inlinecode"><span class="id" title="var">Option</span></span>，
+  Haskell 中的 <span class="inlinecode"><span class="id" title="var">Maybe</span></span> 等。
+
+<div class="paragraph"> </div>
+
+  Coq 中的 <span class="inlinecode"><span class="id" title="var">option</span></span> 是 _多态类型 (Polymorphic Type)_
+  (下一节会介绍这个概念)。
+  本节我们将被封装的值 A 的类型限定为 <span class="inlinecode"><span class="id" title="var">nat</span></span>。
+
 </div>
 <div class="code">
 
@@ -1002,18 +1051,27 @@
 </div>
 
 <div class="doc">
-然后我们可以修改前面 <span class="inlinecode"><span class="id" title="var">nth_bad</span></span> 的定义，使其在列表太短时返回 <span class="inlinecode"><span class="id" title="var">None</span></span>，
-    在列表足够长且 <span class="inlinecode"><span class="id" title="var">a</span></span> 在 <span class="inlinecode"><span class="id" title="var">n</span></span> 处时返回 <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>。我们将这个新函数称为
-    <span class="inlinecode"><span class="id" title="var">nth_error</span></span> 来表明它可以产生带错误的结果。 
+  <span class="inlinecode"><span class="id" title="var">nth_error</span></span> 是对 <span class="inlinecode"><span class="id" title="var">nth_bad</span></span> 的改进。
+  注意，<span class="inlinecode"><span class="id" title="var">nth_error</span></span> 的返回类型是 <span class="inlinecode"><span class="id" title="var">natoption</span></span>:
+<ul class="doclist">
+<li> 当列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 过短时，它返回 <span class="inlinecode"><span class="id" title="var">None</span></span>，
+
+</li>
+<li> 否则它将元素 <span class="inlinecode"><span class="id" title="var">a</span></span> 封装成类型为 <span class="inlinecode"><span class="id" title="var">natoption</span></span> 的 <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>，
+    然后返回 <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>。
+
+</li>
+</ul>
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth_error</span> (<span class="id" title="var">l</span>:<span class="id" title="var">natlist</span>) (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">natoption</span> :=<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth_error</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">natoption</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">nil</span> ⇒ <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">nil</span> ⇒ <span class="id" title="var">None</span> <br/>
 &nbsp;&nbsp;| <span class="id" title="var">a</span> :: <span class="id" title="var">l'</span> ⇒ <span class="id" title="keyword">match</span> <span class="id" title="var">n</span> =? <span class="id" title="var">O</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">true</span> ⇒ <span class="id" title="var">Some</span> <span class="id" title="var">a</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">true</span> ⇒ <span class="id" title="var">Some</span> <span class="id" title="var">a</span> <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">false</span> ⇒ <span class="id" title="var">nth_error</span> <span class="id" title="var">l'</span> (<span class="id" title="var">pred</span> <span class="id" title="var">n</span>)<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">end</span><br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
@@ -1030,52 +1088,48 @@
 </div>
 
 <div class="doc">
-本例也是个介绍 Coq 编程语言更多细微特性的机会，比如条件表达式... 
+  <span class="inlinecode"><span class="id" title="var">nth_error</span></span> 中的嵌套模式匹配 <span class="inlinecode"><span class="id" title="keyword">match</span></span> <span class="inlinecode"><span class="id" title="var">n</span>=?</span> <span class="inlinecode"><span class="id" title="var">O</span></span>
+  也可以换成条件表达式，
+  如下面的 <span class="inlinecode"><span class="id" title="var">nth_error_if</span></span> 所示。
+
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth_error'</span> (<span class="id" title="var">l</span>:<span class="id" title="var">natlist</span>) (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">natoption</span> :=<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth_error_if</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">natoption</span> :=<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
 &nbsp;&nbsp;| <span class="id" title="var">nil</span> ⇒ <span class="id" title="var">None</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">a</span> :: <span class="id" title="var">l'</span> ⇒ <span class="id" title="keyword">if</span> <span class="id" title="var">n</span> =? <span class="id" title="var">O</span> <span class="id" title="keyword">then</span> <span class="id" title="var">Some</span> <span class="id" title="var">a</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">nth_error'</span> <span class="id" title="var">l'</span> (<span class="id" title="var">pred</span> <span class="id" title="var">n</span>)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">a</span> :: <span class="id" title="var">l'</span> ⇒ <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">if</span> <span class="id" title="var">n</span> =? <span class="id" title="var">O</span> <span class="id" title="keyword">then</span> <span class="id" title="var">Some</span> <span class="id" title="var">a</span> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span> <span class="id" title="var">nth_error_if</span> <span class="id" title="var">l'</span> (<span class="id" title="var">pred</span> <span class="id" title="var">n</span>)<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Coq 的条件语句和其它语言中的一样，不过加上了一点更为一般化的特性。
-    由于布尔类型不是内建的，因此 Coq 实际上支持在<i>'任何'</i>带有两个构造子的，
-    归纳定义的类型上使用条件表达式。当断言（guard）求值为 <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span>
-    定义中的第一个构造子时，它被认为是真的；当它被求值到第二个构造子时，
-    则被认为是假的。 
+  接收到类型为 <span class="inlinecode"><span class="id" title="var">natoption</span></span> 的值 <span class="inlinecode"><span class="id" title="var">v</span></span> 以后，
+  我们通常会对其进行模式匹配 <span class="inlinecode"><span class="id" title="keyword">match</span></span> <span class="inlinecode"><span class="id" title="var">v</span></span> <span class="inlinecode"><span class="id" title="keyword">with</span></span>:
+<ul class="doclist">
+<li> 如果为 <span class="inlinecode"><span class="id" title="var">None</span></span>，则做特殊处理。
+
+</li>
+<li> 如果为 <span class="inlinecode"><span class="id" title="var">Some</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span>，则对 <span class="inlinecode"><span class="id" title="var">a</span></span> 做处理。
+
+</li>
+</ul>
+
 <div class="paragraph"> </div>
 
- 以下函数从 <span class="inlinecode"><span class="id" title="var">natoption</span></span> 中取出一个 <span class="inlinecode"><span class="id" title="var">nat</span></span>，在遇到 <span class="inlinecode"><span class="id" title="var">None</span></span> 时它将返回提供的默认值。 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">option_elim</span> (<span class="id" title="var">d</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">o</span> : <span class="id" title="var">natoption</span>) : <span class="id" title="var">nat</span> :=<br/>
-&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">o</span> <span class="id" title="keyword">with</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">n'</span> ⇒ <span class="id" title="var">n'</span><br/>
-&nbsp;&nbsp;| <span class="id" title="var">None</span> ⇒ <span class="id" title="var">d</span><br/>
-&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
 <a name="lab25"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
- 用同样的思路修正之前的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 函数，使我们无需为 <span class="inlinecode"><span class="id" title="var">nil</span></span> 的情况提供默认元素。  
+ 请使用 <span class="inlinecode"><span class="id" title="var">natoption</span></span> 思想修改之前定义的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 函数。
 </div>
 <div class="code">
 
 <br/>
 <span class="id" title="keyword">Definition</span> <span class="id" title="var">hd_error</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>) : <span class="id" title="var">natoption</span><br/>
-&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+&nbsp;&nbsp;.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_hd_error1</span> : <span class="id" title="var">hd_error</span> [] = <span class="id" title="var">None</span>.<br/>
@@ -1092,66 +1146,9 @@ Coq 的条件语句和其它语言中的一样，不过加上了一点更为一�
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab26"></a><h4 class="section">练习：1 星, standard, optional (option_elim_hd)</h4>
- 此练习能帮助你在新的 <span class="inlinecode"><span class="id" title="var">hd_error</span></span> 和旧的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 之间建立联系。 
 </div>
 <div class="code">
-
-<br/>
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">option_elim_hd</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">l</span>:<span class="id" title="var">natlist</span>) (<span class="id" title="var">default</span>:<span class="id" title="var">nat</span>),<br/>
-&nbsp;&nbsp;<span class="id" title="var">hd</span> <span class="id" title="var">default</span> <span class="id" title="var">l</span> = <span class="id" title="var">option_elim</span> <span class="id" title="var">default</span> (<span class="id" title="var">hd_error</span> <span class="id" title="var">l</span>).<br/>
-<span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-</div>
-<div class="code">
-
-<br/>
 <span class="id" title="keyword">End</span> <span class="id" title="var">NatList</span>.<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab27"></a><h4 class="section">练习：2 星, standard (baz_num_elts)</h4>
-
-
-<div class="paragraph"> </div>
-
-    考虑以下归纳定义： 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Inductive</span> <span class="id" title="var">baz</span> : <span class="id" title="keyword">Type</span> :=<br/>
-&nbsp;&nbsp;| <span class="id" title="var">Baz1</span> (<span class="id" title="var">x</span> : <span class="id" title="var">baz</span>)<br/>
-&nbsp;&nbsp;| <span class="id" title="var">Baz2</span> (<span class="id" title="var">y</span> : <span class="id" title="var">baz</span>) (<span class="id" title="var">b</span> : <span class="id" title="var">bool</span>).<br/>
-
-<br/>
-</div>
-
-<div class="doc">
-有<i>'多少'</i>个表达式具备类型 <span class="inlinecode"><span class="id" title="var">baz</span></span>？（以注释说明。） 
-</div>
-<div class="code">
-
-<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_baz_num_elts</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-</div>
-<div class="code">
-
-<br/>
 </div>
 </div>
 
