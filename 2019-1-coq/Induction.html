@@ -29,14 +29,10 @@
 
 <div class="paragraph"> </div>
 
-  我们先用下面一行命令，将上一章中所有的定义都导入进来。
-  在此之前，你需要先编译 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span> 得到 <span class="inlinecode"><span class="id" title="var">Basics.vo</span></span>。
+  本节依赖于 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span> (你需要先阅读它)。
+  你需要先编译 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span> 得到 <span class="inlinecode"><span class="id" title="var">Basics.vo</span></span>。
   编译方法：在 CoqIDE 中打开 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span>，
   执行 "Compile" 菜单中的 "Compile Buffer" 命令。
-
-<div class="paragraph"> </div>
-
-  (TODO (to ant-hengxin): How to "Make"?)
 
 </div>
 <div class="code">
@@ -285,7 +281,8 @@
 
 <a name="lab4"></a><h4 class="section">练习：2 星, standard (double_plus)</h4>
 
-  完成函数 <span class="inlinecode"><span class="id" title="var">double</span></span> 的定义，它接受参数 <span class="inlinecode"><span class="id" title="var">n</span></span>，返回 <span class="inlinecode">2<span class="id" title="var">n</span></span>: 
+  完成函数 <span class="inlinecode"><span class="id" title="var">double</span></span> 的定义，它接受参数 <span class="inlinecode"><span class="id" title="var">n</span></span>，返回 <span class="inlinecode">2<span class="id" title="var">n</span></span>
+  (你可以将 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span> 的定义拷贝过来): 
 
 </div>
 <div class="code">
@@ -534,44 +531,23 @@
 <div class="paragraph"> </div>
 
       它由归纳假设直接得出。<i>'证毕'</i>。 
-</li>
-</ul>
 
 </li>
 </ul>
-<a name="lab9"></a><h4 class="section">练习：2 星, advanced, recommended (plus_comm_informal)</h4>
 
+</li>
+</ul>
 
-<div class="paragraph"> </div>
-
-    将你对 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 的解答翻译成非形式化证明：
-
-<div class="paragraph"> </div>
-
-    定理：加法满足交换律。
-
-<div class="paragraph"> </div>
-
-    Proof: 
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_plus_comm_informal</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
 </div>
 <div class="code">
 </div>
 
 <div class="doc">
-<a name="lab10"></a><h1 class="section">更多练习</h1>
+<a name="lab9"></a><h1 class="section">更多练习</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab11"></a><h4 class="section">练习：3 星, standard, recommended (mult_comm)</h4>
+<a name="lab10"></a><h4 class="section">练习：3 星, standard, recommended (mult_comm)</h4>
 
     利用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 证明下述定理 <span class="inlinecode"><span class="id" title="var">plus_swap</span></span>。(提示: 不必使用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span>。) 
 </div>
@@ -602,7 +578,7 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab12"></a><h4 class="section">练习：3 星, standard, optional (more_exercises)</h4>
+<a name="lab11"></a><h4 class="section">练习：3 星, standard, optional (more_exercises)</h4>
 
 <div class="paragraph"> </div>
 
@@ -709,7 +685,7 @@
 </div>
 
 <div class="doc">
-<font size=-2>&#9744;</font> <a name="lab13"></a><h4 class="section">练习：3 星, standard (binary)</h4>
+<font size=-2>&#9744;</font> <a name="lab12"></a><h4 class="section">练习：3 星, standard (binary)</h4>
 
   下面这道题目可以检验你是否掌握了本节(以及上一节)的主要内容。
   不要怕。正是这些让你感到有些困难的题目在悄悄地锻炼你的能力。
@@ -787,16 +763,13 @@
 <div class="code">
 
 <br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
 </div>
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab14"></a><h4 class="section">练习：3 星, standard, recommended (binary_commute)</h4>
+<a name="lab13"></a><h4 class="section">练习：3 星, standard, recommended (binary_commute)</h4>
 
   在上一个练习中，你已经测试过 <span class="inlinecode"><span class="id" title="var">incr</span></span> 与 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> 的可交换性，
   如下图所示 (这种图被称为 <i>'交换图' (Commutative Digram???)_，
@@ -823,13 +796,10 @@
 <div class="code">
 
 <br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary_commute</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
 </div>
 
 <div class="doc">
-<font size=-2>&#9744;</font> <a name="lab15"></a><h4 class="section">练习：5 星, advanced (binary_inverse)</h4>
+<font size=-2>&#9744;</font> <a name="lab14"></a><h4 class="section">练习：5 星, advanced (binary_inverse)</h4>
  (a) 完成函数 <span class="inlinecode"><span class="id" title="var">nat_to_bin</span></span> 的定义，它将自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 转换为二进制形式。
 </div>
 <div class="code">
@@ -850,10 +820,7 @@
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">nat_bin_nat</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>, <span class="id" title="var">bin_to_nat</span> (<span class="id" title="var">nat_to_bin</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary_inverse_a</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
@@ -869,9 +836,6 @@
 <div class="code">
 
 <br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary_inverse_b</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
 
 <br/>
 </div>
@@ -893,10 +857,7 @@
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">bin_nat_bin_eqb_normalize</span> : <br/>
 &nbsp;&nbsp;<span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> : <span class="id" title="var">bin</span>, <span class="id" title="var">nat_to_bin</span> (<span class="id" title="var">bin_to_nat</span> <span class="id" title="var">b</span>) = <span class="id" title="var">normalize</span> <span class="id" title="var">b</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
-
-<br/>
-<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_binary_inverse_c</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">

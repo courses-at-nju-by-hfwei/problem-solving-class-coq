@@ -9,6 +9,13 @@
   最早的(?)的函数式程序设计语言 Lisp 的含义即是 "LISt Processor"。
 *)
 
+(** 
+  本节依赖于 [Induction.v] (你需要先阅读它)。
+  你需要先编译 [Induction.v] 得到 [Induction.vo]。
+  编译方法：在 CoqIDE 中打开 [Induction.v]，
+  执行 "Compile" 菜单中的 "Compile Buffer" 命令。
+*)
+
 From LF Require Export Induction.
 Module NatList.
 (* ################################################################# *)

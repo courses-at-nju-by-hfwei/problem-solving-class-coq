@@ -7,21 +7,24 @@
 
 ## 内容 
 - [ ] Preface
+  - [ ] install
+  - [ ] coqide manual
 - [x] Data Types and Naturals ([`Basics.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Basics.v))
   - [x] Data Types
   - [x] Naturals
   - [x] `simpl`, `reflexivity`, `destruct`
   - [x] Exercise
-- [ ] Logic ([`Logic.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Logic.v))
+- [x] Logic ([`Logic.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Logic.v))
   - [x] Proposition
   - [x] and
   - [x] or
   - [x] not, false
-  - [ ] implication?
+  - [x] implication
   - [x] true
   - [x] equivalence
   - [x] existence
-  - [ ] forall?
+  - [x] forall
+  - [ ] Propositions and Booleans??? (暂时删去)
 - [ ] (Optional) Constructive Logic ([`ConsLogic.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/ConsLogic.v))
 - [x] Induction (I) ([`Induction.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Induction.v))
   - [x] induction

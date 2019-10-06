@@ -1,12 +1,10 @@
 (** * Induction: 归纳证明 *)
 
 (** 
-  我们先用下面一行命令，将上一章中所有的定义都导入进来。
-  在此之前，你需要先编译 [Basics.v] 得到 [Basics.vo]。
+  本节依赖于 [Basics.v] (你需要先阅读它)。
+  你需要先编译 [Basics.v] 得到 [Basics.vo]。
   编译方法：在 CoqIDE 中打开 [Basics.v]，
   执行 "Compile" 菜单中的 "Compile Buffer" 命令。
-  
-  (TODO (to ant-hengxin): How to "Make"?)
 *)
 
 From LF Require Export Basics.    
@@ -165,7 +163,8 @@ Admitted.
 (** [] *)
 
 (** **** 练习：2 星, standard (double_plus)
-  完成函数 [double] 的定义，它接受参数 [n]，返回 [2n]: 
+  完成函数 [double] 的定义，它接受参数 [n]，返回 [2n]
+  (你可以将 [Basics.v] 的定义拷贝过来): 
 *)
 
 Fixpoint double (n:nat) : nat
@@ -320,19 +319,8 @@ Admitted.
 
         S (n' + (m + p)) = S ((n' + m) + p),
 
-      它由归纳假设直接得出。_'证毕'_。 *)
-(** **** 练习：2 星, advanced, recommended (plus_comm_informal)  
-
-    将你对 [plus_comm] 的解答翻译成非形式化证明：
-
-    定理：加法满足交换律。
-
-    Proof: (* 请在此处解答 *)
+      它由归纳假设直接得出。_'证毕'_。 
 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_plus_comm_informal : option (nat*string) := None.
-(** [] *)
 (* ################################################################# *)
 (** * 更多练习 *)
 
@@ -492,9 +480,6 @@ Fixpoint bin_to_nat (m:bin) : nat
 *)
 
 (* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_binary : option (nat*string) := None.
 (** [] *)
 
 (** **** 练习：3 星, standard, recommended (binary_commute)  
@@ -517,9 +502,6 @@ Definition manual_grade_for_binary : option (nat*string) := None.
 *)
 
 (* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_binary_commute : option (nat*string) := None.
 (** [] *)
 (** **** 练习：5 星, advanced (binary_inverse) *)  
 (** (a) 完成函数 [nat_to_bin] 的定义，它将自然数 [n] 转换为二进制形式。*)
@@ -533,10 +515,8 @@ Fixpoint nat_to_bin (n : nat) : bin
 
 Theorem nat_bin_nat : forall n, bin_to_nat (nat_to_bin n) = n.
 Proof.
-  (* 请在此处解答 *) Admitted.
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_binary_inverse_a : option (nat*string) := None.
+  (* 请在此处解答 *)
+Admitted.
 
 (** 
   (b) 然而 [Theorem bin_nat_bin : forall b : bin, nat_to_bin (bin_to_nat b)] 
@@ -544,9 +524,6 @@ Definition manual_grade_for_binary_inverse_a : option (nat*string) := None.
 *)
 
 (* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_binary_inverse_b : option (nat*string) := None.
 
 (**
   (c) 为了修复上述定理，我们先定义一个函数 [normalize]，
@@ -561,10 +538,7 @@ Fixpoint normalize (b : bin) : bin
 Theorem bin_nat_bin_eqb_normalize : 
   forall b : bin, nat_to_bin (bin_to_nat b) = normalize b.
 Proof.
-  (* 请在此处解答 *) Admitted.
-(* 请在此处解答 *)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_binary_inverse_c : option (nat*string) := None.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 (* Fri Jul 19 00:32:19 UTC 2019 *)

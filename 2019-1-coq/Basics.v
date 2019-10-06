@@ -1,20 +1,20 @@
 (** * 数据类型与自然数 (Data Types and Naturals) *)
 
-(*
-          ##############################
-          ###  请勿公开发布习题解答  ###
-          ##############################
+(**
+  - 请勿公开发布习题解答
+  - 有问题请在 http://problemoverflow.top/ 提问
 *)
 
 (* ################################################################# *)
 (** * 引言 *)
 
 (** 
-  '程序 = 算法 + 数据结构' by ???
+  '算法 + 数据结构 = 程序' 
+  (Algorithms + Data Structures = Programs) by Niklaus Wirth
   
   如何说算法是一张食谱，那么数据就是食材。
   所谓'巧妇难为无米之炊'，没有数据，算法就无用武之地。
-  正如食材各式各样，数据也有各种 _类型_ (在本教材中，我们使用数据类型的说法，而不是数据结构)。
+  正如食材各式各样，数据也有各种_类型_(在本教材中，我们使用数据类型的说法，而不是数据结构)。
   
   数据类型包含两部分含义： 
   - 数据 (也称 _值_) 构成的集合； 
@@ -33,11 +33,6 @@
   本章介绍如何在 Coq (内置的 _'Gallina'_ 程序设计语言) 中定义数据类型。
   同时，本章还将介绍如何在 Coq 中做证明。
   我们以自然数数据类型为例。
-  
-    其它常见的函数式语言特性包括_'代数数据类型（Algebraic Data Type）'_，
-    能让构造和处理丰富数据结构更加简单的_'模式匹配（Pattern Matching）'_，
-    以及用来支持抽象和代码复用的复杂的_'多态类型系统（Polymorphic Type System）'_。
-
 *)
 (* ################################################################# *)
 (** * 数据与函数 *)
@@ -59,7 +54,8 @@
 
 (** 
   以下声明 (Declaration) 定义了一个名为 [day] 的数据类型。
-  它的数据构成的集合为 {[monday], [tuesday], [wednesday], [thursday], [friday], [saturday], [sunday]}。
+  它的数据构成的集合为 {[monday], [tuesday], [wednesday], 
+  [thursday], [friday], [saturday], [sunday]}。
   [day] 是 _'枚举'(Enumerate)_ 数据类型，因为我们直接在定义中一一列举了它包含的值。
 *)
 
@@ -101,14 +97,11 @@ Compute (next_day saturday).
 Compute (next_day (next_day saturday)).
 (* ==> monday : day *)
 
-
-(** 第二，我们可以将_'期望'_的结果写成 Coq 的示例： *)
-(**
-  我们可以做单元测试 (Unit Test)。
-  下面的 [Example] 定义了一个断言 (Assertioin)： 
+(** 第二，我们通过单元测试 (Unit Test) 检验函数。
+  下面的 [Example] 定义了一个断言 (Assertioin):
   [saturday] 的明天的明天是 [monday]。
-  我们还给这个断言起了个名字： time_files。
-  以后，我们可以使用 time_files 引用该断言。
+  我们还给这个断言起了个名字： [time_files]。
+  以后，我们可以使用 [time_files] 引用该断言。
 *)
 Example time_flies:
   (next_day (next_day saturday)) = monday.
@@ -137,55 +130,16 @@ Proof. simpl. reflexivity.  Qed.
   [Proof] 表示证明开始，[Qed] 表示证毕 (哇，多么美妙的词语)。
 *)
 (* ================================================================= *)
-(** ** 作业提交指南 *)
-
-(** 如果你在课堂中使用《软件基础》，你的讲师可能会用自动化脚本来为你的作业评分。
-    为了让这些脚本能够正常工作（这样你才能拿到全部学分！），请认真遵循以下规则：
-      - 评分脚本在提取你提交的 [.v] 文件时会用到其中的特殊标记。因此请勿修改练习的
-        “分隔标记”，如练习的标题、名称、以及末尾的 [[]] 等等。
-      - 不要删除练习。如果你想要跳过某个练习（例如它标记为可选或你无法解决它），
-        可以在 [.v] 文件中留下部分证明，这没关系，不过此时请确认它以 [Admitted]
-        结尾（不要用 [Abort] 之类的东西）。
-      - 你也可以在解答中使用附加定义（如辅助函数，需要的引理等）。
-        你可以将它们放在练习的头部和你要证明的定理之间。
-
-    You will also notice that each chapter (like [Basics.v]) is
-    accompanied by a _test script_ ([BasicsTest.v]) that automatically
-    calculates points for the finished homework problems in the
-    chapter.  These scripts are mostly for the auto-grading
-    infrastructure that your instructor may use to help process
-    assignments, but you may also like to use them to double-check
-    that your file is well formatted before handing it in.  In a
-    terminal window either type [make BasicsTest.vo] or do the
-    following:
-
-       coqc -Q . LF Basics.v
-       coqc -Q . LF BasicsTest.v
-
-    There is no need to hand in [BasicsTest.v] itself (or [Preface.v]).
-
-    _If your class is using the Canvas system to hand in assignments_:
-      - If you submit multiple versions of the assignment, you may
-        notice that they are given different names.  This is fine: The
-        most recent submission is the one that will be graded.
-      - To hand in multiple files at the same time (if more than one
-        chapter is assigned in the same week), you need to make a
-        single submission with all the files at once using the button
-        "Add another file" just above the comment box. *)
-(* ================================================================= *)
 (** *** 布尔类型 *)
 
-(** 
-  下面的声明定义了布尔类型 [bool]，它包含两个值 [true] 与 [false]。
-*)
+(** 下面的声明定义了布尔类型 [bool]，它包含两个值 [true] 与 [false]。*)
 
 Inductive bool : Type :=
   | true
   | false.
 
 (** 
-  常用的布尔函数包括： [negb] 取反； [andb] 并且； [orb] 或者。
-  它们的定义如下所示。
+  常用的布尔函数包括： [negb] (取反)； [andb] (并且)； [orb] (或者)。
 *)
 
 Definition negb (b:bool) : bool :=
@@ -223,9 +177,7 @@ Proof. simpl. reflexivity. Qed.
 Example test_orb4:  (orb true  true)  = true.
 Proof. simpl. reflexivity. Qed.
 
-(** 
-  我们可以使用 [Natation] 为布尔函数引入更常见的符号。
-*)
+(** 我们可以使用 [Natation] 为布尔函数引入更常见的符号。*)
 
 Notation "x && y" := (andb x y).
 Notation "x || y" := (orb x y).
@@ -250,21 +202,20 @@ Proof. simpl. reflexivity. Qed.
 Definition nandb (b1:bool) (b2:bool) : bool
   (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
 
-Example test_nandb1:               (nandb true false) = true.
+Example test_nandb1: (nandb true false) = true.
 (* 请在此处解答 *) Admitted.
-Example test_nandb2:               (nandb false false) = true.
+Example test_nandb2: (nandb false false) = true.
 (* 请在此处解答 *) Admitted.
-Example test_nandb3:               (nandb false true) = true.
+Example test_nandb3: (nandb false true) = true.
 (* 请在此处解答 *) Admitted.
-Example test_nandb4:               (nandb true true) = false.
+Example test_nandb4: (nandb true true) = false.
 (* 请在此处解答 *) Admitted.
 (** [] *)
 (* ================================================================= *)
 (** ** 类型 *)
 
 (** 
-  Coq 中的每个表达式都有类型。
-  我们可以使用 [Check] 指令查看表达式的类型。
+  Coq 中的每个表达式都有类型。我们可以使用 [Check] 指令查看表达式的类型。
 *)
 
 Check true.
@@ -312,9 +263,7 @@ Check andb.
   我们不希望每次都从头构造一个数据类型，而是希望能基于已有的数据类型定义新的数据类型。
 *)
 
-(**
-  [rgb] 仍然是简单的枚举类型。
-*)
+(** [rgb] 仍然是简单的枚举类型。*)
 Inductive rgb : Type :=
   | red
   | green
@@ -384,14 +333,19 @@ Definition isred (c : color) : bool :=
 (* ================================================================= *)
 (** ** 模块 *)
 
-(** Coq 提供了_'模块系统'_来帮助组织大规模的开发。
-    如果我们将一组定义放在 [Module X] 和 [End X] 标记之间，那么在文件中的
-    [End] 之后，我们就可以通过像 [X.foo] 这样的名字来引用，而不必直接用
-    [foo] 了。在这里，我们通过此特性在内部模块中引入了 [nat] 类型的定义，
-    这样就不会覆盖标准库中的同名定义了。*)
-
+(**
+  Coq 使用_'模块'(Module)_组织较大规模的代码。
+  目前，我们只需要了解它的两种基本功能:
+  - 可以将一组紧密相关的定义放在 [Module X] 和 [End X] 之间。
+    这样，在 [End X] 之后，我们可以使用 [X.foo] 引用模块内部的 [foo]。
+  - [Module X] 与 [End X] 中的定义是封闭的。
+    它们不会与该模块外部的同名定义产生冲突。
+  
+  这里，我们使用了模块的第二种功能，
+  在 [Module NatPlayground] 里定义自己的 [nat] 类型。
+  注意: 在 [End NatPlayground] 之后，我们采用的仍是 Coq 标准库里提供的定义。
+*)
 Module NatPlayground.
-
 (* ================================================================= *)
 (** ** 自然数 (Naturals) *)
 
@@ -412,6 +366,7 @@ Inductive nat : Type :=
 
 (**
   So Easy! 我们来解读一下。
+  
   这个归纳定义告诉我们，自然数 [nat] _有且仅有_ 两种构造方式：
   - [O] 是一个构造函数。
   它告诉我们，[O] 是自然数。(注意：这里是大写字母 [O]，不是数字 [0]。
@@ -437,7 +392,6 @@ Inductive nat : Type :=
   没有循环依赖。
 *)
 
-
 (** 
   需要再次强调的是，到目前为止，我们仅仅是定义了一些符号：
   [O]、[S O]、[S (S O)] 等。
@@ -449,7 +403,6 @@ Inductive nat : Type :=
   (以后大家在学习数理逻辑的时候，遇到的第一个难点，
   就是区分语法 (符号、公式)与语义 (解释、意义、真假)。)
 *)
-
 End NatPlayground.
 
 (** 
@@ -462,14 +415,10 @@ Check (S (S (S (S O)))).
   (* ===> 4 : nat *)
 Check 4.
 
-(** 
-  你猜构造函数 [S] 的类型是什么？
-*)
-
+(** 你猜构造函数 [S] 的类型是什么？ *)
 Check S.
 
 Module NatPlayground2.
-
 (**
   先定义前驱函数 [pred]。
   需要注意的是，我们规定 [O] 的前驱仍是 [O]。
@@ -498,8 +447,9 @@ Fixpoint plus (n : nat) (m : nat) : nat :=
   需要注意的是，[plus n m] 使用了自身 [plus n' m] (n' < n)，
   是一个递归函数。
   因此，我们使用了关键字 [Fixpoint]，而不是之前在定义函数时使用的 [Definition]。
+  
   [Fixpoint] 是与递归定义紧密相关的概念。
-  我们不深究它背后的理论。
+  这里，我们不深究它背后的理论。
   有兴趣的同学，可以选修冯老师的课程或者研究生关于计算理论的课程。 
 *)
 
@@ -531,6 +481,16 @@ Compute (plus 3 2).
 ==> [S (S (plus (S O) (S (S O))))] 根据第二个 [match] 子句
 ==> [S (S (S (plus O (S (S O)))))] 根据第二个 [match] 子句
 ==> [S (S (S (S (S O))))]          根据第一个 [match] 子句 *)
+
+(** **** 练习：2 星, standard (double_plus)
+  完成函数 [double] 的定义，它接受参数 [n]，返回 [2n]。
+  请使用递归定义方式，而不是定义为 [n + n]。 
+*)
+
+Fixpoint double (n : nat) : nat
+  (* := 你的解答 *).
+Admitted.
+(** [] *)
 
 (**
   乘法 [mult] 的定义方式类似，它用到了刚刚定义的 [plus]。
@@ -614,13 +574,9 @@ Notation "x * y" := (mult x y)
 
 Check ((0 + 1) + 1).
 
-(** 
-  我们再来练习定义几个自然数上的函数。
-*)
+(** 我们再来练习定义几个自然数上的函数。*)
 
-(**
-  [eqb] 判断两个自然数是否相等 (命名中的后缀 ”b“ 表示它返回的是 bool 值)。
-*)
+(** [eqb] 判断两个自然数是否相等 (命名中的后缀 ”b“ 表示它返回的是 bool 值)。*)
 
 Fixpoint eqb (n m : nat) : bool :=
   match n with
@@ -635,8 +591,7 @@ Fixpoint eqb (n m : nat) : bool :=
   end.
 
 (** **** 练习：1 星, standard (eqb1)
-  参考 [minus]的定义，使用并列模式匹配改写 [eqb]，
-  并设计测试用例。
+  参考 [minus]的定义，使用并列模式匹配改写 [eqb]，并设计测试用例。
 *)
 Fixpoint eqb1 (n m : nat) : bool
   (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
@@ -691,9 +646,7 @@ Proof. simpl. reflexivity.  Qed.
 Example test_leb3:             (leb 4 2) = false.
 Proof. simpl. reflexivity.  Qed.
 
-(** 
-  为 [eqb] 与 [leb] 引入符号记法。 
-*)
+(** 为 [eqb] 与 [leb] 引入符号记法。*)
 
 Notation "x =? y" := (eqb x y) (at level 70) : nat_scope.
 Notation "x <=? y" := (leb x y) (at level 70) : nat_scope.
@@ -730,6 +683,7 @@ Example test_ltb3:             (ltb 4 2) = false.
   在数学课上学习证明不就够了吗？
   
   如果你做过足够长、足够复杂的证明，你就会体会到，证明是多么容易出错。
+  (如果不是因为发现了一个反例，再给我一个星期的时间，我就能"证明"那个猜想中的定理了。)
   证明出了错，要想找到错误，又是何等困难。
   如果在你写证明的时候，能有一位严苛的权威人士始终盯着你的证明，
   帮助你检查每一个证明步骤，直到 [Qed] 的那一美妙时刻，
@@ -800,18 +754,16 @@ Theorem mult_0_l : forall n:nat, 0 * n = 0.
 Proof. intros n. simpl. reflexivity. Qed.
 
 (**
-  请你解释定理 [plus_1_l] 及其证明过程。
-  (你要确保理解每一个证明步骤。
-  这次没有 Coq 盯着你。
+  请解释定理 [plus_1_l] 及其证明过程。
+  (你要确保理解每一个证明步骤。这次没有 Coq 盯着你。
   你可以欺骗我，但你不能欺骗你自己。)
 *)
+
 Theorem plus_1_l : forall n:nat, 1 + n = S n.
 Proof. intros n. simpl. reflexivity. Qed.
 (* ################################################################# *)
 (** * 基于改写 (Rewriting) 的证明 *)
-(**
-  _'改写 (Rewriting)'_ 指的是用等号的一端替换等号的另一端。
-*)
+(** _'改写 (Rewriting)'_ 指的是用等号的一端替换等号的另一端。*)
 
 (**
   定理 [plus_id_example] 读作：
@@ -969,10 +921,7 @@ Qed.
   我们可以写 [as [|]] 或者 [as []]。
 *)
 
-(**
-  [destruct] 可以嵌套使用。 
-*)
-
+(** [destruct] 可以嵌套使用。*)
 Theorem andb_commutative : forall b c, andb b c = andb c b.
 Proof.
   intros b c. 
@@ -986,7 +935,6 @@ Proof.
 Qed.
 
 (** 我们也可以用匹配的花括号区别每个子目标对应的证明。*)
-
 Theorem andb_commutative' : forall b c, andb b c = andb c b.
 Proof.
   intros b c. 
@@ -1000,7 +948,6 @@ Proof.
 Qed.
 
 (** 此外，花括号有限定范围的作用，它允许我们在一个证明中的多个层级下使用同一种标号： *)
-
 Theorem andb3_exchange :
   forall b c d, andb (andb b c) d = andb (andb b d) c.
 Proof.
@@ -1042,7 +989,6 @@ Proof.
 Qed.
 
 (** 如果没有需要命名的参数，我们只需写 [[]]。 *)
-
 Theorem andb_commutative'' :
   forall b c, andb b c = andb c b.
 Proof.
@@ -1068,39 +1014,10 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 (** [] *)
-(* ################################################################# *)
-(** * 更多练习 *)
-(** **** 练习：1 星, standard (indentity_fn_applied_twice)  
-  证明定理 [identity_fn_applied_twice]。 *)
-
-Theorem identity_fn_applied_twice :
-  forall (f : bool -> bool),
-  (forall (x : bool), f x = x) ->
-  forall (b : bool), f (f b) = b.
-Proof.
-  (* 请在此处解答 *)
-Admitted.
-
-(** [] *)
-
-(** **** 练习：1 星, standard (negation_fn_applied_twice)  
-
-  声明并证明定理 [negation_fn_applied_twice]。
-  它与 [identity_fn_applied_twice]类似，
-  但是第二个前提改为 [forall (x : bool), f x = negb x]。 *)
-
-(* 请在此处解答 *)
-
-From Coq Require Export String. (* 导入 Coq 标准库中的 [String] 模块；用于评分*)
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_negation_fn_applied_twice : option (nat*string) := None.
-(** [] *)
 
 (** **** 练习：3 星, standard, optional (andb_eq_orb)  
     请证明定理 [andb_eq_orb]。
-    
-    有一点点难度 (是不是很兴奋？)，试试看吧。
+    可能有一点点难度 (是不是很兴奋？)，试试看吧。
 *)
 
 Theorem andb_eq_orb :

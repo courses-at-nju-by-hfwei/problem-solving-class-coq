@@ -1,13 +1,24 @@
 (** * Logic: Coq 中的逻辑系统 *)
 
+(** 
+  本节依赖于 [Basics.v] (你需要先阅读它)。
+  你需要先编译 [Basics.v] 得到 [Basics.vo]。
+  编译方法：在 CoqIDE 中打开 [Basics.v]，
+  执行 "Compile" 菜单中的 "Compile Buffer" 命令。
+  
+  (TODO (to ant-hengxin): How to "Make"?)
+*)
+
 Set Warnings "-notation-overridden,-parsing".
 From LF Require Export Basics.
 
 (**
-  "逻辑是不可战胜的，因为反对逻辑还得使用逻辑。" By 谁说的来着?
+  "逻辑是不可战胜的，因为反对逻辑还得使用逻辑。"
+  (Logic is invincible because in order to combat logic 
+  it is necessary to use logic.) By Pierre Boutroux.
   
   本节介绍一阶谓词逻辑 
-  (说它是一阶谓词逻辑并不严格，我们在本节的最后部分讨论) 
+  (说它是一阶谓词逻辑并不严格，我们以后讨论。) 
   的 _'自然推理系统' (Natural Deduction System)_。
   系统，封闭之结构也;
   推理，证明之路径也;
@@ -118,7 +129,16 @@ Print eq.
 (** * 逻辑联结词 *)
 
 (**
-  TODO: 作为引子，介绍一下自然推理系统的对称性特点。
+  自然推理系统中的规则有很好的对称性。
+  它为每个逻辑联结词引入两个规则，
+  一个是 introduction 规则，一个是 elimination 规则。
+  introduction 规则用于证明含有相应逻辑联结词的目标，
+  而 elimination 规则用于消除前提中含有的相应逻辑联结词。
+  
+  强烈建议: 请结合以下资料阅读并练习本节后续内容。
+  - https://www.cs.cornell.edu/courses/cs3110/2013sp/lectures/lec15-logic-contd/lec15.html
+  - https://leanprover.github.io/logic_and_proof/natural_deduction_for_propositional_logic.html
+  - https://leanprover.github.io/logic_and_proof/natural_deduction_for_first_order_logic.html 
 *)
 (* ================================================================ *)
 (** ** 合取 *)
@@ -334,7 +354,6 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 (** [] *)
-
 (* ================================================================= *)
 (** ** 假命题与否定 
   很多时候，我们需要证明某个命题 [A] 不成立，
@@ -489,7 +508,7 @@ Proof.
 Admitted.
 (** [] *)
 
-(**  
+(**
   我们用 [x <> y] 表示 (~ (x = y))。
   Notation "x <> y" := (~(x = y)).
 *)
@@ -545,6 +564,57 @@ Proof. apply I. Qed.
   因此没有必要引入 [True-elimination] 规则。
 *)
 (* ================================================================= *)
+(** ** 蕴含 *)
+(**
+  命题 [A -> B] 表示命题 [A] 蕴含命题 [B]。
+  [A -> B] 为真当且仅当 [A] 为假或者 [A]、[B]均为真。
+  我们已经见识过一些涉及蕴含的命题与证明了。
+  这里，我们从自然推理系统的角度重新审视之前使用的证明策略。
+    
+  要证明 [A -> B]，我们通常将 [A] 作为假设加入到上下文中，
+  然后在假设 [A] 成立的前提下，证明 [B]。
+  这就是对 "->-intro" 规则的逆向使用。
+  注意: 当我们应用该规则时，新加入的假设 [A] 被 discharged 了。
+  (discharged，"放电"? "释放"? "撤销"? 我找不到合适的译法。大家意会吧。)
+*)
+
+Theorem ABA : forall A B : Prop, A -> (B -> A).
+Proof.
+  intros A B HA HB.
+  apply HA.
+Qed.
+
+(**
+  如果当前证明上下文中存在形如 [A -> B] 的前提 [H : A -> B]，
+  并且存在前提 [Q : A]，那么我们可以使用 [apply H in Q]，得到 [B]。
+  这就是 "->-elimination" 规则，
+  也就是常说的 _分离规则 (modus ponens; MP)_。
+*)
+
+Theorem ABBC : forall A B C : Prop,
+  ((A -> B) /\ (B -> C)) -> (A -> C).
+Proof.
+  intros A B C [HAB HBC].
+  intros HA.
+  apply HAB in HA.
+  apply HBC in HA.
+  apply HA.
+Qed.
+
+(** **** 练习：1 星, standard, recommended (implies) *)
+Theorem A_or_BA : forall A B : Prop,
+  (A \/ (B /\ A)) -> A.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+
+Theorem ABC : forall A B C : Prop, (* 起名字好难啊 *)
+  ((A -> (B -> C)) /\ B) -> (A -> C).
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+(** [] *)
+(* ================================================================= *)
 (** ** 逻辑等价 *)
 
 (** 
@@ -580,6 +650,22 @@ Proof.
   - (* -> *) apply HBA.
   - (* <- *) apply HAB.
 Qed.
+
+Lemma not_true_iff_false : forall b,
+  b <> true <-> b = false.
+Proof.
+  (* WORKED IN CLASS *)
+  intros b. split.
+  - (* -> *) apply not_true_is_false.
+  - (* <- *) intros H. rewrite H. intros H'.
+    discriminate H'. (* 下面解释该行*)
+Qed.
+(**
+  在上面证明的最后，我们使用了 [discriminate H'] 完成证明。
+  此时，[H': false = true]。[false] 与 [true] 是 [bool] 类型的两个构造函数。
+  在归纳定义中，不同的构造函数构造出的值一定是不同的。
+  如果上下文出现类似 [H'] 的假设，则可以立即使用 [discriminate] 完成证明。 
+*)
 
 (** **** 练习：1 星, standard, optional (iff_properties) *)
 (**
@@ -701,7 +787,7 @@ Qed.
   在之后的证明中，我们就可以使用 [x] 与前提 [Px] 了。
   这对应于 "exists-elimination" 规则。
   (新引入的前提 [Px] 在使用 "exists-elimination"规则时
-  会被 discharged (这个词该怎么翻译???) 掉。)
+  会被 discharged 掉。)
 *)
 
 Theorem exists_example_2 : forall n,
@@ -745,7 +831,19 @@ Admitted.
   性质[P] 都对 [x] 成立 (或者说，[x] 都满足性质 [P])。
   我们已经见识过很多涉及全称量词的命题与证明了。
   这里，我们从自然推理系统的角度重新审视之前使用的证明策略。
+  
+  在证明涉及全称量词的命题 [forall x : T, P] 时，
+  我们通常的做法是: 先任取 [x]，然后证明对于这个任取的 [x]，[P] 成立。
+  这就是在使用 "forall-intro" 规则。
+  比如我们之前证明过的 [and_elim_left].
 *)
+Lemma and_elim_left' : forall P Q : Prop,
+  P /\ Q -> P.
+Proof.
+  intros P Q. (* 逆用 "forall-intro" 规则: 任取 [P] 与 [Q] *)
+  intros [HP HQ].
+  apply HP.
+Qed.
 
 (** **** 练习：3 星, standard (combine_odd_even)  
   函数 [combine_odd_even] 接受两个定义在自然数上的性质 
@@ -789,185 +887,13 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 (** [] *)
-(* ================================================================= *)
-(** ** 命题与布尔值 *)
-
-(** 我们已经知道在 Coq 中有两种编码逻辑事实的方式了，即使用_'布尔值'_
-    （类型为 [bool]）和_'命题'_（类型为 [Prop]）。
-
-    例如，我们可以通过以下两种方式来断言 [n] 为偶数： *)
-
-(** [evenb n] 求值为 [true]： *)
-Example even_42_bool : evenb 42 = true.
-Proof. reflexivity. Qed.
-
-(** 或者存在某个 [k] 使得 [n = double k]： *)
-Example even_42_prop : exists k, 42 = double k.
-Proof. exists 21. reflexivity. Qed.
-
-(** 当然，如果二者刻画的偶数性描述的不是同一个自然数集合，那么会非常奇怪！
-    幸运的是，我们确实可以证明二者相同... *)
-
-(** 首先我们需要两个辅助引理。 *)
-Theorem evenb_double : forall k, evenb (double k) = true.
-Proof.
-  intros k. induction k as [|k' IHk'].
-  - reflexivity.
-  - simpl. apply IHk'.
-Qed.
-
-(** **** 练习：3 星, standard (evenb_double_conv)  *)
-Theorem evenb_double_conv : forall n,
-  exists k, n = if evenb n then double k
-                else S (double k).
-Proof.
-  (* 提示：使用 [Induction.v] 中的 [evenb_S] 引理。  *)
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-Theorem even_bool_prop : forall n,
-  evenb n = true <-> exists k, n = double k.
-Proof.
-  intros n. split.
-  - intros H. destruct (evenb_double_conv n) as [k Hk].
-    rewrite Hk. rewrite H. exists k. reflexivity.
-  - intros [k Hk]. rewrite Hk. apply evenb_double.
-Qed.
-
-(** 此定理说明，逻辑命题 [exists k, n = double k] 的真伪对应布尔计算 [evenb n]
-    的真值。 *)
-
-(** 类似地，以下两种 [n] 与 [m] 相等的表述等价：
-      - (1) [n =? m] 值为 [true]；
-      - (2) [n = m]。
-    同样，二者的记法也等价。 *)
-
-Theorem eqb_eq : forall n1 n2 : nat,
-  n1 =? n2 = true <-> n1 = n2.
-Proof.
-  intros n1 n2. split.
-  - apply eqb_true.
-  - intros H. rewrite H. rewrite <- eqb_refl. reflexivity.
-Qed.
-
-(** 然而，即便布尔值和某个断言的命题式在逻辑上是等价的，但它们在_'操作上'_
-    也可能不一样。 *)
-
-(** 在前面的偶数例子中，证明 [even_bool_prop] 的反向部分（即
-    [evenb_double]，从命题到布尔表达式的方向）时，我们对
-    [k] 进行了简单的归纳。而反方向的证明（即练习 [evenb_double_conv]）
-    则需要一种聪明的一般化方法，因为我们无法直接证明
-    [(exists k, n = double k) -> evenb n = true]。 *)
-
-(** 对于这些例子来说，命题式的声明比与之对应的布尔表达式要更为有用，
-    但并非总是如此。例如，我们无法在函数的定义中测试一般的命题是否为真，
-    因此以下代码片段会被拒绝： *)
-
-Fail Definition is_even_prime n :=
-  if n = 2 then true
-  else false.
-
-(** Coq 会抱怨 [n = 2] 的类型是 [Prop]，而它想要一个 [bool]
-    类型的元素（或其它带有两个元素的归纳类型）。此错误信息的原因与 Coq
-    核心语言的_'计算性'_特质有关，即它能表达的所有函数都是可计算且完全的。
-    这样设计的的原因之一是为了能从 Coq 开发的代码中提取出可执行程序。
-    因此，在 Coq 中 [Prop] _'并没有'_一种通用的情况分析操作来确定
-    任意给定的命题是否为真，一旦存在这种操作，我们就能写出不可计算的函数。
-
-    尽管一般的不可计算性质无法表述为布尔计算，但值得注意的是，很多
-    _'可计算的'_性质更容易通过 [Prop] 而非 [bool] 来表达，因为在 Coq
-    中定义递归函数中会受到很大的限制。例如，下一章会展示如何用 [Prop]
-    来定义“某个正则表达式可以匹配给定的字符串”这一性质。如果使用
-    [bool] 来定义，就需要写一个真正的正则表达式匹配器了，这样会更加复杂，
-    更难以理解，也更难以对它进行推理。
-
-    另一方面，通过布尔值来陈述事实会带来一点重要的优势，即通过对 Coq
-    中的项进行计算可以实现一些自动推理，这种技术被称为_'互映证明（Proof
-    by Reflection）'_。考虑以下陈述： *)
-
-Example even_1000 : exists k, 1000 = double k.
-
-(** 对此命题而言，最直接的证明方式就是直接给出 [k] 的值。 *)
-
-Proof. exists 500. reflexivity. Qed.
-
-(** 而使用与之对应的布尔语句的证明则更加简单： *)
-
-Example even_1000' : evenb 1000 = true.
-Proof. reflexivity. Qed.
-
-(** 有趣的是，由于这两种定义是等价的，因此我们无需显式地给出 500，
-    而是使用布尔等价式来证明彼此： *)
-
-Example even_1000'' : exists k, 1000 = double k.
-Proof. apply even_bool_prop. reflexivity. Qed.
-
-(** 尽管此例的证明脚本的长度并未因此而减少，然而更大的证明通常可通过
-    这种互映的方式来显著化简。举一个极端的例子，在用 Coq 证明著名的
-    _'四色定理'_时，人们使用互映技巧将几百种不同的情况归约成了一个布尔计算。 *)
-
-(** 另一点明显的不同是“布尔事实”的否定可以被直白地陈述并证明，
-    只需翻转预期的布尔值结果即可。 *)
-
-Example not_even_1001 : evenb 1001 = false.
-Proof.
-  (* 课上已完成 *)
-  reflexivity.
-Qed.
-
-(** 相反，命题的否定形式可能更难以掌握。 *)
-
-Example not_even_1001' : ~(exists k, 1001 = double k).
-Proof.
-  (* 课上已完成 *)
-  rewrite <- even_bool_prop.
-  unfold not.
-  simpl.
-  intro H.
-  discriminate H.
-Qed.
-
-(** 相等性补充了另一个例子。在涉及 [n] 和 [m] 的证明中，知道 [n =? m = true]
-    通常没什么直接的帮助。然而如果我们将该语句转换为等价的 [n = m] 形式，
-    则可利用该等式改写证明目标。
- *)
-
-Lemma plus_eqb_example : forall n m p : nat,
-    n =? m = true -> n + p =? m + p = true.
-Proof.
-  (* 课上已完成 *)
-  intros n m p H.
-    rewrite eqb_eq in H.
-  rewrite H.
-  rewrite eqb_eq.
-  reflexivity.
-Qed.
-
-(** 我们不会详细地介绍互映技巧，然而对于展示布尔计算与一般命题的互补优势而言，
-    它是个很好的例子。 *)
 
 (** **** 练习：2 星, standard (logical_connectives)  
 
     以下引理将本章中讨论的命题联结词与对应的布尔操作关联了起来。 *)
 
-Lemma andb_true_iff : forall b1 b2:bool,
-  b1 && b2 = true <-> b1 = true /\ b2 = true.
-Proof.
-  (* 请在此处解答 *) Admitted.
-
 Lemma orb_true_iff : forall b1 b2,
   b1 || b2 = true <-> b1 = true \/ b2 = true.
-Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：1 星, standard (eqb_neq)  
-
-    以下定理为等价式 [eqb_eq] 的“否定”版本，
-    在某些场景中使用它会更方便些（后面的章节中会讲到这方面的例子）。 *)
-
-Theorem eqb_neq : forall x y : nat,
-  x =? y = false <-> x <> y.
 Proof.
   (* 请在此处解答 *)
 Admitted.
