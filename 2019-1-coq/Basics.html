@@ -875,27 +875,6 @@
 </div>
 
 <div class="doc">
-<a name="lab12"></a><h4 class="section">练习：2 星, standard (double_plus)</h4>
-
-  完成函数 <span class="inlinecode"><span class="id" title="var">double</span></span> 的定义，它接受参数 <span class="inlinecode"><span class="id" title="var">n</span></span>，返回 <span class="inlinecode">2<span class="id" title="var">n</span></span>。
-  请使用递归定义方式，而不是定义为 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>。 
-
-</div>
-<div class="code">
-
-<br/>
-<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">double</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span><br/>
-&nbsp;&nbsp;.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
-</div>
-
-<div class="doc">
-<font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
   乘法 <span class="inlinecode"><span class="id" title="var">mult</span></span> 的定义方式类似，它用到了刚刚定义的 <span class="inlinecode"><span class="id" title="var">plus</span></span>。
   这里，<span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 的意思与 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> 相同。
 
@@ -915,7 +894,7 @@
 </div>
 
 <div class="doc">
-<a name="lab13"></a><h4 class="section">练习：1 星, standard (exp)</h4>
+<a name="lab12"></a><h4 class="section">练习：1 星, standard (exp)</h4>
 
   我们将自然数上的幂运算的定义作为练习。
   你需要用到刚刚定义的 <span class="inlinecode"><span class="id" title="var">mult</span></span>。
@@ -960,7 +939,7 @@
 </div>
 
 <div class="doc">
-<a name="lab14"></a><h4 class="section">练习：1 星, standard (exp)</h4>
+<a name="lab13"></a><h4 class="section">练习：1 星, standard (exp)</h4>
 
   注意 <span class="inlinecode"><span class="id" title="var">minus</span></span> 是如何使用 <span class="inlinecode"><span class="id" title="keyword">match</span></span> 对两个参数同时做并列模式匹配的。
   当然，你也可以先对 <span class="inlinecode"><span class="id" title="var">n</span></span> 做模式匹配，再嵌套地对 <span class="inlinecode"><span class="id" title="var">m</span></span> 做模式匹配。
@@ -986,7 +965,32 @@
 </div>
 
 <div class="doc">
-<a name="lab15"></a><h4 class="section">练习：1 星, standard (factorial)</h4>
+  我们可以引入通常的加法、减法、乘法<i>'记号（Notation）'</i>。
+  <span class="inlinecode"><span class="id" title="keyword">level</span></span> 规定了优先级，<span class="inlinecode"><span class="id" title="tactic">left</span></span> <span class="inlinecode"><span class="id" title="keyword">associativity</span></span> 表示“左结合”。
+  目前，你不需要了解这些细节。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x + y" := (<span class="id" title="var">plus</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;x - y" := (<span class="id" title="var">minus</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;x * y" := (<span class="id" title="var">mult</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> ((0 + 1) + 1).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab14"></a><h4 class="section">练习：1 星, standard (factorial)</h4>
 
     请定义阶乘函数 <span class="inlinecode"><span class="id" title="var">factorial</span></span>：
        factorial(0)  =  1
@@ -1008,29 +1012,44 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
+<a name="lab15"></a><h4 class="section">练习：2 星, standard (double_plus)</h4>
 
-<div class="paragraph"> </div>
-
-  我们可以引入通常的加法、减法、乘法<i>'记号（Notation）'</i>。
-  <span class="inlinecode"><span class="id" title="keyword">level</span></span> 规定了优先级，<span class="inlinecode"><span class="id" title="tactic">left</span></span> <span class="inlinecode"><span class="id" title="keyword">associativity</span></span> 表示“左结合”。
-  目前，你不需要了解这些细节。
+  完成函数 <span class="inlinecode"><span class="id" title="var">double</span></span> 的定义，它接受参数 <span class="inlinecode"><span class="id" title="var">n</span></span>，返回 <span class="inlinecode">2<span class="id" title="var">n</span></span>。
+  请使用递归定义方式，而不是定义为 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>。 
 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" title="keyword">Notation</span> &quot;x + y" := (<span class="id" title="var">plus</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
-<span class="id" title="keyword">Notation</span> &quot;x - y" := (<span class="id" title="var">minus</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 50, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
-<span class="id" title="keyword">Notation</span> &quot;x * y" := (<span class="id" title="var">mult</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 40, <span class="id" title="tactic">left</span> <span class="id" title="keyword">associativity</span>)<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">nat_scope</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">double</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab16"></a><h4 class="section">练习：2 星, standard (sum_to)</h4>
+
+  完成函数 <span class="inlinecode"><span class="id" title="var">sum_to</span></span> 的定义，它接受参数 <span class="inlinecode"><span class="id" title="var">n</span></span>，返回 <span class="inlinecode">1</span> <span class="inlinecode">+</span> <span class="inlinecode">2</span> <span class="inlinecode">+</span> <span class="inlinecode">...</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>。 
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">sum_to</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
 
 <br/>
-<span class="id" title="keyword">Check</span> ((0 + 1) + 1).<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">sum_to_10</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">sum_to</span> 10 = 55.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
@@ -1060,7 +1079,7 @@
 </div>
 
 <div class="doc">
-<a name="lab16"></a><h4 class="section">练习：1 星, standard (eqb1)</h4>
+<a name="lab17"></a><h4 class="section">练习：1 星, standard (eqb1)</h4>
 
   参考 <span class="inlinecode"><span class="id" title="var">minus</span></span>的定义，使用并列模式匹配改写 <span class="inlinecode"><span class="id" title="var">eqb</span></span>，并设计测试用例。
 
@@ -1122,7 +1141,7 @@
 <div class="paragraph"> </div>
 
   <span class="inlinecode"><span class="id" title="var">leb</span></span> 函数检查第一个参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 是否小于等于第二个参数 <span class="inlinecode"><span class="id" title="var">m</span></span>。
-  注意这也是一个递归函数。 
+  注意这也是一个递归函数。
 
 </div>
 <div class="code">
@@ -1166,7 +1185,7 @@
 </div>
 
 <div class="doc">
-<a name="lab17"></a><h4 class="section">练习：1 星, standard (ltb)</h4>
+<a name="lab18"></a><h4 class="section">练习：1 星, standard (ltb)</h4>
 
     <span class="inlinecode"><span class="id" title="var">ltb</span></span> 检查第一个参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 是否小于第二个参数 <span class="inlinecode"><span class="id" title="var">m</span></span>。
     请完成它的定义。 
@@ -1195,7 +1214,7 @@
 </div>
 
 <div class="doc">
-<a name="lab18"></a><h1 class="section">基于化简的证明</h1>
+<a name="lab19"></a><h1 class="section">基于化简的证明</h1>
 
 <div class="paragraph"> </div>
 
@@ -1215,7 +1234,6 @@
 <div class="paragraph"> </div>
 
   如果你做过足够长、足够复杂的证明，你就会体会到，证明是多么容易出错。
-  (如果不是因为发现了一个反例，再给我一个星期的时间，我就能"证明"那个猜想中的定理了。)
   证明出了错，要想找到错误，又是何等困难。
   如果在你写证明的时候，能有一位严苛的权威人士始终盯着你的证明，
   帮助你检查每一个证明步骤，直到 <span class="inlinecode"><span class="id" title="keyword">Qed</span></span> 的那一美妙时刻，
@@ -1353,7 +1371,7 @@
 </div>
 
 <div class="doc">
-<a name="lab19"></a><h1 class="section">基于改写 (Rewriting) 的证明</h1>
+<a name="lab20"></a><h1 class="section">基于改写 (Rewriting) 的证明</h1>
  <i>'改写 (Rewriting)'</i> 指的是用等号的一端替换等号的另一端。
 <div class="paragraph"> </div>
 
@@ -1400,7 +1418,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab20"></a><h4 class="section">练习：1 星, standard (plus_id_exercise)</h4>
+<a name="lab21"></a><h4 class="section">练习：1 星, standard (plus_id_exercise)</h4>
 
   删除 "<span class="inlinecode"><span class="id" title="var">Admitted</span>.</span>"，完成定理 <span class="inlinecode"><span class="id" title="var">plus_id_exercise</span></span> 的证明。
   (<span class="inlinecode"><span class="id" title="var">Admitted</span></span> 表示暂时跳过该定理的证明，而将其将其作为已知条件。) 
@@ -1463,7 +1481,7 @@
   <i>'实例化'（Instantiate）_ <span class="inlinecode"><span class="id" title="var">n</span></span>。 
 <div class="paragraph"> </div>
 
-<a name="lab21"></a><h4 class="section">练习：2 星, standard (mult_S_1)</h4>
+<a name="lab22"></a><h4 class="section">练习：2 星, standard (mult_S_1)</h4>
 
 </div>
 <div class="code">
@@ -1483,7 +1501,7 @@
 </div>
 
 <div class="doc">
-<a name="lab22"></a><h1 class="section">分情形分析 (Case Analysis) 证明法</h1>
+<a name="lab23"></a><h1 class="section">分情形分析 (Case Analysis) 证明法</h1>
 
 <div class="paragraph"> </div>
 
@@ -1719,7 +1737,7 @@
 </div>
 
 <div class="doc">
-<a name="lab23"></a><h4 class="section">练习：2 星, standard (andb_true_elim2)</h4>
+<a name="lab24"></a><h4 class="section">练习：2 星, standard (andb_true_elim2)</h4>
 
 </div>
 <div class="code">
@@ -1733,7 +1751,7 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab24"></a><h4 class="section">练习：1 星, standard (zero_nbeq_plus_1)</h4>
+<a name="lab25"></a><h4 class="section">练习：1 星, standard (zero_nbeq_plus_1)</h4>
 
 </div>
 <div class="code">
@@ -1747,7 +1765,7 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab25"></a><h4 class="section">练习：3 星, standard, optional (andb_eq_orb)</h4>
+<a name="lab26"></a><h4 class="section">练习：3 星, standard, optional (andb_eq_orb)</h4>
 
     请证明定理 <span class="inlinecode"><span class="id" title="var">andb_eq_orb</span></span>。
     可能有一点点难度 (是不是很兴奋？)，试试看吧。

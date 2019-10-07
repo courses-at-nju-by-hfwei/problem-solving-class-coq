@@ -10,6 +10,8 @@ Bib.vo Bib.glob Bib.v.beautified: Bib.v
 Bib.vio: Bib.v
 BibTest.vo BibTest.glob BibTest.v.beautified: BibTest.v
 BibTest.vio: BibTest.v
+ConsLogic.vo ConsLogic.glob ConsLogic.v.beautified: ConsLogic.v
+ConsLogic.vio: ConsLogic.v
 Extraction.vo Extraction.glob Extraction.v.beautified: Extraction.v
 Extraction.vio: Extraction.v
 ExtractionTest.vo ExtractionTest.glob ExtractionTest.v.beautified: ExtractionTest.v

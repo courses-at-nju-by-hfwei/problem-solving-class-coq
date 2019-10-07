@@ -430,6 +430,9 @@
 
   哦，定理是函数? 那就可以做计算了?
   嗯，没错。关于这个话题，我们先点到为止。后面我们还会回来。
+
+<div class="paragraph"> </div>
+
 <a name="lab7"></a><h4 class="section">练习：2 星, standard, optional (plus_swap')</h4>
 
 <div class="paragraph"> </div>
@@ -449,14 +452,46 @@
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab8"></a><h4 class="section">练习：2 星, standard, optional (sum_to_equation)</h4>
+
 </div>
 <div class="code">
+<span class="id" title="keyword">Print</span> <span class="id" title="var">sum_to</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-<a name="lab8"></a><h1 class="section">形式化证明 vs. 非形式化证明</h1>
+  TODO: (@ant-hengxin) 该练习还有问题，暂时不需要学生完成。
+  等待 @ant-henxin 修复。
+
+<div class="paragraph"> </div>
+
+  请证明 Gauss 所发现的求和公式 (<span class="inlinecode"><span class="id" title="var">sum_to_equation</span></span>)
+  : 1 + 2 + ... + n = 1/2 n (n+1).
+
+<div class="paragraph"> </div>
+
+  你可能需要用到下面的引理。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">sum_helper</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;2 × <span class="id" title="var">sum_to</span> (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) = 2 × (<span class="id" title="var">S</span> <span class="id" title="var">n</span>) + 2 × (<span class="id" title="var">sum_to</span> <span class="id" title="var">n</span>).<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">sum_to_equation</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
+&nbsp;&nbsp;2 × (<span class="id" title="var">sum_to</span> <span class="id" title="var">n</span>) = <span class="id" title="var">n</span> × (<span class="id" title="var">n</span> + 1).<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<a name="lab9"></a><h1 class="section">形式化证明 vs. 非形式化证明</h1>
 
 <div class="paragraph"> </div>
 
@@ -543,11 +578,11 @@
 </div>
 
 <div class="doc">
-<a name="lab9"></a><h1 class="section">更多练习</h1>
+<a name="lab10"></a><h1 class="section">更多练习</h1>
 
 <div class="paragraph"> </div>
 
-<a name="lab10"></a><h4 class="section">练习：3 星, standard, recommended (mult_comm)</h4>
+<a name="lab11"></a><h4 class="section">练习：3 星, standard, recommended (mult_comm)</h4>
 
     利用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 证明下述定理 <span class="inlinecode"><span class="id" title="var">plus_swap</span></span>。(提示: 不必使用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span>。) 
 </div>
@@ -578,7 +613,7 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab11"></a><h4 class="section">练习：3 星, standard, optional (more_exercises)</h4>
+<a name="lab12"></a><h4 class="section">练习：3 星, standard, optional (more_exercises)</h4>
 
 <div class="paragraph"> </div>
 
@@ -685,7 +720,218 @@
 </div>
 
 <div class="doc">
-<font size=-2>&#9744;</font> <a name="lab12"></a><h4 class="section">练习：3 星, standard (binary)</h4>
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Theorem double_injective_FAILED : forall n m,
+     double n = double m -&gt;
+     n = m.
+Proof.
+  intros n m. induction n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>.
+<ul class="doclist">
+<li>  simpl. intros eq. destruct m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> eqn:E.
+    +  reflexivity.
+    +  discriminate eq.
+
+</li>
+<li>  intros eq. destruct m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> eqn:E.
+    +  discriminate eq.
+    +  apply f_equal.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+      Abort.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Theorem double_injective : forall n m,
+     double n = double m -&gt;
+     n = m.
+Proof.
+  intros n. induction n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>.
+<ul class="doclist">
+<li>  simpl. intros m eq. destruct m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> eqn:E.
+    +  reflexivity.
+    +  discriminate eq.
+
+<div class="paragraph"> </div>
+
+
+</li>
+<li>  simpl.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+    intros m eq.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+    destruct m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> eqn:E.
+    +  simpl.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+      discriminate eq.
+
+<div class="paragraph"> </div>
+
+    +       apply f_equal.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+      apply IHn'. injection eq as goal. apply goal. Qed.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Theorem eqb_true : forall n m,
+    n =? m = true -&gt; n = m.
+Proof.
+   Admitted.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Definition manual_grade_for_informal_proof : option (nat*string) := None.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Theorem double_injective_take2_FAILED : forall n m,
+     double n = double m -&gt;
+     n = m.
+Proof.
+  intros n m. induction m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>.
+<ul class="doclist">
+<li>  simpl. intros eq. destruct n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> eqn:E.
+    +  reflexivity.
+    +  discriminate eq.
+
+</li>
+<li>  intros eq. destruct n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> eqn:E.
+    +  discriminate eq.
+    +  apply f_equal.
+        
+</li>
+</ul>
+Abort.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Theorem double_injective_take2 : forall n m,
+     double n = double m -&gt;
+     n = m.
+Proof.
+  intros n m.
+    generalize dependent n.
+    induction m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>.
+<ul class="doclist">
+<li>  simpl. intros n eq. destruct n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> eqn:E.
+    +  reflexivity.
+    +  discriminate eq.
+
+</li>
+<li>  intros n eq. destruct n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> eqn:E.
+    +  discriminate eq.
+    +  apply f_equal.
+      apply IHm'. injection eq as goal. apply goal. Qed.
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Theorem eqb_id_true : forall x y,
+  eqb_id x y = true -&gt; x = y.
+Proof.
+  intros <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. simpl. intros H.
+  assert (H' : m = n). { apply eqb_true. apply H. }
+  rewrite H'. reflexivity.
+Qed.
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+Theorem nth_error_after_last: forall (n : nat) (X : Type) (l : list X),
+     length l = n -&gt;
+     nth_error l n = None.
+Proof.
+  Admitted.
+
+<div class="paragraph"> </div>
+
+<a name="lab13"></a><h4 class="section">练习：3 星, standard (binary)</h4>
 
   下面这道题目可以检验你是否掌握了本节(以及上一节)的主要内容。
   不要怕。正是这些让你感到有些困难的题目在悄悄地锻炼你的能力。
@@ -769,7 +1015,7 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab13"></a><h4 class="section">练习：3 星, standard, recommended (binary_commute)</h4>
+<a name="lab14"></a><h4 class="section">练习：3 星, standard, recommended (binary_commute)</h4>
 
   在上一个练习中，你已经测试过 <span class="inlinecode"><span class="id" title="var">incr</span></span> 与 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> 的可交换性，
   如下图所示 (这种图被称为 <i>'交换图' (Commutative Digram???)_，
@@ -799,7 +1045,7 @@
 </div>
 
 <div class="doc">
-<font size=-2>&#9744;</font> <a name="lab14"></a><h4 class="section">练习：5 星, advanced (binary_inverse)</h4>
+<font size=-2>&#9744;</font> <a name="lab15"></a><h4 class="section">练习：5 星, advanced (binary_inverse)</h4>
  (a) 完成函数 <span class="inlinecode"><span class="id" title="var">nat_to_bin</span></span> 的定义，它将自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 转换为二进制形式。
 </div>
 <div class="code">

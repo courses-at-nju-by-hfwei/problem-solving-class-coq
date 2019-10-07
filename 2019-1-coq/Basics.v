@@ -482,16 +482,6 @@ Compute (plus 3 2).
 ==> [S (S (S (plus O (S (S O)))))] 根据第二个 [match] 子句
 ==> [S (S (S (S (S O))))]          根据第一个 [match] 子句 *)
 
-(** **** 练习：2 星, standard (double_plus)
-  完成函数 [double] 的定义，它接受参数 [n]，返回 [2n]。
-  请使用递归定义方式，而不是定义为 [n + n]。 
-*)
-
-Fixpoint double (n : nat) : nat
-  (* := 你的解答 *).
-Admitted.
-(** [] *)
-
 (**
   乘法 [mult] 的定义方式类似，它用到了刚刚定义的 [plus]。
   这里，[(n m : nat)] 的意思与 [(n : nat) (m : nat)] 相同。
@@ -542,21 +532,7 @@ Proof. (* 请在此处写入证明 *) Admitted.
 (** [] *)
 End NatPlayground2.
 
-(** **** 练习：1 星, standard (factorial)
-    请定义阶乘函数 [factorial]：
-       factorial(0)  =  1
-       factorial(n)  =  n * factorial(n-1)     (if n > 0)
-*)
-Fixpoint factorial (n:nat) : nat
-  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
-
-Example test_factorial1:          (factorial 3) = 6.
-(* 请在此处解答 *) Admitted.
-Example test_factorial2:          (factorial 5) = (mult 10 12).
-(* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** 
+(**
   我们可以引入通常的加法、减法、乘法_'记号（Notation）'_。
   [level] 规定了优先级，[left associativity] 表示“左结合”。
   目前，你不需要了解这些细节。
@@ -573,6 +549,42 @@ Notation "x * y" := (mult x y)
                        : nat_scope.
 
 Check ((0 + 1) + 1).
+
+(** **** 练习：1 星, standard (factorial)
+    请定义阶乘函数 [factorial]：
+       factorial(0)  =  1
+       factorial(n)  =  n * factorial(n-1)     (if n > 0)
+*)
+Fixpoint factorial (n:nat) : nat
+  (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
+
+Example test_factorial1:          (factorial 3) = 6.
+(* 请在此处解答 *) Admitted.
+Example test_factorial2:          (factorial 5) = (mult 10 12).
+(* 请在此处解答 *) Admitted.
+(** [] *)
+
+(** **** 练习：2 星, standard (double_plus)
+  完成函数 [double] 的定义，它接受参数 [n]，返回 [2n]。
+  请使用递归定义方式，而不是定义为 [n + n]。 
+*)
+
+Fixpoint double (n : nat) : nat
+  (* := 你的解答 *).
+Admitted.
+(** [] *)
+
+(** **** 练习：2 星, standard (sum_to)
+  完成函数 [sum_to] 的定义，它接受参数 [n]，返回 [1 + 2 + ... + n]。 
+*)
+Fixpoint sum_to (n : nat) : nat
+  (* := 你的解答 *).
+Admitted.
+(** [] *)
+  
+Example sum_to_10 :
+  sum_to 10 = 55.
+Proof. (* 请在此处解答 *) Admitted.
 
 (** 我们再来练习定义几个自然数上的函数。*)
 
@@ -626,7 +638,7 @@ Proof. simpl. reflexivity.  Qed.
 
 (** 
   [leb] 函数检查第一个参数 [n] 是否小于等于第二个参数 [m]。
-  注意这也是一个递归函数。 
+  注意这也是一个递归函数。
 *)
 
 Fixpoint leb (n m : nat) : bool :=
@@ -683,7 +695,6 @@ Example test_ltb3:             (ltb 4 2) = false.
   在数学课上学习证明不就够了吗？
   
   如果你做过足够长、足够复杂的证明，你就会体会到，证明是多么容易出错。
-  (如果不是因为发现了一个反例，再给我一个星期的时间，我就能"证明"那个猜想中的定理了。)
   证明出了错，要想找到错误，又是何等困难。
   如果在你写证明的时候，能有一位严苛的权威人士始终盯着你的证明，
   帮助你检查每一个证明步骤，直到 [Qed] 的那一美妙时刻，

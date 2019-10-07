@@ -265,6 +265,7 @@ Print plus_comm.
   哦，定理是函数? 那就可以做计算了?
   嗯，没错。关于这个话题，我们先点到为止。后面我们还会回来。
 *)
+
 (** **** 练习：2 星, standard, optional (plus_swap') *)
 (** 
   除了 [assert]，我们还可以使用 [replace] 策略证明上述定理。
@@ -279,6 +280,26 @@ Proof.
 Admitted.
 (** [] *)
 
+(** **** 练习：2 星, standard, optional (sum_to_equation) *)
+Print sum_to.
+
+(**
+  TODO: (@ant-hengxin) 该练习还有问题，暂时不需要学生完成。
+  等待 @ant-henxin 修复。
+  
+  请证明 Gauss 所发现的求和公式 ([sum_to_equation])
+  : 1 + 2 + ... + n = 1/2 n (n+1).
+  
+  你可能需要用到下面的引理。
+*)
+
+Lemma sum_helper : forall n : nat,
+  2 * sum_to (S n) = 2 * (S n) + 2 * (sum_to n).
+Proof. (* 目前，我们还无法证明该引理。我们直接接受它。*) Admitted.
+
+Theorem sum_to_equation : forall n : nat,
+  2 * (sum_to n) = n * (n + 1).
+Proof. Admitted.
 (* ################################################################# *)
 (** * 形式化证明 vs. 非形式化证明 *)
 
@@ -431,6 +452,262 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 (** [] *)
+
+(**
+(* ################################################################# *)
+(** * 变换归纳法则 *)
+
+(** 在 Coq 中进行归纳证明时，有时控制归纳假设的确切形式是十分重要的。
+    特别是，在调用 [induction] 策略前，我们用 [intros]
+    将假设从目标移到上下文中时要十分小心。例如，假设我们要证明 [double]
+    函数式单射的 -- 即，它将不同的参数映射到不同的结果：
+
+       Theorem double_injective: forall n m,
+         double n = double m -> n = m.
+
+    其证明的_'开始方式'_有点微妙：如果我们以
+
+       intros n. induction n.
+
+    开始，那么一切都好。然而假如以
+
+       intros n m. induction n.
+
+    开始，就会卡在归纳情况中... *)
+
+Theorem double_injective_FAILED : forall n m,
+     double n = double m ->
+     n = m.
+Proof.
+  intros n m. induction n as [| n'].
+  - (* n = O *) simpl. intros eq. destruct m as [| m'] eqn:E.
+    + (* m = O *) reflexivity.
+    + (* m = S m' *) discriminate eq.
+  - (* n = S n' *) intros eq. destruct m as [| m'] eqn:E.
+    + (* m = O *) discriminate eq.
+    + (* m = S m' *) apply f_equal.
+
+(** 此时，归纳假设 [IHn'] _'不会'_给出 [n' = m'] -- 会有个额外的 [S] 阻碍 --
+    因此该目标无法证明。 *)
+
+      Abort.
+
+(** 哪里出了问题？ *)
+
+(** 问题在于，我们在调用归纳假设的地方已经将 [m] 引入了上下文中 --
+    直观上，我们已经告诉了 Coq“我们来考虑具体的 [n] 和 [m]...”，
+    而现在必须为这些_'具体的'_ [n] 和 [m] 证明 [double n = double m]，
+    然后才有 [n = m]。
+
+    下一个策略 [induction n] 告诉 Coq：我们要对 [n] 归纳来证明该目标。
+    也就是说，我们要证明对于_'所有的'_ [n]，命题
+
+      - [P n] = "if [double n = double m], then [n = m]"
+
+    成立，需通过证明
+
+      - [P O]
+
+        （即，若“[double O = double m] 则 [O = m]”）和
+
+      - [P n -> P (S n)]
+
+        （即，若“[double n = double m] 则 [n = m]”蕴含“若
+        [double (S n) = double m] 则 [S n = m]”）来得出。
+
+    如果我们仔细观察第二个语句，就会发现它说了奇怪的事情：即，对于一个_'具体的'_
+    [m]，如果我们知道
+
+      - “若 [double n = double m] 则 [n = m]”
+
+    那么我们就能证明
+
+       - “若 [double (S n) = double m] 则 [S n = m]”。
+
+    要理解为什么它很奇怪，我们来考虑一个具体的 [m] --
+    比如说，[5]。该语句就会这样说：如果我们知道
+
+      - [Q] = “若 [double n = 10] 则 [n = 5]”
+
+    那么我们就能证明
+
+      - [R] = “若 [double (S n) = 10] 则 [S n = 5]”。
+
+    但是知道 [Q] 对于证明 [R] 来说并没有任何帮助！（如果我们试着根据 [Q]
+    证明 [R] from [Q]，就会以“假设 [double (S n) = 10]..”这样的句子开始，
+    不过之后我们就会卡住：知道 [double (S n)] 为 [10] 并不能告诉我们
+    [double n] 是否为 [10]，因此 [Q] 是没有用的。） *)
+
+(** 当 [m] 已经在上下文中时，试图对 [n] 进行归纳来进行此证明是行不通的，
+    因为我们之后要尝试证明涉及_'每一个'_ [n] 的命题，而不只是_'单个'_ [m]。 *)
+
+(** 对 [double_injective] 的成功证明将 [m] 留在了目标语句中 [induction]
+    作用于 [n] 的地方：*)
+
+Theorem double_injective : forall n m,
+     double n = double m ->
+     n = m.
+Proof.
+  intros n. induction n as [| n'].
+  - (* n = O *) simpl. intros m eq. destruct m as [| m'] eqn:E.
+    + (* m = O *) reflexivity.
+    + (* m = S m' *) discriminate eq.
+
+  - (* n = S n' *) simpl.
+
+(** 注意，此时的证明目标和归纳假设是不同的：证明目标要求我们证明更一般的事情
+    （即，为_'每一个'_ [m] 证明该语句），而归纳假设 [IH] 相应地更加灵活，
+    允许我们在应用归纳假设时选择任何想要的 [m]。 *)
+
+    intros m eq.
+
+(** 现在我们选择了一个具体的 [m] 并引入了假设 [double n = double m]。
+    由于我们对 [n] 做了情况分析，因此还要对 [m] 做情况分析来保持两边“同步”。 *)
+
+    destruct m as [| m'] eqn:E.
+    + (* m = O *) simpl.
+
+(** 0 的情况很显然： *)
+
+      discriminate eq.
+
+    + (* m = S m' *)
+      apply f_equal.
+
+(** 到这里，由于我们在 [destruct m] 的第二个分支中，因此上下文中涉及到的 [m']
+    就是我们开始讨论的 [m] 的前趋。由于我们也在归纳的 [S] 分支中，这就很完美了：
+    如果我们在归纳假设中用当前的 [m']（此实例由下一步的 [apply] 自动产生）
+    实例化一般的 [m]，那么 [IHn'] 就刚好能给出我们需要的来结束此证明。 *)
+
+      apply IHn'. injection eq as goal. apply goal. Qed.
+
+(** What you should take away from all this is that we need to be
+    careful, when using induction, that we are not trying to prove
+    something too specific: To prove a property of [n] and [m] by
+    induction on [n], it is sometimes important to leave [m]
+    generic. *)
+
+(** 以下练习需要同样的模式。 *)
+
+(** **** 练习：2 星, standard (eqb_true)  *)
+Theorem eqb_true : forall n m,
+    n =? m = true -> n = m.
+Proof.
+  (* 请在此处解答 *) Admitted.
+(** [] *)
+
+(** **** 练习：2 星, advanced (eqb_true_informal)  
+
+    给出一个详细的 [eqb_true] 的非形式化证明，量词要尽可能明确。 *)
+
+(* 请在此处解答 *)
+
+(* 请勿修改下面这一行： *)
+Definition manual_grade_for_informal_proof : option (nat*string) := None.
+(** [] *)
+
+(** 在 [induction] 之前做一些 [intros] 来获得更一般归纳假设并不总是奏效。
+    有时需要对量化的变量做一下_'重排'_。例如，假设我们想要通过对 [m]
+    而非 [n] 进行归纳来证明 [double_injective]。 *)
+
+Theorem double_injective_take2_FAILED : forall n m,
+     double n = double m ->
+     n = m.
+Proof.
+  intros n m. induction m as [| m'].
+  - (* m = O *) simpl. intros eq. destruct n as [| n'] eqn:E.
+    + (* n = O *) reflexivity.
+    + (* n = S n' *) discriminate eq.
+  - (* m = S m' *) intros eq. destruct n as [| n'] eqn:E.
+    + (* n = O *) discriminate eq.
+    + (* n = S n' *) apply f_equal.
+        (* 和前面一样，又卡在这儿了。 *)
+Abort.
+
+(** 问题在于，要对 [m] 进行归纳，我们首先必须对 [n] 归纳。
+    （如果我们不引入任何东西就执行 [induction m]，Coq 就会自动为我们引入 [n]！） *)
+
+(** 我们可以对它做什么？一种可能就是改写该引理的陈述使得 [m] 在 [n] 之前量化。
+    这样是可行的，不过它不够好：我们不想调整该引理的陈述来适应具体的证明策略！
+    我们更想以最清晰自然的方式陈述它。 *)
+
+(** 我们可以先引入所有量化的变量，然后_'重新一般化（re-generalize）'_
+    其中的一个或几个，选择性地从上下文中挑出几个变量并将它们放回证明目标的开始处。
+    用 [generalize dependent] 策略就能做到。*)
+
+Theorem double_injective_take2 : forall n m,
+     double n = double m ->
+     n = m.
+Proof.
+  intros n m.
+  (* [n] and [m] are both in the context *)
+  generalize dependent n.
+  (* 现在 [n] 回到了目标中，我们可以对 [m] 进行归纳并得到足够一般的归纳假设了。 *)
+  induction m as [| m'].
+  - (* m = O *) simpl. intros n eq. destruct n as [| n'] eqn:E.
+    + (* n = O *) reflexivity.
+    + (* n = S n' *) discriminate eq.
+  - (* m = S m' *) intros n eq. destruct n as [| n'] eqn:E.
+    + (* n = O *) discriminate eq.
+    + (* n = S n' *) apply f_equal.
+      apply IHm'. injection eq as goal. apply goal. Qed.
+
+(** 我们来看一下此定理的非形式化证明。注意我们保持 [n]
+    的量化状态并通过归纳证明的命题，对应于我们形式化证明中依赖的一般化。
+
+    _'定理'_：对于任何自然数 [n] 和 [m]，若 [double n = double m]，则 [n = m]。
+
+    _'证明'_：令 [m] 为一个 [nat]。我们通过对 [m] 进行归纳来证明，对于任何 [n]，
+        若 [double n = double m]，则 [n = m]。
+
+      - 首先，设 [m = 0]，而 [n] 是一个数使得 [double n = double m]。
+        我们必须证明 [n = 0]。
+
+        由于 [m = 0]，根据 [double] 的定义，我们有 [double n = 0]。此时对于 [n]
+        需要考虑两种情况。若 [n = 0]，则得证，因为 [m = 0 = n]，正如所需。
+        否则，若对于某个 [n'] 有 [n = S n']，我们就会导出矛盾：根据 [double]
+        的定义，我们可得出 [double n = S (S (double n'))]，但它与 [double n = 0]
+        相矛盾。
+
+      - 其次，设 [m = S m']，而 [n] 同样是一个数使得 [double n = double m]。
+        我们必须证明 [n = S m']，根据归纳假设，对于任何数 [s]，若
+        [double s = double m']，则 [s = m']。
+
+        根据 [m = S m'] 的事实以及 [double] 的定义我们有 [double n = S (S (double m'))]。
+        此时对于 [n] 需要考虑两种情况。
+
+        若 [n = 0]，则根据 [double n = 0] 的定义会得出矛盾。
+
+        因此，我们假设对于某个 [n']，有 [n = S n']，同样根据 [double]
+        的定义，我们有 [S (S (double n')) = S (S (double m'))]，它可通过反演
+        [double n' = double m'] 得出。以 [n'] 实例化归纳假设允许我们得出
+        [n' = m'] 的结论，显然 [S n' = S m']。因此 [S n' = n] 且 [S m' = m]，
+        此即我们所欲证。 [] *)
+
+(** 在结束本节去做习题之前，我们先稍微跑个题，使用 [eqb_true]
+    来证明一个标识符的类似性质以备后用： *)
+
+Theorem eqb_id_true : forall x y,
+  eqb_id x y = true -> x = y.
+Proof.
+  intros [m] [n]. simpl. intros H.
+  assert (H' : m = n). { apply eqb_true. apply H. }
+  rewrite H'. reflexivity.
+Qed.
+
+(** **** 练习：3 星, standard, recommended (gen_dep_practice)  
+
+    通过对 [l] 进行归纳来证明它。 *)
+
+Theorem nth_error_after_last: forall (n : nat) (X : Type) (l : list X),
+     length l = n ->
+     nth_error l n = None.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
+(** [] *)
+*)
+
 (** **** 练习：3 星, standard (binary)
   下面这道题目可以检验你是否掌握了本节(以及上一节)的主要内容。
   不要怕。正是这些让你感到有些困难的题目在悄悄地锻炼你的能力。
