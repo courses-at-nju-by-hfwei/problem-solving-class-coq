@@ -24,18 +24,10 @@
 <div class="doc">
 <a name="lab1"></a><h1 class="section">Induction: 归纳证明</h1>
 
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  本节依赖于 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span> (你需要先阅读它)。
-  你需要先编译 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span> 得到 <span class="inlinecode"><span class="id" title="var">Basics.vo</span></span>。
-  编译方法：在 CoqIDE 中打开 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span>，
-  执行 "Compile" 菜单中的 "Compile Buffer" 命令。
-
 </div>
 <div class="code">
+
+<br/>
 
 <br/>
 <span class="id" title="var">From</span> <span class="id" title="var">LF</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">Basics</span>.<br/>
@@ -44,17 +36,10 @@
 <div class="doc">
 <a name="lab2"></a><h1 class="section">归纳法证明</h1>
 
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  在上一章中，我们使用 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 证明了定理 <span class="inlinecode"><span class="id" title="var">plus_O_n</span></span> (即，<span class="inlinecode">0</span> 是 <span class="inlinecode">+</span> 的左单位元)。
-  下面，我们尝试使用 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 证明定理 <span class="inlinecode"><span class="id" title="var">plus_n_O</span></span>，
-  它表明 <span class="inlinecode">0</span> 也是 <span class="inlinecode">+</span> 的右单位元。
-
 </div>
 <div class="code">
+
+<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_n_O_firsttry</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>,<br/>
@@ -66,21 +51,6 @@
 &nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-
-<div class="paragraph"> </div>
-
-  我们发现 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 不起作用。
-  这是因为，<span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> 中的 <span class="inlinecode"><span class="id" title="var">n</span></span> 是任意自然数，无法使用 <span class="inlinecode"><span class="id" title="var">plus</span></span> 定义中的匹配进行化简。
-
-<div class="paragraph"> </div>
-
-  那么，用上一章学过的 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 对 <span class="inlinecode"><span class="id" title="var">n</span></span> 分情况讨论，是否可行?
-
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_n_O_secondtry</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>:<span class="id" title="var">nat</span>,<br/>
@@ -89,99 +59,12 @@
 &nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
 &nbsp;&nbsp;- <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>. &nbsp;&nbsp;- <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="keyword">Abort</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="keyword">Abort</span>. 
+<br/>
 
 <br/>
-</div>
 
-<div class="doc">
-
-<div class="paragraph"> </div>
-
-<ul class="doclist">
-<li> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> 的情形可以通过 <span class="inlinecode"><span class="id" title="var">plus</span></span> 的第一条模式匹配完成化简。
-
-</li>
-<li> 对于 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>，经过一步 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 后，
-    我们还需要证明 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0)</span>。
-    这意味着我们需要证明 <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span>。
-    而这与我们一开始要证明的目标 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span>在形式上是完全相同的，
-    不同的是，此处 <span class="inlinecode"><span class="id" title="var">n'</span></span> 比 <span class="inlinecode"><span class="id" title="var">n</span></span> 小 1。
-    这就提示我们需要使用 <i>'数学归纳法' (Mathematical Induction)_。
-
-<div class="paragraph"> </div>
-
-    在我们问题求解课程四个学期的内容中，数学归纳法经常出现，非常重要。
-    甚至在大家以后的科研工作中，数学归纳法都有可能是最常用的理解问题
-    与证明定理的方法。
-    (请默念三遍：数学归纳法，数学归纳法，数学归纳法)
-    另外，数学归纳法不仅仅是应用在自然数上的，
-    而是可以应用于所有归纳定义的结构/对象。
-    关于这一点，我们会在后续章节与后续课程深入学习。
-
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  我们从<i>'自然数上的归纳原理'</i>开始：
-  (问卷：高中时是否学习过数学归纳法?)
-  假设 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">n</span>)</span> 为关于自然数的命题。
-  我们想要证明 <span class="inlinecode"><span class="id" title="var">P</span></span> 对于所有自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 都成立时。
-  数学归纳法告诉我们，只需要：
-<ul class="doclist">
-<li> 证明 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">O</span>)</span> 成立；
-
-</li>
-<li> 证明对于任何 <span class="inlinecode"><span class="id" title="var">n'</span></span>，若 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">n'</span>)</span> 成立，那么 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> 也成立。
-
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
-  (此处又有学生提问：怎么证明数学归纳法的正确性呢?)
-
-<div class="paragraph"> </div>
-
-  (答：难道你不觉得这是显然成立的吗?)
-
-<div class="paragraph"> </div>
-
-  (另一位学生反驳：你不是说要“怀疑一切、证明一切”吗? (TODO: 嗯，回头补上))
-
-<div class="paragraph"> </div>
-
-  (故作镇定：很好。那怎么证明呢? 这个问题我们还是先留给大家思考吧。
-  后续课程中我们还有机会回到这个问题上来。)
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  Coq 通过应用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 策略把待定目标 <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span>
-  分为两个子目标:
-<ul class="doclist">
-<li> 基础情况: <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>。此时，我们需要证明 <span class="inlinecode"><span class="id" title="var">P</span>(0)</span>，即 <span class="inlinecode">0</span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> 成立。
-
-</li>
-<li> 归纳步骤: <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>。
-    此时，我们有归纳假设 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">n'</span>)</span> 成立，即 <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> 成立。
-    我们需要在归纳假设 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">n'</span>)</span> 成立的基础上，证明 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">n</span>)</span> 成立，
-    即证明 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> 成立，
-    也就是 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">+</span> <span class="inlinecode">0</span> 成立。
-    基本的证明方法就是将对 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>)</span> 的证明
-    化归 (Reduce) 到可以直接应用归纳假设 <span class="inlinecode"><span class="id" title="var">P</span>(<span class="id" title="var">n'</span>)</span> 的情况。
-
-</li>
-</ul>
-
-</div>
-<div class="code">
+<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_n_O</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>, <span class="id" title="var">n</span> = <span class="id" title="var">n</span> + 0.<br/>
@@ -195,28 +78,6 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-
-<div class="paragraph"> </div>
-
-  根据上面的分析，对自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 应用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 策略，
-  会产生两个子目标。
-  就像使用 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> 做分情形分析一样，在 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 中，
-  我们使用 <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[</span> <span class="inlinecode">|</span> <span class="inlinecode">]</span> 表达基本情况与归纳步骤。
-<ul class="doclist">
-<li> 在基本情况中，<span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>。不需要额外参数。
-
-</li>
-<li> 在归纳步骤，<span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>。我们需要引入额外参数代表 <span class="inlinecode"><span class="id" title="var">n'</span></span>。
-
-</li>
-</ul>
-  需要特别注意的是，我们还使用 IHn' 记录了归纳假设。
-
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">minus_diag</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
@@ -230,18 +91,6 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-  注意: 在上面的证明中，我们没有使用 <span class="inlinecode"><span class="id" title="tactic">intros</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>。
-  当 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 会自动将 <span class="inlinecode"><span class="id" title="var">n</span></span> 移到上下文中。
-<a name="lab3"></a><h4 class="section">练习：2 星, standard, recommended (basic_induction)</h4>
-
-    使用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 完成以下证明。你可能需要使用之前证明的定理。
-    记住 <span class="inlinecode"><span class="id" title="keyword">Print</span></span>、<span class="inlinecode"><span class="id" title="keyword">Search</span></span>。
-
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_0_r</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
@@ -256,13 +105,6 @@
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-  我们终于可以证明加法交换律与结合律了。
-
-</div>
-<div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_comm</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">n</span> + <span class="id" title="var">m</span> = <span class="id" title="var">m</span> + <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -277,15 +119,10 @@
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab4"></a><h4 class="section">练习：2 星, standard (double_plus)</h4>
-
-  完成函数 <span class="inlinecode"><span class="id" title="var">double</span></span> 的定义，它接受参数 <span class="inlinecode"><span class="id" title="var">n</span></span>，返回 <span class="inlinecode">2<span class="id" title="var">n</span></span>
-  (你可以将 <span class="inlinecode"><span class="id" title="var">Basics.v</span></span> 的定义拷贝过来): 
-
 </div>
 <div class="code">
+
+<br/>
 
 <br/>
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">double</span> (<span class="id" title="var">n</span>:<span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span><br/>
@@ -293,12 +130,6 @@
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-使用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 证明 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>: 
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">double_plus</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span>, <span class="id" title="var">double</span> <span class="id" title="var">n</span> = <span class="id" title="var">n</span> + <span class="id" title="var">n</span> .<br/>
@@ -308,14 +139,10 @@
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
-<div class="paragraph"> </div>
-
-<a name="lab5"></a><h4 class="section">练习：2 星, standard, optional (evenb_S)</h4>
-
-  证明下述关于 <span class="inlinecode"><span class="id" title="var">evenb</span></span> 的定理。
-
 </div>
 <div class="code">
+
+<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">evenb_S</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
@@ -331,25 +158,12 @@
 </div>
 
 <div class="doc">
-<a name="lab6"></a><h1 class="section">证明里的证明</h1>
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  关于 <span class="inlinecode"><span class="id" title="tactic">induction</span></span>，我们暂时介绍这么多。
-  后面，我们还会回到这个主题。
-
-<div class="paragraph"> </div>
-
-  下面，我们介绍一个在做证明时经常会碰到的情况:
-  一个证明会依赖于其它结论，但是这个结论可能很简单，或者缺乏普遍性，
-  不值得我们专门为之引入一个定理。
-  这时，Coq 允许我们使用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 策略将该结论嵌入 (inline) 在大的证明结构中。 
+<a name="lab3"></a><h1 class="section">证明里的证明</h1>
 
 </div>
 <div class="code">
+
+<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_0_plus'</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">nat</span>,<br/>
@@ -362,30 +176,8 @@
 <span class="id" title="keyword">Qed</span>.<br/>
 
 <br/>
-</div>
 
-<div class="doc">
-  注意观察 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 对证明目标的改变。
-  <span class="inlinecode"><span class="id" title="tactic">assert</span></span> <span class="inlinecode">(<span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode">0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> 策略引入了一个子目标，记为 <span class="inlinecode"><span class="id" title="var">H</span></span>。
-  我们先在随后的 <span class="inlinecode">{</span> <span class="inlinecode">...</span> <span class="inlinecode">}</span> 内给出这个子目标的证明。
-  退出 <span class="inlinecode">{</span> <span class="inlinecode">...</span> <span class="inlinecode">}</span> 后，我们又回到原来的证明目标 <span class="inlinecode">(0</span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">m</span></span>。
-  此时，我们可以将 <span class="inlinecode"><span class="id" title="var">H</span></span> 作为已知定理使用了。
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 还有一个特别的用处，我们举例说明。
-  假设我们要证明 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span> <span class="inlinecode">+</span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">q</span>)</span> <span class="inlinecode">=</span> <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> <span class="inlinecode">+</span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">q</span>)</span>。
-  似乎我们可以直接使用加法交换律 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 将等号左边的 <span class="inlinecode">(<span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span>)</span> 
-  改写为等号右边的 <span class="inlinecode">(<span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span>。
-  但是，这里有6个加号，Coq 的 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 并没有聪明到
-  知道我们想对哪个加号应用加法交换律。
-  实际上，它将 <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 作用在了最外层的加号上。
-
-</div>
-<div class="code">
+<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_rearrange_firsttry</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span> : <span class="id" title="var">nat</span>,<br/>
@@ -396,13 +188,6 @@
 <span class="id" title="keyword">Abort</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-  <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 允许我们陈述一个针对证明中特定的变量的引理。
-
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_rearrange</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> <span class="id" title="var">q</span> : <span class="id" title="var">nat</span>,<br/>
@@ -416,31 +201,12 @@
 
 <br/>
 <span class="id" title="keyword">Print</span> <span class="id" title="var">plus_comm</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-  在后面章节，我们将会看到，这个证明中的第2到第4行，可以用一条语句代替：
-  <span class="inlinecode"><span class="id" title="tactic">rewrite</span></span> <span class="inlinecode">(<span class="id" title="var">plus_comm</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span>).</span>。
-  回顾 <span class="inlinecode"><span class="id" title="var">plus_comm</span></span> 定理:
-  <span class="inlinecode"><span class="id" title="keyword">∀</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>,</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">+</span> <span class="inlinecode"><span class="id" title="var">n</span></span>。
-  我们可以将该定理看成接受两个自然数的函数。
-  给定 <span class="inlinecode"><span class="id" title="var">n</span></span> 与 <span class="inlinecode"><span class="id" title="var">m</span></span>，<span class="inlinecode"><span class="id" title="var">plus_comm</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> 就是加法交换律在 <span class="inlinecode"><span class="id" title="var">n</span></span> 与 <span class="inlinecode"><span class="id" title="var">m</span></span> 上的实例化。
-
-<div class="paragraph"> </div>
-
-  哦，定理是函数? 那就可以做计算了?
-  嗯，没错。关于这个话题，我们先点到为止。后面我们还会回来。
-
-<div class="paragraph"> </div>
-
-<a name="lab7"></a><h4 class="section">练习：2 星, standard, optional (plus_swap')</h4>
-
-<div class="paragraph"> </div>
-
-  除了 <span class="inlinecode"><span class="id" title="tactic">assert</span></span>，我们还可以使用 <span class="inlinecode"><span class="id" title="tactic">replace</span></span> 策略证明上述定理。
-  <span class="inlinecode"><span class="id" title="tactic">replace</span></span> <span class="inlinecode">(<span class="id" title="var">t</span>)</span> <span class="inlinecode"><span class="id" title="keyword">with</span></span> <span class="inlinecode">(<span class="id" title="var">u</span>)</span> 会将目标中 <span class="inlinecode"><span class="id" title="var">t</span></span> 的所有 <i>'出现' (occurrences)_替换为 <span class="inlinecode"><span class="id" title="var">u</span></span>,
-  并生成子目标 <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">u</span></span>。
-  请根据上面的介绍，尝试使用 <span class="inlinecode"><span class="id" title="tactic">replace</span></span> 重新证明 <span class="inlinecode"><span class="id" title="var">plus_swap</span></span>。
+<a name="lab4"></a><h4 class="section">练习：2 星, standard, optional (plus_swap')</h4>
 
 </div>
 <div class="code">
@@ -454,30 +220,13 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab8"></a><h4 class="section">练习：2 星, standard, optional (sum_to_equation)</h4>
+<a name="lab5"></a><h4 class="section">练习：2 星, standard, optional (sum_to_equation)</h4>
 
 </div>
 <div class="code">
 <span class="id" title="keyword">Print</span> <span class="id" title="var">sum_to</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-  TODO: (@ant-hengxin) 该练习还有问题，暂时不需要学生完成。
-  等待 @ant-henxin 修复。
-
-<div class="paragraph"> </div>
-
-  请证明 Gauss 所发现的求和公式 (<span class="inlinecode"><span class="id" title="var">sum_to_equation</span></span>)
-  : 1 + 2 + ... + n = 1/2 n (n+1).
-
-<div class="paragraph"> </div>
-
-  你可能需要用到下面的引理。
-
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Lemma</span> <span class="id" title="var">sum_helper</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
@@ -491,102 +240,23 @@
 </div>
 
 <div class="doc">
-<a name="lab9"></a><h1 class="section">形式化证明 vs. 非形式化证明</h1>
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  在初中，我们就开始写数学证明了。
-  但是，什么是证明?
-  我们好像从来没有给证明本身下过定义?
-
-<div class="paragraph"> </div>
-
-  关于这个问题的答案，我们把它留给你们的数理逻辑老师。
-  让人惊讶的是，为证明下定义也不过是最近一百年的事情。
-  同样让人惊讶的是，我们的经验表明，不知道证明的定义也并不妨碍我们做证明。
-
-<div class="paragraph"> </div>
-
-  在 Coq 里，我们需要写机器可以检验的 <i>'形式化证明' (Formal Proof)_，
-  而大多数时候，我们写的是 <i>'非形式化证明' (Informal Proof)_。
-  如下所示。
-<ul class="doclist">
-<li> <i>'定理'</i>：对于任何 <span class="inlinecode"><span class="id" title="var">n</span></span>、<span class="inlinecode"><span class="id" title="var">m</span></span> 和 <span class="inlinecode"><span class="id" title="var">p</span></span>，
-
-<div class="paragraph"> </div>
-
-      n + (m + p) = (n + m) + p.
-
-<div class="paragraph"> </div>
-
-    <i>'证明'</i>：对 <span class="inlinecode"><span class="id" title="var">n</span></span> 使用归纳法。
-
-<div class="paragraph"> </div>
-
-<ul class="doclist">
-<li> 首先，设 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>。我们必须证明
-
-<div class="paragraph"> </div>
-
-        0 + (m + p) = (0 + m) + p.
-
-<div class="paragraph"> </div>
-
-      此结论可从 <span class="inlinecode">+</span> 的定义直接得到。
-
-<div class="paragraph"> </div>
-
-
-</li>
-<li> 然后，设 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>，其中
-
-<div class="paragraph"> </div>
-
-        n' + (m + p) = (n' + m) + p.
-
-<div class="paragraph"> </div>
-
-      我们必须证明
-
-<div class="paragraph"> </div>
-
-        (S n') + (m + p) = ((S n') + m) + p.
-
-<div class="paragraph"> </div>
-
-      根据 <span class="inlinecode">+</span> 的定义，该式可写成
-
-<div class="paragraph"> </div>
-
-        S (n' + (m + p)) = S ((n' + m) + p),
-
-<div class="paragraph"> </div>
-
-      它由归纳假设直接得出。<i>'证毕'</i>。 
-
-</li>
-</ul>
-
-</li>
-</ul>
+<a name="lab6"></a><h1 class="section">形式化证明 vs. 非形式化证明</h1>
 
 </div>
 <div class="code">
+
+<br/>
+
+<br/>
 </div>
 
 <div class="doc">
-<a name="lab10"></a><h1 class="section">更多练习</h1>
+<a name="lab7"></a><h1 class="section">更多练习</h1>
 
-<div class="paragraph"> </div>
-
-<a name="lab11"></a><h4 class="section">练习：3 星, standard, recommended (mult_comm)</h4>
-
-    利用 <span class="inlinecode"><span class="id" title="tactic">assert</span></span> 证明下述定理 <span class="inlinecode"><span class="id" title="var">plus_swap</span></span>。(提示: 不必使用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span>。) 
 </div>
 <div class="code">
+
+<br/>
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">plus_swap</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span> <span class="id" title="var">p</span> : <span class="id" title="var">nat</span>,<br/>
@@ -595,12 +265,6 @@
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-现在我们终于可以证明乘法交换律了。你可能会用上 <span class="inlinecode"><span class="id" title="var">plus_swap</span></span>。
-</div>
-<div class="code">
 
 <br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_comm</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
@@ -613,27 +277,12 @@
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab12"></a><h4 class="section">练习：3 星, standard, optional (more_exercises)</h4>
-
-<div class="paragraph"> </div>
-
-  注意: 以下练习题并不一定都需要使用 <span class="inlinecode"><span class="id" title="tactic">induction</span></span>.
-  你需要通过做练习培养自己做证明时的直觉。
-  直觉是非常重要的。
-
-<div class="paragraph"> </div>
-
-  (如果你又忘记了某些函数或者定理，请记着 <span class="inlinecode"><span class="id" title="keyword">Print</span></span>、<span class="inlinecode"><span class="id" title="keyword">Check</span></span> 与 <span class="inlinecode"><span class="id" title="keyword">Search</span></span>。)
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  关于布尔函数
+<a name="lab8"></a><h4 class="section">练习：3 星, standard, optional (more_exercises)</h4>
 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">andb_false_r</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">b</span> : <span class="id" title="var">bool</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">andb</span> <span class="id" title="var">b</span> <span class="id" title="var">false</span> = <span class="id" title="var">false</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -650,13 +299,6 @@
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-  关于自然数之间的大小关系
-
-</div>
-<div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqb_refl</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;<span class="id" title="var">true</span> = (<span class="id" title="var">n</span> =? <span class="id" title="var">n</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -694,13 +336,6 @@
 <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
-</div>
-
-<div class="doc">
-  关于乘法运算。我们终于可以证明乘法分配律和乘法结合律了。
-
-</div>
-<div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">mult_1_l</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> : <span class="id" title="var">nat</span>,<br/>
 &nbsp;&nbsp;1 × <span class="id" title="var">n</span> = <span class="id" title="var">n</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -721,217 +356,371 @@
 
 <div class="doc">
 <font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab9"></a><h1 class="section">变换归纳法则</h1>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">InductionPlayground</span>.<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">double</span> (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">n</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">O</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">n'</span> ⇒ <span class="id" title="var">S</span> (<span class="id" title="var">S</span> (<span class="id" title="var">double</span> <span class="id" title="var">n'</span>))<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">double_injective</span>: <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">double</span> <span class="id" title="var">n</span> = <span class="id" title="var">double</span> <span class="id" title="var">m</span> → <span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [ | <span class="id" title="var">n'</span> <span class="id" title="var">IHn'</span>].<br/>
+&nbsp;&nbsp;- <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [ | <span class="id" title="var">m'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>. &nbsp;&nbsp;- <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [ | <span class="id" title="var">m'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="tactic">f_equal</span>. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHn'</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">simpl</span> <span class="id" title="tactic">in</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">injection</span> <span class="id" title="var">eq</span> <span class="id" title="keyword">as</span> <span class="id" title="var">H</span>. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">H</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">nat</span>.<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">double_injective_FAILED</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">double</span> <span class="id" title="var">n</span> = <span class="id" title="var">double</span> <span class="id" title="var">m</span> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span> <span class="id" title="var">IHn'</span>].<br/>
+&nbsp;&nbsp;-  <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>. &nbsp;&nbsp;-  <span class="id" title="tactic">intros</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">apply</span> <span class="id" title="tactic">f_equal</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  现在，回到我们的主题上来。
+
 <div class="paragraph"> </div>
 
+  证明进行到此，我们的待证目标变成 <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>。
+  我们的归纳假设 <span class="inlinecode"><span class="id" title="var">IHn'</span></span> 是 
+  <span class="inlinecode"><span class="id" title="var">IHn'</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span>)</span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>。
 
 <div class="paragraph"> </div>
 
+  但是，从这个归纳假设，我们无法证明 <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>:
+  归纳假设的结论部分是 <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>，而不是 <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>。
 
 <div class="paragraph"> </div>
 
+  证明进入死胡同。
+  沮丧。
+  终止。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  为什么会这样呢? 
+  <span class="inlinecode"><span class="id" title="var">n</span></span> 与 <span class="inlinecode"><span class="id" title="var">m</span></span> 在定理 <span class="inlinecode"><span class="id" title="var">double_injective</span></span> 中难道不是对称的吗?
+  它们的作用难道不是一样的吗?
+  为什么对 <span class="inlinecode"><span class="id" title="var">n</span></span> 做归纳可以很顺利，对 <span class="inlinecode"><span class="id" title="var">m</span></span> 做归纳就进入了死胡同呢?
 
 <div class="paragraph"> </div>
 
-Theorem double_injective_FAILED : forall n m,
-     double n = double m -&gt;
-     n = m.
-Proof.
-  intros n m. induction n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>.
+  我们不妨回头比较一下两种做法在执行完 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 策略后产生的证明状态。
 <ul class="doclist">
-<li>  simpl. intros eq. destruct m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> eqn:E.
-    +  reflexivity.
-    +  discriminate eq.
+<li> 第一种做法: <span class="inlinecode"><span class="id" title="tactic">intros</span></span> <span class="inlinecode"><span class="id" title="var">n</span>.</span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode"><span class="id" title="var">IHn'</span>].</span>
 
 </li>
-<li>  intros eq. destruct m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> eqn:E.
-    +  discriminate eq.
-    +  apply f_equal.
+<li> 第二种做法: <span class="inlinecode"><span class="id" title="tactic">intros</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span>.</span> <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> <span class="inlinecode"><span class="id" title="var">IHm'</span>].</span>
 
 </li>
 </ul>
 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+当 <span class="inlinecode"><span class="id" title="var">m</span></span> 已经在上下文中时，试图对 <span class="inlinecode"><span class="id" title="var">n</span></span> 进行归纳来进行此证明是行不通的，
+    因为我们之后要尝试证明涉及<i>'每一个'</i> <span class="inlinecode"><span class="id" title="var">n</span></span> 的命题，而不只是<i>'单个'</i> <span class="inlinecode"><span class="id" title="var">m</span></span>。 
 <div class="paragraph"> </div>
 
+ 对 <span class="inlinecode"><span class="id" title="var">double_injective</span></span> 的成功证明将 <span class="inlinecode"><span class="id" title="var">m</span></span> 留在了目标语句中 <span class="inlinecode"><span class="id" title="tactic">induction</span></span>
+    作用于 <span class="inlinecode"><span class="id" title="var">n</span></span> 的地方：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">double_injective_revisited</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">double</span> <span class="id" title="var">n</span> = <span class="id" title="var">double</span> <span class="id" title="var">m</span> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>].<br/>
+&nbsp;&nbsp;-  <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;-  <span class="id" title="tactic">simpl</span>.<br/>
+
+<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">m</span> <span class="id" title="var">eq</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+现在我们选择了一个具体的 <span class="inlinecode"><span class="id" title="var">m</span></span> 并引入了假设 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>。
+    由于我们对 <span class="inlinecode"><span class="id" title="var">n</span></span> 做了情况分析，因此还要对 <span class="inlinecode"><span class="id" title="var">m</span></span> 做情况分析来保持两边“同步”。 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">destruct</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">simpl</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+0 的情况很显然： 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+ <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="tactic">f_equal</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+到这里，由于我们在 <span class="inlinecode"><span class="id" title="tactic">destruct</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> 的第二个分支中，因此上下文中涉及到的 <span class="inlinecode"><span class="id" title="var">m'</span></span>
+    就是我们开始讨论的 <span class="inlinecode"><span class="id" title="var">m</span></span> 的前趋。由于我们也在归纳的 <span class="inlinecode"><span class="id" title="var">S</span></span> 分支中，这就很完美了：
+    如果我们在归纳假设中用当前的 <span class="inlinecode"><span class="id" title="var">m'</span></span>（此实例由下一步的 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> 自动产生）
+    实例化一般的 <span class="inlinecode"><span class="id" title="var">m</span></span>，那么 <span class="inlinecode"><span class="id" title="var">IHn'</span></span> 就刚好能给出我们需要的来结束此证明。 
+</div>
+<div class="code">
+
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHn'</span>. <span class="id" title="tactic">injection</span> <span class="id" title="var">eq</span> <span class="id" title="keyword">as</span> <span class="id" title="keyword">goal</span>. <span class="id" title="tactic">apply</span> <span class="id" title="keyword">goal</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">InductionPlayground</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+What you should take away from all this is that we need to be
+    careful, when using induction, that we are not trying to prove
+    something too specific: To prove a property of <span class="inlinecode"><span class="id" title="var">n</span></span> and <span class="inlinecode"><span class="id" title="var">m</span></span> by
+    induction on <span class="inlinecode"><span class="id" title="var">n</span></span>, it is sometimes important to leave <span class="inlinecode"><span class="id" title="var">m</span></span>
+    generic. 
+<div class="paragraph"> </div>
+
+ 以下练习需要同样的模式。 
+<div class="paragraph"> </div>
+
+<a name="lab10"></a><h4 class="section">练习：2 星, standard (eqb_true)</h4>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">eqb_true</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> =? <span class="id" title="var">m</span> = <span class="id" title="var">true</span> → <span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab11"></a><h4 class="section">练习：2 星, advanced (eqb_true_informal)</h4>
+
 
 <div class="paragraph"> </div>
 
-      Abort.
+    给出一个详细的 <span class="inlinecode"><span class="id" title="var">eqb_true</span></span> 的非形式化证明，量词要尽可能明确。 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_informal_proof</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+ 在 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> 之前做一些 <span class="inlinecode"><span class="id" title="tactic">intros</span></span> 来获得更一般归纳假设并不总是奏效。
+    有时需要对量化的变量做一下<i>'重排'</i>。例如，假设我们想要通过对 <span class="inlinecode"><span class="id" title="var">m</span></span>
+    而非 <span class="inlinecode"><span class="id" title="var">n</span></span> 进行归纳来证明 <span class="inlinecode"><span class="id" title="var">double_injective</span></span>。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">double_injective_take2_FAILED</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">double</span> <span class="id" title="var">n</span> = <span class="id" title="var">double</span> <span class="id" title="var">m</span> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>. <span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>].<br/>
+&nbsp;&nbsp;-  <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;-  <span class="id" title="tactic">intros</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">apply</span> <span class="id" title="tactic">f_equal</span>.<br/>
+<span class="id" title="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+问题在于，要对 <span class="inlinecode"><span class="id" title="var">m</span></span> 进行归纳，我们首先必须对 <span class="inlinecode"><span class="id" title="var">n</span></span> 归纳。
+    （如果我们不引入任何东西就执行 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>，Coq 就会自动为我们引入 <span class="inlinecode"><span class="id" title="var">n</span></span>！） 
+<div class="paragraph"> </div>
+
+ 我们可以对它做什么？一种可能就是改写该引理的陈述使得 <span class="inlinecode"><span class="id" title="var">m</span></span> 在 <span class="inlinecode"><span class="id" title="var">n</span></span> 之前量化。
+    这样是可行的，不过它不够好：我们不想调整该引理的陈述来适应具体的证明策略！
+    我们更想以最清晰自然的方式陈述它。 
+<div class="paragraph"> </div>
+
+ 我们可以先引入所有量化的变量，然后<i>'重新一般化（re-generalize）'</i>
+    其中的一个或几个，选择性地从上下文中挑出几个变量并将它们放回证明目标的开始处。
+    用 <span class="inlinecode"><span class="id" title="tactic">generalize</span></span> <span class="inlinecode"><span class="id" title="tactic">dependent</span></span> 策略就能做到。
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">double_injective_take2</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">double</span> <span class="id" title="var">n</span> = <span class="id" title="var">double</span> <span class="id" title="var">m</span> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">n</span> = <span class="id" title="var">m</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">m</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">m</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">m'</span>].<br/>
+&nbsp;&nbsp;-  <span class="id" title="tactic">simpl</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;-  <span class="id" title="tactic">intros</span> <span class="id" title="var">n</span> <span class="id" title="var">eq</span>. <span class="id" title="tactic">destruct</span> <span class="id" title="var">n</span> <span class="id" title="keyword">as</span> [| <span class="id" title="var">n'</span>] <span class="id" title="var">eqn</span>:<span class="id" title="var">E</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">discriminate</span> <span class="id" title="var">eq</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;+  <span class="id" title="tactic">apply</span> <span class="id" title="tactic">f_equal</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">apply</span> <span class="id" title="var">IHm'</span>. <span class="id" title="tactic">injection</span> <span class="id" title="var">eq</span> <span class="id" title="keyword">as</span> <span class="id" title="keyword">goal</span>. <span class="id" title="tactic">apply</span> <span class="id" title="keyword">goal</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+我们来看一下此定理的非形式化证明。注意我们保持 <span class="inlinecode"><span class="id" title="var">n</span></span>
+    的量化状态并通过归纳证明的命题，对应于我们形式化证明中依赖的一般化。
 
 <div class="paragraph"> </div>
 
+    <i>'定理'</i>：对于任何自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 和 <span class="inlinecode"><span class="id" title="var">m</span></span>，若 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>，则 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span>。
 
 <div class="paragraph"> </div>
 
+    <i>'证明'</i>：令 <span class="inlinecode"><span class="id" title="var">m</span></span> 为一个 <span class="inlinecode"><span class="id" title="var">nat</span></span>。我们通过对 <span class="inlinecode"><span class="id" title="var">m</span></span> 进行归纳来证明，对于任何 <span class="inlinecode"><span class="id" title="var">n</span></span>，
+        若 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>，则 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span>。
 
 <div class="paragraph"> </div>
 
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Theorem double_injective : forall n m,
-     double n = double m -&gt;
-     n = m.
-Proof.
-  intros n. induction n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span>.
 <ul class="doclist">
-<li>  simpl. intros m eq. destruct m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> eqn:E.
-    +  reflexivity.
-    +  discriminate eq.
+<li> 首先，设 <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>，而 <span class="inlinecode"><span class="id" title="var">n</span></span> 是一个数使得 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>。
+        我们必须证明 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>。
+
+<div class="paragraph"> </div>
+
+        由于 <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>，根据 <span class="inlinecode"><span class="id" title="var">double</span></span> 的定义，我们有 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>。此时对于 <span class="inlinecode"><span class="id" title="var">n</span></span>
+        需要考虑两种情况。若 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>，则得证，因为 <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span>，正如所需。
+        否则，若对于某个 <span class="inlinecode"><span class="id" title="var">n'</span></span> 有 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>，我们就会导出矛盾：根据 <span class="inlinecode"><span class="id" title="var">double</span></span>
+        的定义，我们可得出 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>))</span>，但它与 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>
+        相矛盾。
 
 <div class="paragraph"> </div>
 
 
 </li>
-<li>  simpl.
+<li> 其次，设 <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>，而 <span class="inlinecode"><span class="id" title="var">n</span></span> 同样是一个数使得 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span>。
+        我们必须证明 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>，根据归纳假设，对于任何数 <span class="inlinecode"><span class="id" title="var">s</span></span>，若
+        <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">s</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>，则 <span class="inlinecode"><span class="id" title="var">s</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>。
 
+<div class="paragraph"> </div>
+
+        根据 <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span> 的事实以及 <span class="inlinecode"><span class="id" title="var">double</span></span> 的定义我们有 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m'</span>))</span>。
+        此时对于 <span class="inlinecode"><span class="id" title="var">n</span></span> 需要考虑两种情况。
+
+<div class="paragraph"> </div>
+
+        若 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span>，则根据 <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode">0</span> 的定义会得出矛盾。
+
+<div class="paragraph"> </div>
+
+        因此，我们假设对于某个 <span class="inlinecode"><span class="id" title="var">n'</span></span>，有 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span>，同样根据 <span class="inlinecode"><span class="id" title="var">double</span></span>
+        的定义，我们有 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n'</span>))</span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">S</span></span> <span class="inlinecode">(<span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m'</span>))</span>，它可通过反演
+        <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">double</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span> 得出。以 <span class="inlinecode"><span class="id" title="var">n'</span></span> 实例化归纳假设允许我们得出
+        <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> 的结论，显然 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span>。因此 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">n</span></span> 且 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">m'</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span>，
+        此即我们所欲证。 <font size=-2>&#9744;</font> 
 </li>
 </ul>
 
-<div class="paragraph"> </div>
+</div>
+<div class="code">
 
+<br/>
 
-<div class="paragraph"> </div>
+<br/>
+</div>
 
-    intros m eq.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-    destruct m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span> eqn:E.
-    +  simpl.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-      discriminate eq.
-
-<div class="paragraph"> </div>
-
-    +       apply f_equal.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-      apply IHn'. injection eq as goal. apply goal. Qed.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Theorem eqb_true : forall n m,
-    n =? m = true -&gt; n = m.
-Proof.
-   Admitted.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Definition manual_grade_for_informal_proof : option (nat*string) := None.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Theorem double_injective_take2_FAILED : forall n m,
-     double n = double m -&gt;
-     n = m.
-Proof.
-  intros n m. induction m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>.
-<ul class="doclist">
-<li>  simpl. intros eq. destruct n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> eqn:E.
-    +  reflexivity.
-    +  discriminate eq.
-
-</li>
-<li>  intros eq. destruct n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> eqn:E.
-    +  discriminate eq.
-    +  apply f_equal.
-        
-</li>
-</ul>
-Abort.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Theorem double_injective_take2 : forall n m,
-     double n = double m -&gt;
-     n = m.
-Proof.
-  intros n m.
-    generalize dependent n.
-    induction m as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">m'</span></span>.
-<ul class="doclist">
-<li>  simpl. intros n eq. destruct n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> eqn:E.
-    +  reflexivity.
-    +  discriminate eq.
-
-</li>
-<li>  intros n eq. destruct n as <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n'</span></span> eqn:E.
-    +  discriminate eq.
-    +  apply f_equal.
-      apply IHm'. injection eq as goal. apply goal. Qed.
-
-</li>
-</ul>
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Theorem eqb_id_true : forall x y,
-  eqb_id x y = true -&gt; x = y.
-Proof.
-  intros <span class="inlinecode"><span class="id" title="var">m</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span>. simpl. intros H.
-  assert (H' : m = n). { apply eqb_true. apply H. }
-  rewrite H'. reflexivity.
-Qed.
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-Theorem nth_error_after_last: forall (n : nat) (X : Type) (l : list X),
-     length l = n -&gt;
-     nth_error l n = None.
-Proof.
-  Admitted.
-
-<div class="paragraph"> </div>
-
-<a name="lab13"></a><h4 class="section">练习：3 星, standard (binary)</h4>
+<div class="doc">
+<a name="lab12"></a><h4 class="section">练习：3 星, standard (binary)</h4>
 
   下面这道题目可以检验你是否掌握了本节(以及上一节)的主要内容。
   不要怕。正是这些让你感到有些困难的题目在悄悄地锻炼你的能力。
@@ -1015,7 +804,7 @@ Proof.
 <font size=-2>&#9744;</font> 
 <div class="paragraph"> </div>
 
-<a name="lab14"></a><h4 class="section">练习：3 星, standard, recommended (binary_commute)</h4>
+<a name="lab13"></a><h4 class="section">练习：3 星, standard, recommended (binary_commute)</h4>
 
   在上一个练习中，你已经测试过 <span class="inlinecode"><span class="id" title="var">incr</span></span> 与 <span class="inlinecode"><span class="id" title="var">bin_to_nat</span></span> 的可交换性，
   如下图所示 (这种图被称为 <i>'交换图' (Commutative Digram???)_，
@@ -1045,7 +834,7 @@ Proof.
 </div>
 
 <div class="doc">
-<font size=-2>&#9744;</font> <a name="lab15"></a><h4 class="section">练习：5 星, advanced (binary_inverse)</h4>
+<font size=-2>&#9744;</font> <a name="lab14"></a><h4 class="section">练习：5 星, advanced (binary_inverse)</h4>
  (a) 完成函数 <span class="inlinecode"><span class="id" title="var">nat_to_bin</span></span> 的定义，它将自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 转换为二进制形式。
 </div>
 <div class="code">

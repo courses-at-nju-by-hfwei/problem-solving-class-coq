@@ -1,18 +1,28 @@
 (** * Induction: 归纳证明 *)
 
-(** 
+(*
   本节依赖于 [Basics.v] (你需要先阅读它)。
   你需要先编译 [Basics.v] 得到 [Basics.vo]。
   编译方法：在 CoqIDE 中打开 [Basics.v]，
   执行 "Compile" 菜单中的 "Compile Buffer" 命令。
+  
+  本节介绍如何在 Coq 中做数学归纳法证明。
+  数学归纳法在计算机科学中非常重要，使用非常频繁。
+  记得有一次，我与一位老师聊天，我们的研究方向差别较大，
+  唯一的共同点就是要经常做一些证明。
+  我问，你的领域里有哪些常用的证明策略?
+  他说，数学归纳法。
+  
+  此外，本节还会介绍两个新的证明策略:
+  [injection] 与 [discriminate]。
 *)
 
 From LF Require Export Basics.    
 (* ################################################################# *)
 (** * 归纳法证明 *)
 
-(** 
-  在上一章中，我们使用 [simpl] 证明了定理 [plus_O_n] (即，[0] 是 [+] 的左单位元)。
+(*
+  在上一节中，我们使用 [simpl] 证明了定理 [plus_O_n] (即，[0] 是 [+] 的左单位元)。
   下面，我们尝试使用 [simpl] 证明定理 [plus_n_O]，
   它表明 [0] 也是 [+] 的右单位元。
 *)
@@ -26,7 +36,7 @@ Proof.
 Abort.
 
 
-(** 
+(* 
   我们发现 [simpl] 不起作用。
   这是因为，[n + 0] 中的 [n] 是任意自然数，无法使用 [plus] 定义中的匹配进行化简。
   
@@ -40,10 +50,10 @@ Proof.
   - (* n = 0 *)
     reflexivity. (* So far so good... *)
   - (* n = S n' *)
-    simpl.       (* ...不过我们又卡在这儿了 *)
-Abort.
+    simpl. (* ...不过我们又卡在这儿了 *)
+Abort. (* 终止该证明 *)
 
-(** 
+(* 
   - [n = 0] 的情形可以通过 [plus] 的第一条模式匹配完成化简。
   - 对于 [n = S n']，经过一步 [simpl] 后，
     我们还需要证明 [S n' = S (n' + 0)]。
@@ -61,7 +71,7 @@ Abort.
     关于这一点，我们会在后续章节与后续课程深入学习。
 *)
 
-(** 
+(* 
   我们从_'自然数上的归纳原理'_开始：
   (问卷：高中时是否学习过数学归纳法?)
   假设 [P(n)] 为关于自然数的命题。
@@ -80,7 +90,7 @@ Abort.
   后续课程中我们还有机会回到这个问题上来。)
 *)
 
-(**  
+(*  
   Coq 通过应用 [induction] 策略把待定目标 [forall n : nat, n = n + 0]
   分为两个子目标:
   - 基础情况: [n = 0]。此时，我们需要证明 [P(0)]，即 [0 = 0 + 0] 成立。
@@ -96,16 +106,16 @@ Abort.
 Theorem plus_n_O : forall n : nat, n = n + 0.
 Proof.
   intros n.
-  induction n as [| n' IHn']. (* 讲解如下 *)
+  induction n as [| n' IHn']. (* 下面会详细解释这句话 *)
   - (* n = 0 *)
     reflexivity.
   - (* n = S n' *)
     simpl.
-    rewrite <- IHn'. (* 应用归纳假设 *)
+    rewrite <- IHn'. (* 应用归纳假设 [IHn'] *)
     reflexivity.
 Qed.
 
-(** 
+(* 
   根据上面的分析，对自然数 [n] 应用 [induction] 策略，
   会产生两个子目标。
   就像使用 [destruct] 做分情形分析一样，在 [induction] 中，
@@ -125,11 +135,11 @@ Proof.
     simpl. rewrite -> IHn'. reflexivity.
 Qed.
 
-(**
+(*
   注意: 在上面的证明中，我们没有使用 [intros n]。
   当 [induction n] 会自动将 [n] 移到上下文中。
 *)
-(** **** 练习：2 星, standard, recommended (basic_induction)
+(* **** 练习：2 星, standard, recommended (basic_induction)
     使用 [induction] 完成以下证明。你可能需要使用之前证明的定理。
     记住 [Print]、[Search]。
 *)
@@ -146,9 +156,7 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 
-(**
-  我们终于可以证明加法交换律与结合律了。
-*)
+(* 我们终于可以证明加法交换律与结合律了。*)
 Theorem plus_comm : forall n m : nat,
   n + m = m + n.
 Proof.
@@ -162,7 +170,7 @@ Proof.
 Admitted.
 (** [] *)
 
-(** **** 练习：2 星, standard (double_plus)
+(* **** 练习：2 星, standard (double_plus)
   完成函数 [double] 的定义，它接受参数 [n]，返回 [2n]
   (你可以将 [Basics.v] 的定义拷贝过来): 
 *)
@@ -171,7 +179,7 @@ Fixpoint double (n:nat) : nat
   (* := 你的解答 *).
 Admitted.
 
-(** 使用 [induction] 证明 [double n = n + n]: *)
+(* 使用 [induction] 证明 [double n = n + n]: *)
 
 Lemma double_plus : forall n, double n = n + n .
 Proof.
@@ -179,7 +187,7 @@ Proof.
 Admitted.
 (** [] *)
 
-(** **** 练习：2 星, standard, optional (evenb_S) 
+(* **** 练习：2 星, standard, optional (evenb_S) 
   证明下述关于 [evenb] 的定理。
 *)
 
@@ -192,7 +200,7 @@ Admitted.
 (* ################################################################# *)
 (** * 证明里的证明 *)
 
-(**
+(*
   关于 [induction]，我们暂时介绍这么多。
   后面，我们还会回到这个主题。
   
@@ -212,7 +220,7 @@ Proof.
   reflexivity.
 Qed.
 
-(**
+(*
   注意观察 [assert] 对证明目标的改变。
   [assert (H : 0 + n = n)] 策略引入了一个子目标，记为 [H]。
   我们先在随后的 [{ ... }] 内给出这个子目标的证明。
@@ -220,7 +228,7 @@ Qed.
   此时，我们可以将 [H] 作为已知定理使用了。
 *)
 
-(**
+(*
   [assert] 还有一个特别的用处，我们举例说明。
   假设我们要证明 [(n + m) + (p + q) = (m + n) + (p + q)]。
   似乎我们可以直接使用加法交换律 [plus_comm] 将等号左边的 [(n + m)] 
@@ -239,9 +247,7 @@ Proof.
   (* 但是，Coq 将 [plus_comm] 应用到了最外层的加号上 *)
 Abort.
 
-(**
-  [assert] 允许我们陈述一个针对证明中特定的变量的引理。
-*)
+(* [assert] 允许我们陈述一个针对证明中特定的变量的引理。*)
 
 Theorem plus_rearrange : forall n m p q : nat,
   (n + m) + (p + q) = (m + n) + (p + q).
@@ -254,7 +260,7 @@ Proof.
 Qed.
 
 Print plus_comm.
-(**
+(*
   在后面章节，我们将会看到，这个证明中的第2到第4行，可以用一条语句代替：
   [rewrite (plus_comm n m).]。
   回顾 [plus_comm] 定理:
@@ -267,7 +273,7 @@ Print plus_comm.
 *)
 
 (** **** 练习：2 星, standard, optional (plus_swap') *)
-(** 
+(* 
   除了 [assert]，我们还可以使用 [replace] 策略证明上述定理。
   [replace (t) with (u)] 会将目标中 [t] 的所有 _'出现' (occurrences)_替换为 [u],
   并生成子目标 [t = u]。
@@ -283,8 +289,8 @@ Admitted.
 (** **** 练习：2 星, standard, optional (sum_to_equation) *)
 Print sum_to.
 
-(**
-  TODO: (@ant-hengxin) 该练习还有问题，暂时不需要学生完成。
+(*
+  TODO: (@ant-hengxin) 该练习还有问题，暂时不需要完成。
   等待 @ant-henxin 修复。
   
   请证明 Gauss 所发现的求和公式 ([sum_to_equation])
@@ -303,7 +309,7 @@ Proof. Admitted.
 (* ################################################################# *)
 (** * 形式化证明 vs. 非形式化证明 *)
 
-(** 
+(*
   在初中，我们就开始写数学证明了。
   但是，什么是证明?
   我们好像从来没有给证明本身下过定义?
@@ -316,7 +322,8 @@ Proof. Admitted.
   而大多数时候，我们写的是 _'非形式化证明' (Informal Proof)_。
   如下所示。
 *)
-(** - _'定理'_：对于任何 [n]、[m] 和 [p]，
+
+(* - _'定理'_：对于任何 [n]、[m] 和 [p]，
 
       n + (m + p) = (n + m) + p.
 
@@ -345,7 +352,7 @@ Proof. Admitted.
 (* ################################################################# *)
 (** * 更多练习 *)
 
-(** **** 练习：3 星, standard, recommended (mult_comm)  
+(* **** 练习：3 星, standard, recommended (mult_comm)  
     利用 [assert] 证明下述定理 [plus_swap]。(提示: 不必使用 [induction]。) *)
 
 Theorem plus_swap : forall n m p : nat,
@@ -354,7 +361,7 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 
-(** 现在我们终于可以证明乘法交换律了。你可能会用上 [plus_swap]。*)
+(* 现在我们终于可以证明乘法交换律了。你可能会用上 [plus_swap]。*)
 
 Theorem mult_comm : forall m n : nat,
   m * n = n * m.
@@ -364,7 +371,7 @@ Admitted.
 (** [] *)
 
 (** **** 练习：3 星, standard, optional (more_exercises) *)
-(**
+(*
   注意: 以下练习题并不一定都需要使用 [induction].
   你需要通过做练习培养自己做证明时的直觉。
   直觉是非常重要的。
@@ -372,9 +379,7 @@ Admitted.
   (如果你又忘记了某些函数或者定理，请记着 [Print]、[Check] 与 [Search]。)
 *)
 
-(**
-  关于布尔函数
-*)
+(* 关于布尔函数 *)
 Theorem andb_false_r : forall b : bool,
   andb b false = false.
 Proof.
@@ -391,9 +396,7 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 
-(**
-  关于自然数之间的大小关系
-*)
+(* 关于自然数之间的大小关系 *)
 Theorem eqb_refl : forall n : nat,
   true = (n =? n).
 Proof.
@@ -431,9 +434,7 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 
-(**
-  关于乘法运算。我们终于可以证明乘法分配律和乘法结合律了。
-*)
+(* 关于乘法运算。我们终于可以证明乘法分配律和乘法结合律了。*)
 Theorem mult_1_l : forall n : nat,
   1 * n = n.
 Proof.
@@ -453,48 +454,195 @@ Proof.
 Admitted.
 (** [] *)
 
-(**
 (* ################################################################# *)
 (** * 变换归纳法则 *)
 
-(** 在 Coq 中进行归纳证明时，有时控制归纳假设的确切形式是十分重要的。
-    特别是，在调用 [induction] 策略前，我们用 [intros]
-    将假设从目标移到上下文中时要十分小心。例如，假设我们要证明 [double]
-    函数式单射的 -- 即，它将不同的参数映射到不同的结果：
+(*
+  当命题涉及多个归纳 (Inductive) 类型或者同一个归纳类型的多个变量时，
+  使用数学归纳法的首要任务就是要确定对哪个变量做归纳。
+  比如下面的定理 [double_injective]，
+  它说明 [double] 是单射函数
+  (你应该已经在 [Basics.v] 中定义了 [double]。
+   为了避免冲突，我们使用 Module 机制)。
+  该定理涉及两个自然数类型变量 [n] 和 [m]。
+  我们需要对哪个变量进行归纳呢?
+*)
 
-       Theorem double_injective: forall n m,
-         double n = double m -> n = m.
+Module InductionPlayground.
+Fixpoint double (n : nat) : nat :=
+  match n with
+  | O => O
+  | S n' => S (S (double n'))
+  end.
 
-    其证明的_'开始方式'_有点微妙：如果我们以
+Theorem double_injective: forall n m,
+  double n = double m -> n = m.
 
-       intros n. induction n.
+(*
+   一种选择是对 [n] 做归纳。
+   比如，以 [intros n. induction n as [ | n' IHn'].] 开始证明。
+   恭喜你，这个选择是明智的。
+   
+   我们来看一下完整的证明。
+   请注意观察每一步后证明目标与证明上下文的变化，
+   并扪心自问: 你 (对，就是你) 真得真得真得理解了吗?
+   
+   此外，在这个证明中，我们需要用到新的证明策略
+   [injection] 与 [discriminate]。
+*)
 
-    开始，那么一切都好。然而假如以
+Proof.
+  intros n. induction n as [ | n' IHn'].
+  - (* n = 0 *) 
+    intros m eq. simpl in eq.
+    destruct m as [ | m'] eqn:E.
+    + (* E : m = 0 *)
+      reflexivity.
+    + (* E : m = S m' *)
+      simpl in eq. discriminate eq. (* 下面解释这句话 *)
+  - (* n = S n' *)
+    simpl. intros m eq.
+    destruct m as [ | m'] eqn:E.
+    + (* E : m = 0 *) simpl in eq. discriminate eq.
+    + (* E : m = S m' *) 
+      apply f_equal. (* TODO: 在之前解释 [f_equal] *)
+      apply IHn'.
+      simpl in eq.
+      injection eq as H. (* 下面解释这句话 *)
+      apply H.
+Qed.
 
-       intros n m. induction n.
+(*
+  如果你已经扪心自问过了 (并且得到了肯定的答复)，
+  那么你就已经懂得了如何在 Coq 中做基本的数学归纳法证明。
+  
+  下面，我们打个岔，先介绍一下上述证明中用到的两个新的证明策略:
+  [injection] 与 [discriminate]。
+  
+  先讲 [discriminate]。
+  (discriminate，区分，辨别也。在区分什么? 马上揭晓。)
+  
+  在证明进行到第一处 [discriminate eq.] 时，
+  证明目标是 [0 = S m']，[eq] 为 [eq : 0 = S (S (double m'))]。
+  我们发现此时的证明目标 [0 = S m'] 是假的。
+  因为只有假才能蕴含假，所以证明上下文(合起来)应该也是假的。
+  [discriminate eq.] 的效果就是告诉 Coq:
+  [eq : 0 = S (S (double m'))] 是假的，因此目标得证。
+  作为一位不苟言笑的老大哥，Coq 要检查 
+   [eq : 0 = S (S (double m'))] 确实是假的。
+  那它怎么知道这个是假的呢?
+  我们需要回到自然数类型的定义。
+  
+  Inductive nat : Type :=
+    | O
+    | S (n : nat).
+*)
+Print nat.
+(*
+  观察 CoqIDE 的右下角输出，忽略 (: Set)，
+  你会发现它与我们在 [Basics.v] 中的定义不太一样。
+  不过，这只是"披了件外衣"，
+  它仍然表示: O 与 [S] 是 "唯二" 的构造函数。
+  
+  不仅如此!
+  所有归纳定义的背后还隐藏着两个"秘密":
+  - 每个构造函数都是单射函数。
+  - 不同的构造函数是不相交的。
+  
+  对自然数类型而言，这意味着:
+  - 构造函数 [S] 是单射函数。
+    也就是说，如果 S n = S m，则 n = m。
+  - [O] 与 [S] 是不相交的。
+    也就是说，[O] 与 [S n] 是不相同的 ([n] 为任意自然数)。
+*)
 
-    开始，就会卡在归纳情况中... *)
+(*
+  回到上面的证明。
+  我们有 [eq : 0 = S (S (double m'))]。
+  Coq 就是根据 [O] 与 [S] 的不相交性判定 [eq] 为假的。
+  这种证明策略称为 [discriminate]。
+*)
+
+(*
+  接下来介绍 [injection] 证明策略。
+  [injection]，"injective" 单射。
+  你是否猜到了它和什么有关?
+  是的，它用到了上面所说的第一个"秘密"。
+  
+  当上面的证明进行到 [injection eq as H.] 时，
+  证明目标是 [double n' = double m']，
+  [eq] 为 [eq : S (S (double n')) = S (S (double m'))]。
+  因为 [S] 是单射函数，
+  所以我们可以推出 [S (double n') = S (double m')]，
+  进一步推出 [double n' = double m']。
+  [injection eq] 的效果就是根据 [S] 的单射性质作出上面的推导，
+  得到 [double n' = double m']。
+  [injection eq as H.] 会将得到的 [double n' = double m']
+  命名为 [H]，作为新的证明上下文。
+  有了 [H]，[apply H.] 就证明了目标。
+  
+  (如果仅使用 [injection eq.]，没有 [as H]，
+  那么推导得到的 [double n' = double m'] 会作为前件插入到
+  证明目标中。
+  也就是说，证明目标会变成 
+  [double n' = double m' -> double n' = double m']。
+  这样的话，我们还需要使用 [intros H] 将它引入到上下文中。) 
+*)
+
+(*
+  好了，对 [injection] 与 [discriminate] 的介绍到此为止。
+  我们已经知道了如何通过对 [n] 做归纳证明 [double_injective]。
+  
+  现在，假设你选择对 [m] 做归纳，并且以
+  [intros n m. induction n as [ | n' IHn'].] 开始证明 ... *)
 
 Theorem double_injective_FAILED : forall n m,
      double n = double m ->
      n = m.
 Proof.
-  intros n m. induction n as [| n'].
+  intros n m.
+  induction n as [| n' IHn'].
   - (* n = O *) simpl. intros eq. destruct m as [| m'] eqn:E.
     + (* m = O *) reflexivity.
-    + (* m = S m' *) discriminate eq.
+    + (* m = S m' *) discriminate eq. (* [simpl in eq] 不必要 *)
   - (* n = S n' *) intros eq. destruct m as [| m'] eqn:E.
     + (* m = O *) discriminate eq.
     + (* m = S m' *) apply f_equal.
 
-(** 此时，归纳假设 [IHn'] _'不会'_给出 [n' = m'] -- 会有个额外的 [S] 阻碍 --
-    因此该目标无法证明。 *)
+(**
+  现在，回到我们的主题上来。
+  
+  证明进行到此，我们的待证目标变成 [n' = m']。
+  我们的归纳假设 [IHn'] 是 
+  [IHn' : double n' = double (S m') -> n' = S m']。
+  
+  但是，从这个归纳假设，我们无法证明 [n' = m']:
+  归纳假设的结论部分是 [n' = S m']，而不是 [n' = m']。
+  
+  证明进入死胡同。
+  沮丧。
+  终止。
+*)
+Abort.
 
-      Abort.
+(**
+  为什么会这样呢? 
+  [n] 与 [m] 在定理 [double_injective] 中难道不是对称的吗?
+  它们的作用难道不是一样的吗?
+  为什么对 [n] 做归纳可以很顺利，对 [m] 做归纳就进入了死胡同呢?
+  
+  我们不妨回头比较一下两种做法在执行完 [induction] 策略后产生的证明状态。
+  - 第一种做法: [intros n. induction n as [ | n' IHn'].]
+  - 第二种做法: [intros n m. induction m as [ | m' IHm'].]
+*)
 
-(** 哪里出了问题？ *)
-
-(** 问题在于，我们在调用归纳假设的地方已经将 [m] 引入了上下文中 --
+(* 
+  发现问题了吗?
+  
+  问题很严重。
+  
+  TODO: 继续……
+  问题在于，我们在调用归纳假设的地方已经将 [m] 引入了上下文中 --
     直观上，我们已经告诉了 Coq“我们来考虑具体的 [n] 和 [m]...”，
     而现在必须为这些_'具体的'_ [n] 和 [m] 证明 [double n = double m]，
     然后才有 [n = m]。
@@ -544,7 +692,7 @@ Proof.
 (** 对 [double_injective] 的成功证明将 [m] 留在了目标语句中 [induction]
     作用于 [n] 的地方：*)
 
-Theorem double_injective : forall n m,
+Theorem double_injective_revisited : forall n m,
      double n = double m ->
      n = m.
 Proof.
@@ -555,7 +703,7 @@ Proof.
 
   - (* n = S n' *) simpl.
 
-(** 注意，此时的证明目标和归纳假设是不同的：证明目标要求我们证明更一般的事情
+(* 注意，此时的证明目标和归纳假设是不同的：证明目标要求我们证明更一般的事情
     （即，为_'每一个'_ [m] 证明该语句），而归纳假设 [IH] 相应地更加灵活，
     允许我们在应用归纳假设时选择任何想要的 [m]。 *)
 
@@ -580,6 +728,7 @@ Proof.
     实例化一般的 [m]，那么 [IHn'] 就刚好能给出我们需要的来结束此证明。 *)
 
       apply IHn'. injection eq as goal. apply goal. Qed.
+End InductionPlayground.
 
 (** What you should take away from all this is that we need to be
     careful, when using induction, that we are not trying to prove
@@ -684,7 +833,8 @@ Proof.
         [n' = m'] 的结论，显然 [S n' = S m']。因此 [S n' = n] 且 [S m' = m]，
         此即我们所欲证。 [] *)
 
-(** 在结束本节去做习题之前，我们先稍微跑个题，使用 [eqb_true]
+(*
+(* 在结束本节去做习题之前，我们先稍微跑个题，使用 [eqb_true]
     来证明一个标识符的类似性质以备后用： *)
 
 Theorem eqb_id_true : forall x y,
@@ -694,18 +844,6 @@ Proof.
   assert (H' : m = n). { apply eqb_true. apply H. }
   rewrite H'. reflexivity.
 Qed.
-
-(** **** 练习：3 星, standard, recommended (gen_dep_practice)  
-
-    通过对 [l] 进行归纳来证明它。 *)
-
-Theorem nth_error_after_last: forall (n : nat) (X : Type) (l : list X),
-     length l = n ->
-     nth_error l n = None.
-Proof.
-  (* 请在此处解答 *)
-Admitted.
-(** [] *)
 *)
 
 (** **** 练习：3 星, standard (binary)
