@@ -53,13 +53,14 @@
 <div class="paragraph"> </div>
 
   '算法 + 数据结构 = 程序' 
-  (Algorithms + Data Structures = Programs) by Niklaus Wirth
+  (Algorithms + Data Structures = Programs) by Niklaus Wirth.
 
 <div class="paragraph"> </div>
 
   如果说算法是一张食谱，那么数据就是食材。
   所谓'巧妇难为无米之炊'，没有数据，算法就无用武之地。
-  正如食材各式各样，数据也有各种_类型_(在本教材中，我们使用数据类型的说法，而不是数据结构)。
+  正如食材各式各样，数据也有各种 <i>'类型'</i>
+  (在本教材中，我们使用数据类型的说法，而不是数据结构)。
 
 <div class="paragraph"> </div>
 
@@ -85,7 +86,7 @@
 
 <div class="paragraph"> </div>
 
-  在程序设计语言里， _类型检查 (Type Checking)_ 的工作就是检查：
+  在程序设计语言里， <i>'类型检查'</i> (Type Checking) 的工作就是检查：
 <ul class="doclist">
 <li> 是否使用了无效的 (invalid) 数据； 
 
@@ -154,7 +155,8 @@
   以下声明 (Declaration) 定义了一个名为 <span class="inlinecode"><span class="id" title="var">day</span></span> 的数据类型。
   它的数据构成的集合为 {<span class="inlinecode"><span class="id" title="var">monday</span></span>, <span class="inlinecode"><span class="id" title="var">tuesday</span></span>, <span class="inlinecode"><span class="id" title="var">wednesday</span></span>, 
   <span class="inlinecode"><span class="id" title="var">thursday</span></span>, <span class="inlinecode"><span class="id" title="var">friday</span></span>, <span class="inlinecode"><span class="id" title="var">saturday</span></span>, <span class="inlinecode"><span class="id" title="var">sunday</span></span>}。
-  <span class="inlinecode"><span class="id" title="var">day</span></span> 是 <i>'枚举'(Enumerate)_ 数据类型，因为我们直接在定义中一一列举了它包含的值。
+  <span class="inlinecode"><span class="id" title="var">day</span></span> 是 <i>'枚举'</i> (Enumerate) 数据类型，
+  因为我们直接在定义中一一列举了它包含的值。
 
 </div>
 <div class="code">
@@ -174,7 +176,8 @@
 
 <div class="doc">
   下面，我们定义一个名为 <span class="inlinecode"><span class="id" title="var">next_day</span></span> 的操作，也称为函数。
-  该操作接受一个类型为 <span class="inlinecode"><span class="id" title="var">day</span></span> 的数据 <span class="inlinecode"><span class="id" title="var">d</span></span> (称为_参数 (parameter)_)，返回一个类型为 <span class="inlinecode"><span class="id" title="var">day</span></span> 的数据 (称为_返回值_)。 
+  该操作接受一个类型为 <span class="inlinecode"><span class="id" title="var">day</span></span> 的数据 <span class="inlinecode"><span class="id" title="var">d</span></span> (称为_参数_ (parameter))，
+  返回一个类型为 <span class="inlinecode"><span class="id" title="var">day</span></span> 的数据 (称为_返回值_ (return value))。 
 
 </div>
 <div class="code">
@@ -258,8 +261,8 @@
 </div>
 
 <div class="doc">
-  Coq 是 _交互式定理证明 (Interactive Theorem Proving; ITP)_ 工具，
-  也称为 _证明助手 (Proof Assistant)_。
+  Coq 是 _交互式定理证明_ (Interactive Theorem Proving; ITP) 工具，
+  也称为 _证明助手_ (Proof Assistant)。
 
 <div class="paragraph"> </div>
 
@@ -391,8 +394,8 @@
 
 <div class="paragraph"> </div>
 
-  现在，你需要定义一个布尔函数 <span class="inlinecode"><span class="id" title="var">nandb</span></span>：
-  只有当两个参数都是 <span class="inlinecode"><span class="id" title="var">true</span></span> 时，它才返回 <span class="inlinecode"><span class="id" title="var">false</span></span>；
+  现在，你需要定义一个布尔函数 <span class="inlinecode"><span class="id" title="var">nandb</span></span>:
+  只有当两个参数都是 <span class="inlinecode"><span class="id" title="var">true</span></span> 时，它才返回 <span class="inlinecode"><span class="id" title="var">false</span></span>;
   否则，它返回 <span class="inlinecode"><span class="id" title="var">true</span></span>。
   你可以使用之前定义过的布尔函数 <span class="inlinecode"><span class="id" title="var">negb</span></span>、<span class="inlinecode"><span class="id" title="var">andb</span></span>、<span class="inlinecode"><span class="id" title="var">orb</span></span>。
 
@@ -449,7 +452,7 @@
 
 <div class="paragraph"> </div>
 
-  Coq (内置的 <i>'Gallina'</i> ) 是 _函数式(Functional)_ 程序设计语言。
+  Coq (内置的 <i>'Gallina'</i> ) 是 <i>'函数式'</i> (Functional) 程序设计语言。
   在函数式程序设计语言中，函数也是数据，也有类型。
   更多关于函数式程序设计的内容，我们会在后续课程与 Coq 教材中学习。
 
@@ -543,7 +546,7 @@
 <div class="paragraph"> </div>
 
   <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> <span class="inlinecode"><span class="id" title="var">color</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> 告诉 Coq：
-  _归纳(Inductively)_ 地定义 (也称 <i>'构造'</i>) 名为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的数据类型。
+  _归纳_ (Inductively) 地定义 (也称 <i>'构造'</i>) 名为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的数据类型。
 
 <div class="paragraph"> </div>
 
@@ -556,7 +559,10 @@
 
 </li>
 <li> <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode">(<span class="id" title="var">p</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">rgb</span>)</span> 是一个构造函数。
-    它表示，如果 <span class="inlinecode"><span class="id" title="var">p</span></span> 是类型为 <span class="inlinecode"><span class="id" title="var">rgb</span></span> 的值，那么 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> 就是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。例如，<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="tactic">red</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">green</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">blue</span></span> 都是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
+    它表示，如果 <span class="inlinecode"><span class="id" title="var">p</span></span> 是类型为 <span class="inlinecode"><span class="id" title="var">rgb</span></span> 的值，
+    那么 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">p</span></span> 就是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
+    例如，<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="tactic">red</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">green</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">blue</span></span>
+    都是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
 
 </li>
 </ul>
@@ -565,14 +571,15 @@
 
   同样重要的是，<span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> <span class="inlinecode"><span class="id" title="var">color</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span></span> 还告诉 Coq：
   类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值有且 _仅有_ 以上三种构造方式。
-  例如，<span class="inlinecode"><span class="id" title="var">sunday</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">saturday</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span> 都不是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
+  例如，<span class="inlinecode"><span class="id" title="var">sunday</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">saturday</span></span>、<span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">false</span></span> 
+  都不是类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的值。
 
 <div class="paragraph"> </div>
 
 
 <div class="paragraph"> </div>
 
-  在定义函数时，我们可以针对每个构造函数使用 <i>'模式匹配'。
+  在定义函数时，我们可以针对每个构造函数使用 <i>'模式匹配'</i> (Pattern Match)。
   函数 <span class="inlinecode"><span class="id" title="var">monochrome</span></span> 接受一个类型为 <span class="inlinecode"><span class="id" title="var">color</span></span> 的参数 <span class="inlinecode"><span class="id" title="var">c</span></span>。
   根据上面的分析，<span class="inlinecode"><span class="id" title="var">c</span></span> 有且仅有三种可能的构造方式。
   <span class="inlinecode"><span class="id" title="keyword">match</span></span> 分别考虑这三种构造方式：
@@ -588,7 +595,7 @@
 </li>
 </ul>
   这里，<span class="inlinecode"><span class="id" title="var">q</span></span> 为变量，它的类型是 <span class="inlinecode"><span class="id" title="var">rgb</span></span> (Coq 可以自动推断出这一点)。
-  当 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> 与 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">xxx</span></span> 匹配时，<span class="inlinecode"><span class="id" title="var">q</span></span> 被 <i>'绑定'(bind)_ 到 <span class="inlinecode"><span class="id" title="var">xxx</span></span>。
+  当 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">q</span></span> 与 <span class="inlinecode"><span class="id" title="var">primary</span></span> <span class="inlinecode"><span class="id" title="var">xxx</span></span> 匹配时，<span class="inlinecode"><span class="id" title="var">q</span></span> 被 <i>'绑定'</i> (bind) 到 <span class="inlinecode"><span class="id" title="var">xxx</span></span>。
   你可以在 <span class="inlinecode">⇒</span> 的右边使用 <span class="inlinecode"><span class="id" title="var">q</span></span>。
   在本例中，我们并没有在 <span class="inlinecode">⇒</span> 的右边使用 <span class="inlinecode"><span class="id" title="var">q</span></span>。
   在这种情况下，我们可以使用通配符 <span class="inlinecode"><span class="id" title="var">_</span></span> 代替 <span class="inlinecode"><span class="id" title="var">q</span></span>。
@@ -631,7 +638,7 @@
 
 <div class="paragraph"> </div>
 
-  Coq 使用<i>'模块'(Module)_组织较大规模的代码。
+  Coq 使用 <i>'模块'</i> (Module) 组织较大规模的代码。
   目前，我们只需要了解它的两种基本功能:
 <ul class="doclist">
 <li> 可以将一组紧密相关的定义放在 <span class="inlinecode"><span class="id" title="keyword">Module</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> 和 <span class="inlinecode"><span class="id" title="keyword">End</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> 之间。
@@ -647,8 +654,8 @@
 <div class="paragraph"> </div>
 
   这里，我们使用了模块的第二种功能，
-  在 <span class="inlinecode"><span class="id" title="keyword">Module</span></span> <span class="inlinecode"><span class="id" title="var">NatPlayground</span></span> 里定义自己的 <span class="inlinecode"><span class="id" title="var">nat</span></span> 类型。
-  注意: 在 <span class="inlinecode"><span class="id" title="keyword">End</span></span> <span class="inlinecode"><span class="id" title="var">NatPlayground</span></span> 之后，我们采用的仍是 Coq 标准库里提供的定义。
+  在 <span class="inlinecode"><span class="id" title="keyword">Module</span></span> <span class="inlinecode"><span class="id" title="var">NatPlayground</span>.</span> 里定义自己的 <span class="inlinecode"><span class="id" title="var">nat</span></span> 类型。
+  注意: 在 <span class="inlinecode"><span class="id" title="keyword">End</span></span> <span class="inlinecode"><span class="id" title="var">NatPlayground</span>.</span> 之后，我们采用的仍是 Coq 标准库里提供的定义。
 
 </div>
 <div class="code">
@@ -671,7 +678,9 @@
   那就是自然数有无穷多个 (在后续课程中，我们会知道，自然数有可数无穷多个)。
   我们无法以一一列举的方式定义自然数类型。
   怎么办？怎么才能在有限的纸张上写下无穷多个自然数？
-  (“以”)
+
+<div class="paragraph"> </div>
+
   答案是：归纳定义。<span class="inlinecode"><span class="id" title="keyword">Inductive</span></span>关键词的威力在这里得以显现。
 
 </div>
@@ -723,7 +732,7 @@
   综上所述，在 <span class="inlinecode"><span class="id" title="var">nat</span></span> 的定义中，
   第一个构造函数给出了一个特定的自然数 <span class="inlinecode"><span class="id" title="var">O</span></span>，
   第二个构造函数根据已知的自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 构造一个新的自然数 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> 
-  (也称为 <span class="inlinecode"><span class="id" title="var">n</span></span> 的 <i>'后继'(Successor)_)。
+  (也称为 <span class="inlinecode"><span class="id" title="var">n</span></span> 的 <i>'后继'</i> (Successor))。
   没有循环依赖。
 
 <div class="paragraph"> </div>
@@ -821,7 +830,8 @@
 <div class="doc">
   需要注意的是，<span class="inlinecode"><span class="id" title="var">plus</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> 使用了自身 <span class="inlinecode"><span class="id" title="var">plus</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> (n' &lt; n)，
   是一个递归函数。
-  因此，我们使用了关键字 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>，而不是之前在定义函数时使用的 <span class="inlinecode"><span class="id" title="keyword">Definition</span></span>。
+  因此，我们使用了关键字 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>，
+  而不是之前在定义函数时使用的 <span class="inlinecode"><span class="id" title="keyword">Definition</span></span>。
 
 <div class="paragraph"> </div>
 
@@ -837,14 +847,15 @@
   此时，有同学提问：使用关键词 <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> 与 <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> 定义函数有什么区别?
   答：注意观察 CoqIde 后侧的 "Messages" 窗口。
   除了 "plus is defined"，
-  它还显示了一行信息"plus is recursively defined (decreasing on 1st argument)"。
+  它还显示了一行信息:
+  "plus is recursively defined (decreasing on 1st argument)"。
   Coq 要求所有函数都是可计算的 (在这里，你可以理解成函数对于所有输入都会终止)。
   要保证这一点，Coq 要求使用 <span class="inlinecode"><span class="id" title="var">FixPoint</span></span> 定义的递归函数中的某些参数必须是递减的。
 
 <div class="paragraph"> </div>
 
   Coq 检查到 <span class="inlinecode"><span class="id" title="var">plus</span></span> 的第一个参数是递减的。
-  这意味着我们对参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 执行了<i>'结构化递归' (Structural Induction)_。
+  这意味着我们对参数 <span class="inlinecode"><span class="id" title="var">n</span></span> 执行了<i>'结构化递归'</i> (Structural Induction)。
 
 <div class="paragraph"> </div>
 
@@ -965,7 +976,7 @@
 </div>
 
 <div class="doc">
-  我们可以引入通常的加法、减法、乘法<i>'记号（Notation）'</i>。
+  我们可以引入通常的加法、减法、乘法 <i>'记号'</i> (Notation)。
   <span class="inlinecode"><span class="id" title="keyword">level</span></span> 规定了优先级，<span class="inlinecode"><span class="id" title="tactic">left</span></span> <span class="inlinecode"><span class="id" title="keyword">associativity</span></span> 表示“左结合”。
   目前，你不需要了解这些细节。
 
@@ -1098,8 +1109,8 @@
   <span class="inlinecode"><span class="id" title="var">evenb</span></span> 判断给定的自然数 <span class="inlinecode"><span class="id" title="var">n</span></span> 是否为偶数。
   尽管我们知道 <span class="inlinecode"><span class="id" title="var">O</span></span> 为偶数，但是我们无法直接判断 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> 是否为偶数，
   因为 <span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> 是否为偶数，取决于 <span class="inlinecode"><span class="id" title="var">pred</span></span> <span class="inlinecode"><span class="id" title="var">n'</span></span> 是否为偶数。
-  换句话说，我们需要 <i>'递归'(Recursively)_ 定义该函数。
-  并且，根据上面的分析，我们需要两个 <i>'基础情况'(Basic Cases)_：
+  换句话说，我们需要 <i>'递归'</i> (Recursively) 定义该函数。
+  并且，根据上面的分析，我们需要两个 <i>'基础情况'</i> (Basic Cases):
   <span class="inlinecode"><span class="id" title="var">O</span></span> 是偶数，<span class="inlinecode"><span class="id" title="var">S</span></span> <span class="inlinecode"><span class="id" title="var">O</span></span> 不是偶数。
 
 </div>
@@ -1308,8 +1319,8 @@
 <li> <span class="inlinecode"><span class="id" title="tactic">intros</span></span> <span class="inlinecode"><span class="id" title="var">n</span>.</span>：我们要证明的定理是一个全称命题：“对于所有的自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>，……”。
     在证明这类命题时，通常的做法是：“假设 <span class="inlinecode"><span class="id" title="var">n</span></span> 是任意自然数，……”。
     在后续的证明“……”中，我们就可以使用 <span class="inlinecode"><span class="id" title="var">n</span></span> 了。
-    也就是说，我们将 <span class="inlinecode"><span class="id" title="var">n</span></span> 从 <i>'证明目标' (Goal)_ 
-    移到了 <i>'证明上下文' (Context)_中。
+    也就是说，我们将 <span class="inlinecode"><span class="id" title="var">n</span></span> 从 <i>'证明目标'</i> (Goal) 
+    移到了 <i>'证明上下文'</i> (Context) 中。
     <span class="inlinecode"><span class="id" title="tactic">intros</span></span> <span class="inlinecode"><span class="id" title="var">n</span>.</span> 的作用就是“引入任意自然数 <span class="inlinecode"><span class="id" title="var">n</span></span>”。
     (两年以后，面对《数理逻辑十二讲》的第四讲，
     小明将会回想起问题求解习题课带他见识Coq证明的那个睡意惺忪的清晨。)
@@ -1372,7 +1383,7 @@
 
 <div class="doc">
 <a name="lab20"></a><h1 class="section">基于改写 (Rewriting) 的证明</h1>
- <i>'改写 (Rewriting)'</i> 指的是用等号的一端替换等号的另一端。
+ <i>'改写'</i> (Rewriting) 指的是用等号的一端替换等号的另一端。
 <div class="paragraph"> </div>
 
 
@@ -1440,7 +1451,7 @@
 
 <div class="paragraph"> </div>
 
-  如前所述，<i>'改写 (Rewriting)'</i> 指的是用等号的一端替换等号的另一端。
+  如前所述，<i>'改写'</i> (Rewriting)' 指的是用等号的一端替换等号的另一端。
   这里的等式可以是之前证明过的定理。
   比如定理 <span class="inlinecode"><span class="id" title="var">mult_O_plus</span></span> 的证明用到了之前证明过的 <span class="inlinecode"><span class="id" title="var">plus_O_n</span></span>。
 
@@ -1478,7 +1489,7 @@
 
   需要注意的是，<span class="inlinecode"><span class="id" title="var">plus_O_n</span></span> 是关于 <span class="inlinecode"><span class="id" title="var">n</span></span> 的全称语句。
   在 Rewriting 时，Coq 会通过匹配当前的证明目标来尝试
-  <i>'实例化'（Instantiate）_ <span class="inlinecode"><span class="id" title="var">n</span></span>。 
+  <i>'实例化'</i> (Instantiate) <span class="inlinecode"><span class="id" title="var">n</span></span>。 
 <div class="paragraph"> </div>
 
 <a name="lab22"></a><h4 class="section">练习：2 星, standard (mult_S_1)</h4>

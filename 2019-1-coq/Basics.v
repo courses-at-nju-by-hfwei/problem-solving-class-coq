@@ -10,11 +10,12 @@
 
 (** 
   '算法 + 数据结构 = 程序' 
-  (Algorithms + Data Structures = Programs) by Niklaus Wirth
+  (Algorithms + Data Structures = Programs) by Niklaus Wirth.
   
   如果说算法是一张食谱，那么数据就是食材。
   所谓'巧妇难为无米之炊'，没有数据，算法就无用武之地。
-  正如食材各式各样，数据也有各种_类型_(在本教材中，我们使用数据类型的说法，而不是数据结构)。
+  正如食材各式各样，数据也有各种 _'类型'_
+  (在本教材中，我们使用数据类型的说法，而不是数据结构)。
   
   数据类型包含两部分含义： 
   - 数据 (也称 _值_) 构成的集合； 
@@ -26,7 +27,7 @@
   同样重要的是，自然数作为一种数据类型，它 _不包括_ -1、0.5、2/3、e 等数据，
   也_不支持_除法、拼接、旋转等操作。
   
-  在程序设计语言里， _类型检查 (Type Checking)_ 的工作就是检查：
+  在程序设计语言里， _'类型检查'_ (Type Checking) 的工作就是检查：
   - 是否使用了无效的 (invalid) 数据； 
   - 是否进行了非法的 (unsupported) 操作。
 
@@ -56,7 +57,8 @@
   以下声明 (Declaration) 定义了一个名为 [day] 的数据类型。
   它的数据构成的集合为 {[monday], [tuesday], [wednesday], 
   [thursday], [friday], [saturday], [sunday]}。
-  [day] 是 _'枚举'(Enumerate)_ 数据类型，因为我们直接在定义中一一列举了它包含的值。
+  [day] 是 _'枚举'_ (Enumerate) 数据类型，
+  因为我们直接在定义中一一列举了它包含的值。
 *)
 
 Inductive day : Type :=
@@ -70,7 +72,8 @@ Inductive day : Type :=
 
 (**
   下面，我们定义一个名为 [next_day] 的操作，也称为函数。
-  该操作接受一个类型为 [day] 的数据 [d] (称为_参数 (parameter)_)，返回一个类型为 [day] 的数据 (称为_返回值_)。 
+  该操作接受一个类型为 [day] 的数据 [d] (称为_参数_ (parameter))，
+  返回一个类型为 [day] 的数据 (称为_返回值_ (return value))。 
 *)
 
 Definition next_day (d:day) : day :=
@@ -118,8 +121,8 @@ Example time_flies:
 Proof. simpl. reflexivity.  Qed.
 
 (**
-  Coq 是 _交互式定理证明 (Interactive Theorem Proving; ITP)_ 工具，
-  也称为 _证明助手 (Proof Assistant)_。
+  Coq 是 _交互式定理证明_ (Interactive Theorem Proving; ITP) 工具，
+  也称为 _证明助手_ (Proof Assistant)。
   
   要想使用 Coq 证明某个定理，你需要：
   - 清楚该定理的证明过程
@@ -190,8 +193,8 @@ Proof. simpl. reflexivity. Qed.
 (**
   要想熟练使用 Coq，不做练习是不可能的。
   
-  现在，你需要定义一个布尔函数 [nandb]：
-  只有当两个参数都是 [true] 时，它才返回 [false]；
+  现在，你需要定义一个布尔函数 [nandb]:
+  只有当两个参数都是 [true] 时，它才返回 [false];
   否则，它返回 [true]。
   你可以使用之前定义过的布尔函数 [negb]、[andb]、[orb]。
   
@@ -224,7 +227,7 @@ Check (negb true).
 (* ===> negb true : bool *)
 
 (** 
-  Coq (内置的 _'Gallina'_ ) 是 _函数式(Functional)_ 程序设计语言。
+  Coq (内置的 _'Gallina'_ ) 是 _'函数式'_ (Functional) 程序设计语言。
   在函数式程序设计语言中，函数也是数据，也有类型。
   更多关于函数式程序设计的内容，我们会在后续课程与 Coq 教材中学习。
   
@@ -283,21 +286,25 @@ Inductive color : Type :=
   这里，我们需要介绍一点理论知识。(很简单，不要害怕。)
   
   [Inductive color : Type] 告诉 Coq：
-  _归纳(Inductively)_ 地定义 (也称 _'构造'_) 名为 [color] 的数据类型。
+  _归纳_ (Inductively) 地定义 (也称 _'构造'_) 名为 [color] 的数据类型。
   
   在归纳定义中，我们需要给出构造 [color] 类型的数据的方法 (也称 _'构造函数'_)：
   - [black] 是一个构造函数。它表示 [black] 是类型为 [color] 的值。
   - [white] 是一个构造函数。它表示 [white] 是类型为 [color] 的值。
   - [primary (p : rgb)] 是一个构造函数。
-    它表示，如果 [p] 是类型为 [rgb] 的值，那么 [primary p] 就是类型为 [color] 的值。例如，[primary red]、[primary green]、[primary blue] 都是类型为 [color] 的值。
+    它表示，如果 [p] 是类型为 [rgb] 的值，
+    那么 [primary p] 就是类型为 [color] 的值。
+    例如，[primary red]、[primary green]、[primary blue]
+    都是类型为 [color] 的值。
   
   同样重要的是，[Inductive color : Type] 还告诉 Coq：
   类型为 [color] 的值有且 _仅有_ 以上三种构造方式。
-  例如，[sunday]、[primary saturday]、[primary false] 都不是类型为 [color] 的值。
+  例如，[sunday]、[primary saturday]、[primary false] 
+  都不是类型为 [color] 的值。
 *)
 
 (** 
-  在定义函数时，我们可以针对每个构造函数使用 _'模式匹配'。
+  在定义函数时，我们可以针对每个构造函数使用 _'模式匹配'_ (Pattern Match)。
   函数 [monochrome] 接受一个类型为 [color] 的参数 [c]。
   根据上面的分析，[c] 有且仅有三种可能的构造方式。
   [match] 分别考虑这三种构造方式：
@@ -305,7 +312,7 @@ Inductive color : Type :=
   - [white] 只可能与 [white] 匹配。
   - [primary q] 只可能与 [primary xxx] 匹配。
   这里，[q] 为变量，它的类型是 [rgb] (Coq 可以自动推断出这一点)。
-  当 [primary q] 与 [primary xxx] 匹配时，[q] 被 _'绑定'(bind)_ 到 [xxx]。
+  当 [primary q] 与 [primary xxx] 匹配时，[q] 被 _'绑定'_ (bind) 到 [xxx]。
   你可以在 [=>] 的右边使用 [q]。
   在本例中，我们并没有在 [=>] 的右边使用 [q]。
   在这种情况下，我们可以使用通配符 [_] 代替 [q]。
@@ -334,7 +341,7 @@ Definition isred (c : color) : bool :=
 (** ** 模块 *)
 
 (**
-  Coq 使用_'模块'(Module)_组织较大规模的代码。
+  Coq 使用 _'模块'_ (Module) 组织较大规模的代码。
   目前，我们只需要了解它的两种基本功能:
   - 可以将一组紧密相关的定义放在 [Module X] 和 [End X] 之间。
     这样，在 [End X] 之后，我们可以使用 [X.foo] 引用模块内部的 [foo]。
@@ -342,8 +349,8 @@ Definition isred (c : color) : bool :=
     它们不会与该模块外部的同名定义产生冲突。
   
   这里，我们使用了模块的第二种功能，
-  在 [Module NatPlayground] 里定义自己的 [nat] 类型。
-  注意: 在 [End NatPlayground] 之后，我们采用的仍是 Coq 标准库里提供的定义。
+  在 [Module NatPlayground.] 里定义自己的 [nat] 类型。
+  注意: 在 [End NatPlayground.] 之后，我们采用的仍是 Coq 标准库里提供的定义。
 *)
 Module NatPlayground.
 (* ================================================================= *)
@@ -356,7 +363,7 @@ Module NatPlayground.
   那就是自然数有无穷多个 (在后续课程中，我们会知道，自然数有可数无穷多个)。
   我们无法以一一列举的方式定义自然数类型。
   怎么办？怎么才能在有限的纸张上写下无穷多个自然数？
-  (“以”)
+  
   答案是：归纳定义。[Inductive]关键词的威力在这里得以显现。
 *)
 
@@ -388,7 +395,7 @@ Inductive nat : Type :=
   综上所述，在 [nat] 的定义中，
   第一个构造函数给出了一个特定的自然数 [O]，
   第二个构造函数根据已知的自然数 [n] 构造一个新的自然数 [S n] 
-  (也称为 [n] 的 _'后继'(Successor)_)。
+  (也称为 [n] 的 _'后继'_ (Successor))。
   没有循环依赖。
 *)
 
@@ -446,7 +453,8 @@ Fixpoint plus (n : nat) (m : nat) : nat :=
 (**
   需要注意的是，[plus n m] 使用了自身 [plus n' m] (n' < n)，
   是一个递归函数。
-  因此，我们使用了关键字 [Fixpoint]，而不是之前在定义函数时使用的 [Definition]。
+  因此，我们使用了关键字 [Fixpoint]，
+  而不是之前在定义函数时使用的 [Definition]。
   
   [Fixpoint] 是与递归定义紧密相关的概念。
   这里，我们不深究它背后的理论。
@@ -457,12 +465,13 @@ Fixpoint plus (n : nat) (m : nat) : nat :=
   此时，有同学提问：使用关键词 [Definition] 与 [Inductive] 定义函数有什么区别?
   答：注意观察 CoqIde 后侧的 "Messages" 窗口。
   除了 "plus is defined"，
-  它还显示了一行信息"plus is recursively defined (decreasing on 1st argument)"。
+  它还显示了一行信息:
+  "plus is recursively defined (decreasing on 1st argument)"。
   Coq 要求所有函数都是可计算的 (在这里，你可以理解成函数对于所有输入都会终止)。
   要保证这一点，Coq 要求使用 [FixPoint] 定义的递归函数中的某些参数必须是递减的。
   
   Coq 检查到 [plus] 的第一个参数是递减的。
-  这意味着我们对参数 [n] 执行了_'结构化递归' (Structural Induction)_。
+  这意味着我们对参数 [n] 执行了_'结构化递归'_ (Structural Induction)。
 
   然而，不存在算法能够判断所有的递归定义的函数是否是可终止的
   (又是神奇的计算理论!)。
@@ -533,7 +542,7 @@ Proof. (* 请在此处写入证明 *) Admitted.
 End NatPlayground2.
 
 (**
-  我们可以引入通常的加法、减法、乘法_'记号（Notation）'_。
+  我们可以引入通常的加法、减法、乘法 _'记号'_ (Notation)。
   [level] 规定了优先级，[left associativity] 表示“左结合”。
   目前，你不需要了解这些细节。
 *)
@@ -612,8 +621,8 @@ Fixpoint eqb1 (n m : nat) : bool
   [evenb] 判断给定的自然数 [n] 是否为偶数。
   尽管我们知道 [O] 为偶数，但是我们无法直接判断 [S n'] 是否为偶数，
   因为 [S n'] 是否为偶数，取决于 [pred n'] 是否为偶数。
-  换句话说，我们需要 _'递归'(Recursively)_ 定义该函数。
-  并且，根据上面的分析，我们需要两个 _'基础情况'(Basic Cases)_：
+  换句话说，我们需要 _'递归'_ (Recursively) 定义该函数。
+  并且，根据上面的分析，我们需要两个 _'基础情况'_ (Basic Cases):
   [O] 是偶数，[S O] 不是偶数。
 *)
 
@@ -737,8 +746,8 @@ Qed. (* 证毕 *)
   - [intros n.]：我们要证明的定理是一个全称命题：“对于所有的自然数 [n]，……”。
     在证明这类命题时，通常的做法是：“假设 [n] 是任意自然数，……”。
     在后续的证明“……”中，我们就可以使用 [n] 了。
-    也就是说，我们将 [n] 从 _'证明目标' (Goal)_ 
-    移到了 _'证明上下文' (Context)_中。
+    也就是说，我们将 [n] 从 _'证明目标'_ (Goal) 
+    移到了 _'证明上下文'_ (Context) 中。
     [intros n.] 的作用就是“引入任意自然数 [n]”。
     (两年以后，面对《数理逻辑十二讲》的第四讲，
     小明将会回想起问题求解习题课带他见识Coq证明的那个睡意惺忪的清晨。)
@@ -774,7 +783,7 @@ Theorem plus_1_l : forall n:nat, 1 + n = S n.
 Proof. intros n. simpl. reflexivity. Qed.
 (* ################################################################# *)
 (** * 基于改写 (Rewriting) 的证明 *)
-(** _'改写 (Rewriting)'_ 指的是用等号的一端替换等号的另一端。*)
+(** _'改写'_ (Rewriting) 指的是用等号的一端替换等号的另一端。*)
 
 (**
   定理 [plus_id_example] 读作：
@@ -820,7 +829,7 @@ Proof.
 (** [] *)
 
 (**
-  如前所述，_'改写 (Rewriting)'_ 指的是用等号的一端替换等号的另一端。
+  如前所述，_'改写'_ (Rewriting)' 指的是用等号的一端替换等号的另一端。
   这里的等式可以是之前证明过的定理。
   比如定理 [mult_O_plus] 的证明用到了之前证明过的 [plus_O_n]。
   
@@ -845,7 +854,7 @@ Qed.
 (** 
   需要注意的是，[plus_O_n] 是关于 [n] 的全称语句。
   在 Rewriting 时，Coq 会通过匹配当前的证明目标来尝试
-  _'实例化'（Instantiate）_ [n]。 *)
+  _'实例化'_ (Instantiate) [n]。 *)
     
 (** **** 练习：2 星, standard (mult_S_1)  *)
 Theorem mult_S_1 : forall n m : nat,
