@@ -35,12 +35,12 @@
   - [x] `apply` (already covered by [`Logic.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Logic.v))
   - [x] `injection` (already covered by [`Induction.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Induction.v))
   - [x] `discriminate` (already covered by [`Induction.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Induction.v))
-- [ ] Functional Programming: The List Datatype
+- [x] Functional Programming: The List Datatype
   - [x] Def and Functions for List
   - [x] Programming with Propositions (+ list examples deleted from `Logic.v`)
     - [x] 需要用到 Poly, 放在后面
   - [x] "Partial Map" in `Lists.v`??? (暂时删去)
-  - [ ] Binary Tree
+  - [x] Binary Tree
 - [ ] Functional Programming
   - [ ] Poly
   - [ ] Functions as Data

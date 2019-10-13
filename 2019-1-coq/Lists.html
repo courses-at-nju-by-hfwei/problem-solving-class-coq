@@ -40,7 +40,8 @@
 
 <div class="paragraph"> </div>
 
-  除了列表，本节还将介绍计算机科学中最常见、最漂亮的数据类型: <i>'树'</i> (Tree)。
+  除了列表，本节还将介绍计算机科学中最常见、最漂亮的数据类型: 
+  <i>'树'</i> (Tree 🌲)。
   "Trees sprout up just about everywhere in computer science.
  Donald Knuth"
 
@@ -65,6 +66,8 @@
 <br/>
 <span class="id" title="var">From</span> <span class="id" title="var">LF</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="keyword">Induction</span>.<br/>
 <span class="id" title="keyword">Module</span> <span class="id" title="var">NatList</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -166,6 +169,8 @@
 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">surjective_pairing</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">p</span> : <span class="id" title="var">natprod</span>),<br/>
 &nbsp;&nbsp;<span class="id" title="var">p</span> = (<span class="id" title="var">fst</span> <span class="id" title="var">p</span>, <span class="id" title="var">snd</span> <span class="id" title="var">p</span>).<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
@@ -205,6 +210,8 @@
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
+
+<br/>
 </div>
 
 <div class="doc">
@@ -289,6 +296,8 @@
 接下来，我们定义一些常用的列表操作函数。
 </div>
 <div class="code">
+
+<br/>
 </div>
 
 <div class="doc">
@@ -348,6 +357,8 @@
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_tl</span> : <span class="id" title="var">tl</span> [1;2;3] = [2;3].<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -370,6 +381,8 @@
 &nbsp;&nbsp;| <span class="id" title="var">O</span> ⇒ <span class="id" title="var">nil</span><br/>
 &nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">count'</span> ⇒ <span class="id" title="var">n</span> :: (<span class="id" title="tactic">repeat</span> <span class="id" title="var">n</span> <span class="id" title="var">count'</span>)<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -387,6 +400,8 @@
 &nbsp;&nbsp;| <span class="id" title="var">nil</span> ⇒ <span class="id" title="var">O</span><br/>
 &nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> ⇒ <span class="id" title="var">S</span> (<span class="id" title="var">length</span> <span class="id" title="var">t</span>)<br/>
 &nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -424,6 +439,8 @@
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_app3</span>: [1;2;3] ++ <span class="id" title="var">nil</span> = [1;2;3].<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -529,7 +546,10 @@
 </div>
 
 <div class="doc">
-<font size=-2>&#9744;</font> <a name="lab13"></a><h4 class="section">练习：3 星, standard, recommended (more list functions)</h4>
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab13"></a><h4 class="section">练习：3 星, standard, recommended (more list functions)</h4>
  请完成函数 <span class="inlinecode"><span class="id" title="var">count</span></span> 的定义。
 </div>
 <div class="code">
@@ -649,6 +669,8 @@
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
+
+<br/>
 </div>
 
 <div class="doc">
@@ -687,6 +709,8 @@
 &nbsp;&nbsp;- <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">reflexivity</span>.<br/>
 <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -757,6 +781,8 @@
 
 </div>
 <div class="code">
+
+<br/>
 </div>
 
 <div class="doc">
@@ -827,6 +853,8 @@
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
+
+<br/>
 </div>
 
 <div class="doc">
@@ -840,6 +868,9 @@
   你需要通过大量的练习与思考 (练习之后的思考很重要!很重要!很重要!)
   培养证明的直觉。
   比如，分情形分析够不够用? 需不需要用数学归纳法? 对什么作归纳? 等等。
+
+<div class="paragraph"> </div>
+
 <a name="lab19"></a><h4 class="section">练习：3 星, standard (list_exercises)</h4>
 
 </div>
@@ -988,23 +1019,7 @@
 </div>
 
 <div class="doc">
-<a name="lab24"></a><h1 class="section">Trees: 基础数据类型</h1>
-
-<div class="paragraph"> </div>
-
-
-<div class="paragraph"> </div>
-
-  在所有的树中，有一种树叫 <i>'二叉树'</i> (Binary Tree)。
-  它
-</div>
-<div class="code">
-
-<br/>
-</div>
-
-<div class="doc">
-<a name="lab25"></a><h1 class="section">Options 可选类型</h1>
+<a name="lab24"></a><h1 class="section">Options 可选类型</h1>
 
 </div>
 <div class="code">
@@ -1014,7 +1029,7 @@
 </div>
 
 <div class="doc">
-  在本节的最后，我们回到一开始对 <span class="inlinecode"><span class="id" title="var">hd</span></span> (head) 函数的定义:
+  现在，我们回到一开始对 <span class="inlinecode"><span class="id" title="var">hd</span></span> (head) 函数的定义:
   <span class="inlinecode"><span class="id" title="keyword">Definition</span></span> <span class="inlinecode"><span class="id" title="var">hd</span></span> <span class="inlinecode">(<span class="id" title="var">default</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span> <span class="inlinecode">(<span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">natlist</span>)</span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>。
   为了处理 <span class="inlinecode"><span class="id" title="var">l</span></span> 为空的情况，<span class="inlinecode"><span class="id" title="var">hd</span></span> 要求调用者提供默认返回值 <span class="inlinecode"><span class="id" title="var">default</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>。
   然而，这种处理方式不够优雅:
@@ -1058,6 +1073,9 @@
 Inductive option (A : Type) : Type :=
   | Some (x : A)
   | None. 
+
+<div class="paragraph"> </div>
+
 
 <div class="paragraph"> </div>
 
@@ -1170,7 +1188,7 @@ Inductive option (A : Type) : Type :=
 
 <div class="paragraph"> </div>
 
-<a name="lab26"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
+<a name="lab25"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
  请使用 <span class="inlinecode"><span class="id" title="var">natoption</span></span> 思想修改之前定义的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 函数。
 </div>
 <div class="code">
@@ -1198,6 +1216,191 @@ Inductive option (A : Type) : Type :=
 </div>
 <div class="code">
 <span class="id" title="keyword">End</span> <span class="id" title="var">NatList</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab26"></a><h1 class="section">Trees: 基础数据类型</h1>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  我们以 <i>'二叉树'</i> (Binary Tree) 为例。
+  二叉树在计算机科学中占有重要地位，应用之一就是 (平衡) 二叉搜索树。
+
+<div class="paragraph"> </div>
+
+  顾名思义，在二叉树中，每个节点 (Node) 最多有两个子节点 (Children)，
+  分别称为左子节点 (Left Child) 与右子节点 (Right Child)。
+  在本节，我们仍然限制每个节点中的元素都是自然数类型。
+
+<div class="paragraph"> </div>
+
+  我们使用归纳方式定义(自然数)二叉树 nat_bin_tree。
+  (注意，我们将二叉树缩写成 bin_tree，而不是 btree。
+  这是因为，BTree 是计算机科学中的另一个专有名词。)
+
+<div class="paragraph"> </div>
+
+  二叉树有且仅有两种构造方式:
+<ul class="doclist">
+<li> 空树 <span class="inlinecode"><span class="id" title="var">Empty</span></span> 是二叉树。
+
+</li>
+<li> 如果 <span class="inlinecode"><span class="id" title="var">L</span></span> 是二叉树，<span class="inlinecode"><span class="id" title="var">R</span></span> 是二叉树，<span class="inlinecode"><span class="id" title="var">n</span></span> 是自然数，则 <span class="inlinecode"><span class="id" title="var">Node</span></span> <span class="inlinecode"><span class="id" title="var">L</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span>
+    是二叉树。
+    <span class="inlinecode"><span class="id" title="var">L</span></span> 称为 <span class="inlinecode"><span class="id" title="var">Node</span></span> <span class="inlinecode"><span class="id" title="var">L</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> 的左子树，<span class="inlinecode"><span class="id" title="var">R</span></span> 称为 <span class="inlinecode"><span class="id" title="var">Node</span></span> <span class="inlinecode"><span class="id" title="var">L</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> 的右子树。
+    <span class="inlinecode"><span class="id" title="var">Node</span></span> <span class="inlinecode"><span class="id" title="var">L</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> 称为 <span class="inlinecode"><span class="id" title="var">L</span></span> 与 <span class="inlinecode"><span class="id" title="var">R</span></span> 的 <i>'父节点'</i> (Parent)。
+    左右子树都为 <span class="inlinecode"><span class="id" title="var">Empty</span></span> 的节点称为 <i>'叶节点'</i> (Leaf)。
+    没有父节点的节点称为 <i>'根节点'</i> (Root)。
+
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">nat_bin_tree</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">Empty</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Node</span> (<span class="id" title="var">L</span> : <span class="id" title="var">nat_bin_tree</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">R</span> : <span class="id" title="var">nat_bin_tree</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+在执行下面的命令之前，先想一想它的结果。 
+</div>
+<div class="code">
+<span class="id" title="keyword">Check</span> <span class="id" title="var">Empty</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">Node</span>.<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="var">Node</span> (<span class="id" title="var">Empty</span>) 5 (<span class="id" title="var">Empty</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab27"></a><h4 class="section">练习：2 星, standard (functions on <span class="inlinecode"><span class="id" title="var">nat_bin_tree</span></span>)</h4>
+ 下面你需要为 <span class="inlinecode"><span class="id" title="var">nat_bin_tree</span></span> 定义一些函数，并编写测试用例。
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  函数 <span class="inlinecode"><span class="id" title="var">nsize</span></span> 计算二叉树 <span class="inlinecode"><span class="id" title="var">t</span></span> 的大小，即 <span class="inlinecode"><span class="id" title="var">t</span></span> 中节点的数目。
+  注意，空树 <span class="inlinecode"><span class="id" title="var">Empty</span></span> 的大小为 0。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nsize</span> (<span class="id" title="var">t</span> : <span class="id" title="var">nat_bin_tree</span>) : <span class="id" title="var">nat</span> <br/>
+&nbsp;&nbsp;.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  函数 <span class="inlinecode"><span class="id" title="var">nsum</span></span> 计算二叉树 <span class="inlinecode"><span class="id" title="var">t</span></span> 所有节点中的元素之和。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nsum</span> (<span class="id" title="var">t</span> : <span class="id" title="var">nat_bin_tree</span>) : <span class="id" title="var">nat</span> <br/>
+&nbsp;&nbsp;.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  函数 <span class="inlinecode"><span class="id" title="var">nreflect</span></span> 交换 _每个_节点的左右子树。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nreflect</span> (<span class="id" title="var">t</span> : <span class="id" title="var">nat_bin_tree</span>) : <span class="id" title="var">nat_bin_tree</span><br/>
+&nbsp;&nbsp;.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  与 <span class="inlinecode"><span class="id" title="var">natlist</span></span> 一样，<span class="inlinecode"><span class="id" title="var">nat_bin_tree</span></span> 也是归纳定义的，
+  我们也可以对 <span class="inlinecode"><span class="id" title="var">nat_bin_tree</span></span> 使用数学归纳法。
+
+<div class="paragraph"> </div>
+
+  不同的是，<span class="inlinecode"><span class="id" title="var">nat_bin_tree</span></span> 的 <span class="inlinecode"><span class="id" title="var">Node</span></span> 构造函数中
+  含有_两个_ <span class="inlinecode"><span class="id" title="var">Node</span></span> 类型的参数。
+  因此，对 <span class="inlinecode"><span class="id" title="var">nat_bin_tree</span></span> 类型的 <span class="inlinecode"><span class="id" title="var">t</span></span> 做数学归纳时，
+  在归纳步骤，我们有两个归纳假设，分别针对 <span class="inlinecode"><span class="id" title="var">t</span></span> 的左右子树。
+
+<div class="paragraph"> </div>
+
+  比如，下面证明开头 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">t</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">L</span></span> <span class="inlinecode"><span class="id" title="var">IHL</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> <span class="inlinecode"><span class="id" title="var">IHR</span>]</span>
+  中的 <span class="inlinecode"><span class="id" title="var">IHL</span></span> 与 <span class="inlinecode"><span class="id" title="var">IHR</span></span> 分别表示针对左子树 <span class="inlinecode"><span class="id" title="var">L</span></span> 与右子树 <span class="inlinecode"><span class="id" title="var">R</span></span>
+  的归纳假设。
+
+<div class="paragraph"> </div>
+
+  了解了这些，你应该可以完成下面的证明了。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">nreflect_involutive</span>: <span class="id" title="keyword">∀</span> <span class="id" title="var">t</span> : <span class="id" title="var">nat_bin_tree</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">nreflect</span> (<span class="id" title="var">nreflect</span> <span class="id" title="var">t</span>) = <span class="id" title="var">t</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">induction</span> <span class="id" title="var">t</span> <span class="id" title="keyword">as</span> [ | <span class="id" title="var">L</span> <span class="id" title="var">IHL</span> <span class="id" title="var">n</span> <span class="id" title="var">R</span> <span class="id" title="var">IHR</span>].<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+  函数 <span class="inlinecode"><span class="id" title="var">height</span></span> 计算二叉树 <span class="inlinecode"><span class="id" title="var">t</span></span> 的高度:
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">Empty</span></span> 的高度记为 -1。
+
+</li>
+<li> 节点 <span class="inlinecode"><span class="id" title="var">Node</span></span> <span class="inlinecode"><span class="id" title="var">L</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">R</span></span> 的高度是它的两个子树的最大高度加 1。
+
+</li>
+<li> 树 <span class="inlinecode"><span class="id" title="var">t</span></span> 的高度是它的根结点的高度。
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+  你可以使用 <span class="inlinecode"><span class="id" title="var">Nat.max</span></span> 函数，或者自定义求最大值的函数。
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">height</span> (<span class="id" title="var">t</span> : <span class="id" title="var">nat_bin_tree</span>) : <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+请证明定理 <span class="inlinecode"><span class="id" title="var">nreflect_preserve_height</span></span>: <span class="inlinecode"><span class="id" title="var">nreflect</span></span> 不改变树的高度。
+</div>
+<div class="code">
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">nreflect_preserve_height</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">t</span> : <span class="id" title="var">nat_bin_tree</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">height</span> (<span class="id" title="var">nreflect</span> <span class="id" title="var">t</span>) = <span class="id" title="var">height</span> <span class="id" title="var">t</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+<span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
 </div>
 </div>
 
