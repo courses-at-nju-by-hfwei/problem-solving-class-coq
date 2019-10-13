@@ -22,21 +22,32 @@
 </div>
 
 <div class="doc">
-<a name="lab1"></a><h1 class="section">Lists: 使用结构化的数据</h1>
+<a name="lab1"></a><h1 class="section">Lists: 基本数据类型</h1>
 
 <div class="paragraph"> </div>
 
 
 <div class="paragraph"> </div>
 
-  本节介绍 <i>'列表'(List)_ 数据类型。
-  下一节介绍<i>'函数式程序设计' (Functional Programming; FP)_范型。
+  本节介绍 <i>'列表'</i> (List) 数据类型。
+  下一节介绍 <i>'函数式程序设计'</i> (Functional Programming; FP) 范型。
 
 <div class="paragraph"> </div>
 
   为什么要先介绍列表呢?
-  列表是函数式程序设计中的基础数据类型。
-  最早的(?)的函数式程序设计语言 Lisp 的含义即是 "LISt Processor"。
+  因为列表是函数式程序设计中最基本的数据类型。
+  最早的函数式程序设计语言之一 Lisp 的含义即是 "LISt Processor"。
+
+<div class="paragraph"> </div>
+
+  除了列表，本节还将介绍计算机科学中最常见、最漂亮的数据类型: <i>'树'</i> (Tree)。
+  "Trees sprout up just about everywhere in computer science.
+ Donald Knuth"
+
+<div class="paragraph"> </div>
+
+  (在计算机科学中，树的根在顶部，叶子在底部，
+  这是计算机科学对自然科学作出的巨大贡献。)
 
 <div class="paragraph"> </div>
 
@@ -65,7 +76,7 @@
 <div class="paragraph"> </div>
 
   在定义列表数据类型之前，我们先热热身，
-  定义简单的自然数 _序对 (Ordered Pair)_。
+  定义简单的自然数 <i>'序对'</i> (Ordered Pair)。
   它只有一种构造方式，即将构造函数 <span class="inlinecode"><span class="id" title="var">pair</span></span> 作用到两个自然数 <span class="inlinecode"><span class="id" title="var">n1</span></span> <span class="inlinecode"><span class="id" title="var">n2</span></span> 上。 
 
 </div>
@@ -80,7 +91,7 @@
 
 <div class="doc">
   注意: 我们将该类型命名为 natprod，
-  其中 prod 表示 <i>'乘积' (Product)_ 类型。
+  其中 prod 表示 <i>'乘积'</i> (Product) 类型。
 
 </div>
 <div class="code">
@@ -90,8 +101,7 @@
 </div>
 
 <div class="doc">
-  函数 <span class="inlinecode"><span class="id" title="var">fst</span></span> 与 <span class="inlinecode"><span class="id" title="var">snd</span></span> 分别用于提取有序对的第一个和第二个分量。
-
+函数 <span class="inlinecode"><span class="id" title="var">fst</span></span> 与 <span class="inlinecode"><span class="id" title="var">snd</span></span> 分别用于提取有序对的第一个和第二个分量。
 </div>
 <div class="code">
 
@@ -114,8 +124,7 @@
 </div>
 
 <div class="doc">
-  在数学上，我们使用 <span class="inlinecode">(<span class="id" title="var">x</span>,<span class="id" title="var">y</span>)</span> 表示有序对 <span class="inlinecode"><span class="id" title="var">pair</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>。
-
+在数学上，我们使用 <span class="inlinecode">(<span class="id" title="var">x</span>,<span class="id" title="var">y</span>)</span> 表示有序对 <span class="inlinecode"><span class="id" title="var">pair</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode"><span class="id" title="var">y</span></span>。
 </div>
 <div class="code">
 
@@ -206,8 +215,11 @@
 
 <div class="paragraph"> </div>
 
-  由任意多个自然数构成的<i>'自然数列表'</i>类型
+  由任意多个自然数构成的 <i>'自然数列表'</i> 类型
   需要使用递归来定义。
+
+<div class="paragraph"> </div>
+
   一个自然数列表有且仅有两种构造方式:
 <ul class="doclist">
 <li> 空列表是自然数列表，记为 <span class="inlinecode"><span class="id" title="var">nil</span></span>;
@@ -274,8 +286,7 @@
 </div>
 
 <div class="doc">
-  接下来，我们定义一些常用的列表操作函数。
-
+接下来，我们定义一些常用的列表操作函数。
 </div>
 <div class="code">
 </div>
@@ -519,7 +530,7 @@
 
 <div class="doc">
 <font size=-2>&#9744;</font> <a name="lab13"></a><h4 class="section">练习：3 星, standard, recommended (more list functions)</h4>
- 完成函数 <span class="inlinecode"><span class="id" title="var">count</span></span> 的定义。
+ 请完成函数 <span class="inlinecode"><span class="id" title="var">count</span></span> 的定义。
 </div>
 <div class="code">
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">count</span> (<span class="id" title="var">v</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>) : <span class="id" title="var">nat</span><br/>
@@ -528,15 +539,17 @@
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_count1</span>: <span class="id" title="var">count</span> 1 [1;2;3;1;4;1] = 3.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_count2</span>: <span class="id" title="var">count</span> 6 [1;2;3;1;4;1] = 0.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-完成函数 <span class="inlinecode"><span class="id" title="var">member</span></span> 的定义。
+请完成函数 <span class="inlinecode"><span class="id" title="var">member</span></span> 的定义。
 </div>
 <div class="code">
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">member</span> (<span class="id" title="var">v</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>) : <span class="id" title="var">bool</span><br/>
@@ -545,17 +558,17 @@
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_member1</span>: <span class="id" title="var">member</span> 1 [1;4;1] = <span class="id" title="var">true</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_member2</span>: <span class="id" title="var">member</span> 2 [1;4;1] = <span class="id" title="var">false</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-完成函数 <span class="inlinecode"><span class="id" title="var">remov_one</span></span> 的定义。
+请完成函数 <span class="inlinecode"><span class="id" title="var">remov_one</span></span> 的定义。
 </div>
 <div class="code">
 <span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">remove_one</span> (<span class="id" title="var">v</span> : <span class="id" title="var">nat</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>) : <span class="id" title="var">natlist</span><br/>
@@ -565,17 +578,17 @@
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_remove_one1</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="var">count</span> 5 (<span class="id" title="var">remove_one</span> 5 [2;1;5;4;1]) = 0.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_remove_one2</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="var">count</span> 5 (<span class="id" title="var">remove_one</span> 5 [2;1;4;1]) = 0.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_remove_one3</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="var">count</span> 4 (<span class="id" title="var">remove_one</span> 5 [2;1;4;5;1;4]) = 2.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_remove_one4</span>:<br/>
@@ -595,16 +608,22 @@
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_remove_all1</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="var">count</span> 5 (<span class="id" title="var">remove_all</span> 5 [2;1;5;4;1]) = 0.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_remove_all2</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="var">count</span> 5 (<span class="id" title="var">remove_all</span> 5 [2;1;4;1]) = 0.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_remove_all3</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="var">count</span> 4 (<span class="id" title="var">remove_all</span> 5 [2;1;4;5;1;4]) = 2.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_remove_all4</span>:<br/>
 &nbsp;&nbsp;<span class="id" title="var">count</span> 5 (<span class="id" title="var">remove_all</span> 5 [2;1;5;4;5;1;4;5;1;4]) = 0.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
@@ -619,9 +638,11 @@
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_subset1</span>: <span class="id" title="var">subset</span> [1;2] [2;1;4;1] = <span class="id" title="var">true</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_subset2</span>: <span class="id" title="var">subset</span> [1;2;2] [2;1;4;1] = <span class="id" title="var">false</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">
@@ -635,8 +656,7 @@
 
 <div class="paragraph"> </div>
 
-  接下来，我们使用之前学习过的证明策略
-  论证与列表相关的定理。
+  接下来，我们使用之前学习过的证明策略论证与列表相关的定理。
 
 <div class="paragraph"> </div>
 
@@ -678,12 +698,12 @@
 <div class="paragraph"> </div>
 
   <span class="inlinecode"><span class="id" title="var">natlist</span></span> 是归纳定义的，
-  因此，有关列表的很多定理，都可以使用数学归纳法证明。
+  因此，有关列表的很多定理，都需要(也可以)使用数学归纳法证明。
 
 <div class="paragraph"> </div>
 
   假设我们需要证明命题 <span class="inlinecode"><span class="id" title="var">P</span></span> 对任意列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 都成立。
-  我们可以对列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 作归纳:
+  我们可以如下对列表 <span class="inlinecode"><span class="id" title="var">l</span></span> 作归纳:
 <ul class="doclist">
 <li> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">=</span> <span class="inlinecode">[]</span>。此时，我们需要证明 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">[]</span> 成立。
 
@@ -697,11 +717,7 @@
 
 <div class="paragraph"> </div>
 
-
-<div class="paragraph"> </div>
-
-  下面使用数学归纳法证明 <span class="inlinecode"><span class="id" title="var">app</span></span> 满足结合律。
-
+ 下面使用数学归纳法证明 <span class="inlinecode"><span class="id" title="var">app</span></span> 满足结合律。
 </div>
 <div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_assoc</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> <span class="id" title="var">l3</span> : <span class="id" title="var">natlist</span>,<br/>
@@ -736,8 +752,8 @@
 
 <div class="paragraph"> </div>
 
-  请确保你真正理解了 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">l1'</span></span> <span class="inlinecode"><span class="id" title="var">IHl1'</span>]</span> 
-  的含义。后面，我们会看到更复杂的例子。
+  请确保你真正理解了 <span class="inlinecode"><span class="id" title="tactic">induction</span></span> <span class="inlinecode"><span class="id" title="var">l1</span></span> <span class="inlinecode"><span class="id" title="keyword">as</span></span> <span class="inlinecode">[</span> <span class="inlinecode">|</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">l1'</span></span> <span class="inlinecode"><span class="id" title="var">IHl1'</span>]</span> 的含义。
+  后面，我们会看到更复杂的例子。
 
 </div>
 <div class="code">
@@ -766,15 +782,13 @@
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_rev1</span>: <span class="id" title="var">rev</span> [1;2;3] = [3;2;1].<br/>
 <span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
 <a name="lab17"></a><h4 class="section">练习：3 星, standard, recommended (more list functions)</h4>
-
-<div class="paragraph"> </div>
-
-  请证明定理 <span class="inlinecode"><span class="id" title="var">app_length</span></span>。
-
+ 请证明定理 <span class="inlinecode"><span class="id" title="var">app_length</span></span>。
 </div>
 <div class="code">
 <span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_length</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">natlist</span>,<br/>
@@ -889,24 +903,24 @@
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_eqblist1</span> :<br/>
 &nbsp;&nbsp;(<span class="id" title="var">eqblist</span> <span class="id" title="var">nil</span> <span class="id" title="var">nil</span> = <span class="id" title="var">true</span>).<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_eqblist2</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">eqblist</span> [1;2;3] [1;2;3] = <span class="id" title="var">true</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_eqblist3</span> :<br/>
 &nbsp;&nbsp;<span class="id" title="var">eqblist</span> [1;2;3] [1;2;4] = <span class="id" title="var">false</span>.<br/>
-<span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-  如果我们将函数 <span class="inlinecode"><span class="id" title="var">eqblist</span></span> 看作两个列表之间的 _关系 (Relation)_,
-  那么它是 _自反的 (Reflexive)_。
+  如果我们将函数 <span class="inlinecode"><span class="id" title="var">eqblist</span></span> 看作两个列表之间的一种
+   <i>'关系'</i> (Relation), 那么它是 _自反的_ (Reflexive)。
 
 <div class="paragraph"> </div>
 
@@ -928,7 +942,7 @@
 
 </div>
 <div class="code">
-<span class="id" title="keyword">Theorem</span> <span class="id" title="var">count_member_nonzero</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>),<br/>
+<span class="id" title="keyword">Print</span> <span class="id" title="var">count</span>. <span class="id" title="keyword">Theorem</span> <span class="id" title="var">count_member_nonzero</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">l</span> : <span class="id" title="var">natlist</span>),<br/>
 &nbsp;&nbsp;1 &lt;=? (<span class="id" title="var">count</span> 1 (1 :: <span class="id" title="var">l</span>)) = <span class="id" title="var">true</span>.<br/>
 <span class="id" title="keyword">Proof</span>.<br/>
 <span class="id" title="var">Admitted</span>.<br/>
@@ -969,10 +983,28 @@
 <font size=-2>&#9744;</font> 
 </div>
 <div class="code">
+
+<br/>
 </div>
 
 <div class="doc">
-<a name="lab24"></a><h1 class="section">Options 可选类型</h1>
+<a name="lab24"></a><h1 class="section">Trees: 基础数据类型</h1>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  在所有的树中，有一种树叫 <i>'二叉树'</i> (Binary Tree)。
+  它
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab25"></a><h1 class="section">Options 可选类型</h1>
 
 </div>
 <div class="code">
@@ -1023,13 +1055,19 @@
 </div>
 
 <div class="doc">
+Inductive option (A : Type) : Type :=
+  | Some (x : A)
+  | None. 
+
+<div class="paragraph"> </div>
+
   为了解决该类问题，Coq 提供了 <span class="inlinecode"><span class="id" title="var">option</span></span> 类型。
-  <span class="inlinecode"><span class="id" title="var">option</span></span> 类型是对 _可选值 (Optional Value)_ 的一种封装。
+  <span class="inlinecode"><span class="id" title="var">option</span></span> 类型是对 _可选值_ (Optional Value) 的一种封装。
   作为函数的返回值类型，它表示该函数可能会返回一个无意义的值，
   用以标识错误处理。
   它包含两个构造函数:
 <ul class="doclist">
-<li> Some A: 表示值 A。
+<li> Some A: 表示类型为 A 的值。
 
 </li>
 <li> None: 表示空值。
@@ -1042,12 +1080,13 @@
   很多程序设计语言里都有类似的 <span class="inlinecode"><span class="id" title="var">option</span></span> 类型，
   如 Java 8 中的 <span class="inlinecode"><span class="id" title="var">Optional</span></span>，Scala 中的 <span class="inlinecode"><span class="id" title="var">Option</span></span>，
   Haskell 中的 <span class="inlinecode"><span class="id" title="var">Maybe</span></span> 等。
+  更多内容参见: https://en.wikipedia.org/wiki/Option_type (@wiki)。
 
 <div class="paragraph"> </div>
 
-  Coq 中的 <span class="inlinecode"><span class="id" title="var">option</span></span> 是 _多态类型 (Polymorphic Type)_
+  Coq 中的 <span class="inlinecode"><span class="id" title="var">option</span></span> 是 _多态类型_ (Polymorphic Type)
   (下一节会介绍这个概念)。
-  本节我们将被封装的值 A 的类型限定为 <span class="inlinecode"><span class="id" title="var">nat</span></span>。
+  本节我们将被封装的值的类型限定为 <span class="inlinecode"><span class="id" title="var">nat</span></span>。
 
 </div>
 <div class="code">
@@ -1131,7 +1170,7 @@
 
 <div class="paragraph"> </div>
 
-<a name="lab25"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
+<a name="lab26"></a><h4 class="section">练习：2 星, standard (hd_error)</h4>
  请使用 <span class="inlinecode"><span class="id" title="var">natoption</span></span> 思想修改之前定义的 <span class="inlinecode"><span class="id" title="var">hd</span></span> 函数。
 </div>
 <div class="code">
@@ -1143,15 +1182,15 @@
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_hd_error1</span> : <span class="id" title="var">hd_error</span> [] = <span class="id" title="var">None</span>.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_hd_error2</span> : <span class="id" title="var">hd_error</span> [1] = <span class="id" title="var">Some</span> 1.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 
 <br/>
 <span class="id" title="keyword">Example</span> <span class="id" title="var">test_hd_error3</span> : <span class="id" title="var">hd_error</span> [5;6] = <span class="id" title="var">Some</span> 5.<br/>
- <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
 </div>
 
 <div class="doc">

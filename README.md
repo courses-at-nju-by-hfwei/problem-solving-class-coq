@@ -49,7 +49,7 @@ Rock on Coq for the Problem Solving Class at Nanjing University
 - Clone 或者下载本仓库 (注意保持同步更新)
 - 在本地完成练习
 - 请不要公开发布练习答案。如果想放在个人 GitHub 仓库里，请设置为私有。
-- 有问题请在 [ProblemOverflow](problemoverflow.top) 与QQ群讨论
+- 有问题请在 [ProblemOverflow](http://problemoverflow.top/) 与QQ群讨论
 
 ## 如何向本仓库提交贡献?
 - 解决 [Issues](https://github.com/hengxin/problem-solving-class-coq/issues) 中提到的问题

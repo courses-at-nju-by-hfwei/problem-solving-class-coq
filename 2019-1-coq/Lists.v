@@ -1,12 +1,19 @@
-(** * Lists: 使用结构化的数据 *)
+(** * Lists: 基本数据类型 *)
 
 (**
-  本节介绍 _'列表'(List)_ 数据类型。
-  下一节介绍_'函数式程序设计' (Functional Programming; FP)_范型。
+  本节介绍 _'列表'_ (List) 数据类型。
+  下一节介绍 _'函数式程序设计'_ (Functional Programming; FP) 范型。
   
   为什么要先介绍列表呢?
-  列表是函数式程序设计中的基础数据类型。
-  最早的(?)的函数式程序设计语言 Lisp 的含义即是 "LISt Processor"。
+  因为列表是函数式程序设计中最基本的数据类型。
+  最早的函数式程序设计语言之一 Lisp 的含义即是 "LISt Processor"。
+  
+  除了列表，本节还将介绍计算机科学中最常见、最漂亮的数据类型: _'树'_ (Tree)。
+  "Trees sprout up just about everywhere in computer science.
+  --- Donald Knuth"
+  
+  (在计算机科学中，树的根在顶部，叶子在底部，
+  这是计算机科学对自然科学作出的巨大贡献。)
 *)
 
 (** 
@@ -23,7 +30,7 @@ Module NatList.
 
 (**
   在定义列表数据类型之前，我们先热热身，
-  定义简单的自然数 _序对 (Ordered Pair)_。
+  定义简单的自然数 _'序对'_ (Ordered Pair)。
   它只有一种构造方式，即将构造函数 [pair] 作用到两个自然数 [n1 n2] 上。 
 *)
 
@@ -32,13 +39,11 @@ Inductive natprod : Type :=
 
 (**
   注意: 我们将该类型命名为 natprod，
-  其中 prod 表示 _'乘积' (Product)_ 类型。
+  其中 prod 表示 _'乘积'_ (Product) 类型。
 *)
 Check (pair 3 5).
 
-(**
-  函数 [fst] 与 [snd] 分别用于提取有序对的第一个和第二个分量。
-*)
+(** 函数 [fst] 与 [snd] 分别用于提取有序对的第一个和第二个分量。*)
 
 Definition fst (p : natprod) : nat :=
   match p with
@@ -53,9 +58,7 @@ Definition snd (p : natprod) : nat :=
 Compute (fst (pair 3 5)).
 (* ===> 3 *)
 
-(**
-  在数学上，我们使用 [(x,y)] 表示有序对 [pair x y]。
-*)
+(** 在数学上，我们使用 [(x,y)] 表示有序对 [pair x y]。*)
 
 Notation "( x , y )" := (pair x y).
 
@@ -112,8 +115,9 @@ Admitted.
 (** * 自然数列表 *)
 
 (** 
-  由任意多个自然数构成的_'自然数列表'_类型
+  由任意多个自然数构成的 _'自然数列表'_ 类型
   需要使用递归来定义。
+  
   一个自然数列表有且仅有两种构造方式:
   - 空列表是自然数列表，记为 [nil];
   - 如果 [l] 是自然数列表，[n] 是自然数，
@@ -145,9 +149,7 @@ Definition mylist1 := 1 :: (2 :: (3 :: nil)).
 Definition mylist2 := 1 :: 2 :: 3 :: nil.
 Definition mylist3 := [1;2;3].
 
-(**
-  接下来，我们定义一些常用的列表操作函数。
-*)
+(** 接下来，我们定义一些常用的列表操作函数。*)
 (* ----------------------------------------------------------------- *)
 (** *** Head（带默认值）与 Tail *)
 
@@ -312,47 +314,44 @@ Example test_alternate4:
 Admitted.
 (** [] *)
 (** **** 练习：3 星, standard, recommended (more list functions) *)
-(** 完成函数 [count] 的定义。*)
+(** 请完成函数 [count] 的定义。*)
 Fixpoint count (v : nat) (l : natlist) : nat
   (* 将本行替换成 ":= _你的_定义_ ." *).
 Admitted.
 
 Example test_count1: count 1 [1;2;3;1;4;1] = 3.
- (* 请在此处解答 *)
-Admitted.
-Example test_count2: count 6 [1;2;3;1;4;1] = 0.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
-(** 完成函数 [member] 的定义。*)
+Example test_count2: count 6 [1;2;3;1;4;1] = 0.
+Proof. (* 请在此处解答 *) Admitted.
+
+(** 请完成函数 [member] 的定义。*)
 Fixpoint member (v : nat) (l : natlist) : bool
   (* 将本行替换成 ":= _你的_定义_ ." *).
 Admitted.
 
 Example test_member1: member 1 [1;4;1] = true.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 Example test_member2: member 2 [1;4;1] = false.
-(* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
-(** 完成函数 [remov_one] 的定义。*)
+(** 请完成函数 [remov_one] 的定义。*)
 Fixpoint remove_one (v : nat) (l : natlist) : natlist
   (* 将本行替换成 ":= _你的_定义_ ." *).
 Admitted.
 
 Example test_remove_one1:
   count 5 (remove_one 5 [2;1;5;4;1]) = 0.
-  (* 请在此处解答 *) Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 Example test_remove_one2:
   count 5 (remove_one 5 [2;1;4;1]) = 0.
-  (* 请在此处解答 *) Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 Example test_remove_one3:
   count 4 (remove_one 5 [2;1;4;5;1;4]) = 2.
-  (* 请在此处解答 *) Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 Example test_remove_one4:
   count 5 (remove_one 5 [2;1;5;4;5;1;4]) = 1.
@@ -364,20 +363,19 @@ Fixpoint remove_all (v : nat) (l : natlist) : natlist
 
 Example test_remove_all1:
   count 5 (remove_all 5 [2;1;5;4;1]) = 0.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
+
 Example test_remove_all2:
   count 5 (remove_all 5 [2;1;4;1]) = 0.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
+
 Example test_remove_all3:
   count 4 (remove_all 5 [2;1;4;5;1;4]) = 2.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
+
 Example test_remove_all4:
   count 5 (remove_all 5 [2;1;5;4;5;1;4;5;1;4]) = 0.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 (** 完成函数 [subset] 的定义。*)
 Fixpoint subset (l1 : natlist) (l2 : natlist) : bool
@@ -385,17 +383,15 @@ Fixpoint subset (l1 : natlist) (l2 : natlist) : bool
 Admitted.
 
 Example test_subset1: subset [1;2] [2;1;4;1] = true.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
+
 Example test_subset2: subset [1;2;2] [2;1;4;1] = false.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 (** [] *)
 (* ################################################################# *)
 (** * 有关列表的论证 *)
 (**
-  接下来，我们使用之前学习过的证明策略
-  论证与列表相关的定理。
+  接下来，我们使用之前学习过的证明策略论证与列表相关的定理。
 *)
 
 (** 对于定理 [nil_app]，[reflexivity] 已足够。*)
@@ -420,19 +416,17 @@ Qed.
 
 (**
   [natlist] 是归纳定义的，
-  因此，有关列表的很多定理，都可以使用数学归纳法证明。
+  因此，有关列表的很多定理，都需要(也可以)使用数学归纳法证明。
   
   假设我们需要证明命题 [P] 对任意列表 [l] 都成立。
-  我们可以对列表 [l] 作归纳:
+  我们可以如下对列表 [l] 作归纳:
   - [l = []]。此时，我们需要证明 [P []] 成立。
   - [l = n :: l']。
     此时，我们需要在归纳假设 [P l'] 成立的条件下，
     证明 [P l] 成立。
 *)
 
-(**
-  下面使用数学归纳法证明 [app] 满足结合律。
-*)
+(** 下面使用数学归纳法证明 [app] 满足结合律。*)
 Theorem app_assoc : forall l1 l2 l3 : natlist,
   (l1 ++ l2) ++ l3 = l1 ++ (l2 ++ l3).
 Proof.
@@ -455,8 +449,8 @@ Qed.
     另外，[IHl1'] 记录了针对 [l1'] 的归纳假设，
     即 [IHl1': (l1' ++ l2) ++ l3 = l1' ++ l2 ++ l3]。
     
-  请确保你真正理解了 [induction l1 as [ | n l1' IHl1']] 
-  的含义。后面，我们会看到更复杂的例子。
+  请确保你真正理解了 [induction l1 as [ | n l1' IHl1']] 的含义。
+  后面，我们会看到更复杂的例子。
 *)
 (* ----------------------------------------------------------------- *)
 (** *** 反转列表 *)
@@ -474,10 +468,9 @@ Proof. reflexivity. Qed.
 
 Example test_rev1: rev [1;2;3] = [3;2;1].
 Proof. reflexivity. Qed.
+
 (** **** 练习：3 星, standard, recommended (more list functions) *)
-(**
-  请证明定理 [app_length]。
-*)
+(** 请证明定理 [app_length]。*)
 Theorem app_length : forall l1 l2 : natlist,
   length (l1 ++ l2) = (length l1) + (length l2).
 Proof.
@@ -548,22 +541,19 @@ Admitted.
 
 Example test_eqblist1 :
   (eqblist nil nil = true).
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 Example test_eqblist2 :
   eqblist [1;2;3] [1;2;3] = true.
-(* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 Example test_eqblist3 :
   eqblist [1;2;3] [1;2;4] = false.
- (* 请在此处解答 *)
-Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 (**
-  如果我们将函数 [eqblist] 看作两个列表之间的 _关系 (Relation)_,
-  那么它是 _自反的 (Reflexive)_。
+  如果我们将函数 [eqblist] 看作两个列表之间的一种
+   _'关系'_ (Relation), 那么它是 _自反的_ (Reflexive)。
   
   嗯，如果你现在还不明白上面那句话在说些什么，
   不要紧，直接证明下面的定理 [eqblist_refl] 就好了。 
@@ -575,6 +565,7 @@ Proof.
 Admitted.
 
 (** **** 练习：1 星, standard (count_member_nonzero) *)
+Print count. (* 你之前应该完成了 [count] 的定义。*)
 Theorem count_member_nonzero : forall (l : natlist),
   1 <=? (count 1 (1 :: l)) = true.
 Proof.
@@ -600,6 +591,14 @@ Proof.
   (* 请在此处解答 *)
 Admitted.
 (** [] *)
+
+(* ################################################################# *)
+(** * Trees: 基础数据类型 *)
+
+(**
+  在所有的树中，有一种树叫 _'二叉树'_ (Binary Tree)。
+  它*)
+
 (* ################################################################# *)
 (** * Options 可选类型 *)
 
@@ -630,21 +629,27 @@ Fixpoint nth_bad (l : natlist) (n : nat) : nat :=
 
 Print option.
 (**
+Inductive option (A : Type) : Type :=
+  | Some (x : A)
+  | None. 
+*)
+(**
   为了解决该类问题，Coq 提供了 [option] 类型。
-  [option] 类型是对 _可选值 (Optional Value)_ 的一种封装。
+  [option] 类型是对 _可选值_ (Optional Value) 的一种封装。
   作为函数的返回值类型，它表示该函数可能会返回一个无意义的值，
   用以标识错误处理。
   它包含两个构造函数:
-  - Some A: 表示值 A。
+  - Some A: 表示类型为 A 的值。
   - None: 表示空值。
   
   很多程序设计语言里都有类似的 [option] 类型，
   如 Java 8 中的 [Optional]，Scala 中的 [Option]，
   Haskell 中的 [Maybe] 等。
+  更多内容参见: https://en.wikipedia.org/wiki/Option_type (@wiki)。
 
-  Coq 中的 [option] 是 _多态类型 (Polymorphic Type)_
+  Coq 中的 [option] 是 _多态类型_ (Polymorphic Type)
   (下一节会介绍这个概念)。
-  本节我们将被封装的值 A 的类型限定为 [nat]。
+  本节我们将被封装的值的类型限定为 [nat]。
 *)
 
 Inductive natoption : Type :=
@@ -704,13 +709,13 @@ Definition hd_error (l : natlist) : natoption
 Admitted.
 
 Example test_hd_error1 : hd_error [] = None.
- (* 请在此处解答 *) Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 Example test_hd_error2 : hd_error [1] = Some 1.
- (* 请在此处解答 *) Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 
 Example test_hd_error3 : hd_error [5;6] = Some 5.
- (* 请在此处解答 *) Admitted.
+Proof. (* 请在此处解答 *) Admitted.
 (** [] *)
 End NatList.
 (* Fri Jul 19 00:32:19 UTC 2019 *)

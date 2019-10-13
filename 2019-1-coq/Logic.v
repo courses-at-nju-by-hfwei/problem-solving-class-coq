@@ -6,7 +6,7 @@
   编译方法：在 CoqIDE 中打开 [Basics.v]，
   执行 "Compile" 菜单中的 "Compile Buffer" 命令。
   
-  (TODO (to ant-hengxin): How to "Make"?)
+  (TODO (@ant-hengxin): How to "Make"?)
 *)
 
 Set Warnings "-notation-overridden,-parsing".
@@ -19,7 +19,7 @@ From LF Require Export Basics.
   
   本节介绍一阶谓词逻辑 
   (说它是一阶谓词逻辑并不严格，我们以后讨论。) 
-  的 _'自然推理系统' (Natural Deduction System)_。
+  的 _'自然推理系统'_ (Natural Deduction System)。
   系统，封闭之结构也;
   推理，证明之路径也;
   自然，“无他，但手熟尔”。
@@ -27,13 +27,13 @@ From LF Require Export Basics.
   本节只不过是告诉你如何在 Coq 中使用这个推理系统证明定理 
   (有 Coq 盯着你，你就再也不会误用它们了)。
   
-  在一阶谓词逻辑中，我们会考虑各种 _'命题' (Proposition)_，包括
-  _'合取' (Conjunctive?)_ 命题、_'析取' (Disjunctive)_ 命题、
-  _'否定' (Negative)_ 命题、_'蕴含 (Implication)'_ 命题、
-  _'等价' (Equivalence)_ 命题、_'相等性' (Equality)_ 命题、
-  _'存在' (Existence)_ 命题 以及 _'全称' (Forall)_ 命题。 
+  在一阶谓词逻辑中，我们会考虑各种 _'命题'_ (Proposition)，包括
+  _'合取'_ (Conjunctive) 命题、_'析取'_ (Disjunctive) 命题、
+  _'否定'_ (Negative) 命题、_'蕴含_ (Implication)' 命题、
+  _'等价'_ (Equivalence) 命题、_'相等性'_ (Equality) 命题、
+  _'存在'_ (Existence) 命题以及 _'全称'_ (Forall) 命题。 
   
-  关于逻辑，首先需要介绍的一个概念就是 _'命题' (Proposition)_。
+  关于逻辑，首先需要介绍的一个概念就是 _'命题'_ (Proposition)。
   什么是命题? 命题就是可以判断真假的语句。
   什么是语句? 语句是不含自由变量的公式。
   什么是真? 什么是假? 这个问题就深了。我不敢妄言。
@@ -61,12 +61,12 @@ Check forall n : nat, n = 2.
 (* ===> Prop *)
 
 (** 
-  _'是'_一个命题与该命题_'为真'_ (或者说，_'可被证明' (Provable)_) 是两回事。
+  _'是'_一个命题与该命题_'为真'_ (或者说，_'可被证明'_ (Provable)) 是两回事。
   后者是计算机科学与数理逻辑的重要研究对象。 
 *)
 
 (**
-  在 Coq 中，命题是 _'一等对象（First-Class Object）'_，
+  在 Coq 中，命题是 _'一等对象'_ (First-Class Object)'，
   我们可以像操作其它实体那样操作命题，比如:
   - (1) 为命题命名，并在之后引用它的名字。
   - (2) 命题可以作为函数的返回值。 
@@ -85,7 +85,7 @@ Proof. reflexivity. Qed.
 
 (** 
   (2) 命题可以作为函数的返回值。这类函数接受某些类型的参数，返回一个命题。
-  实际上，这类函数定义了其参数的某种_'性质' (Property)_。 
+  实际上，这类函数定义了其参数的某种_'性质'_ (Property)。 
 *)
 
 (** 
@@ -105,7 +105,7 @@ Proof. unfold is_three. reflexivity. Qed.
 (** 我们还没有介绍过 [unfold] 证明策略。但是聪明的你应该能猜出它的含义与用法。*)
 
 (** 
-  函数 [injective] 定义了一个函数是否是 _'单射函数' (Injective Functions)_。
+  函数 [injective] 定义了一个函数是否是 _'单射函数'_ (Injective Functions)。
   定义中的 "[{A B}]" 表示 [A]、[B] 是两个参数化类型，
   我们会在后续介绍，这里可以当作它们不存在。
 *)
@@ -115,7 +115,7 @@ Definition injective {A B} (f : A -> B) :=
 
 (** 
   相等关系运算符 [=] 也是一个返回 [Prop] 的函数。
-  表达式 [n = m] 只是 [eq n m] 的 _'语法糖' (Syntax Sugar?)_。
+  表达式 [n = m] 只是 [eq n m] 的 _'语法糖'_ (Syntactic Sugar)。
 *)
 Check @eq. (* 暂时忽略 "[@]" 的含义与用法。*)
 (* ===> forall A : Type, A -> A -> Prop *)
@@ -281,7 +281,7 @@ Admitted.
 (** ** 析取 *)
 
 (** 
-  命题 [A \/ B] 表示 [A] 与 [B] 的 _'析取' (即 "逻辑或")_。
+  命题 [A \/ B] 表示 [A] 与 [B] 的 _'析取'_ (即 _逻辑或_)。
   [A \/ B] 为真当且仅当 [A] 与 [B] 中至少有一个为真。
   [A \/ B] 是 [or A B] 的语法糖。
 *)
@@ -445,14 +445,15 @@ Qed.
   它将待证目标 [False] 转化为 [P]。
   背后的推理是: 要证明 [False] 成立，根据前提 [G : P -> False]，
   只需证明 [P] 成立。
-  这实际上是 [->-elimination] 规则，也就是 _'modus ponens'_ 规则。
+  这实际上是 [->-elimination] 规则，也就是 _'modus ponens'_ 规则，
+  后面会有介绍。
 *)
 
 Theorem contradiction_implies_anything : forall P Q : Prop,
   (P /\ ~P) -> Q.
 Proof.
   intros P Q [HP HNP]. unfold not in HNP.
-  apply HNP in HP. (* 对 [HP] _正向 (Forward)_ 应用蕴含式。*)
+  apply HNP in HP. (* 对 [HP] _'正向'_ (Forward) 应用蕴含式。*)
   destruct HP.
 Qed.
 
@@ -461,7 +462,7 @@ Qed.
   [HNP] 是蕴含式 [HNP : P -> False]。
   [HP] 是 [HP : P]。
   注意到 [HP] 与 [HNP] 的前件相同，
-  此时，[apply HNP in HP] 是在正向应用 _'modus ponens'_ 规则:
+  此时，[apply HNP in HP] 是在正向应用 modus ponens 规则:
   已知 [P -> False] 与 [P]，推导出 [False]。
   
   注意: [apply I in H] 会改变 [H]。
@@ -588,7 +589,7 @@ Qed.
   如果当前证明上下文中存在形如 [A -> B] 的前提 [H : A -> B]，
   并且存在前提 [Q : A]，那么我们可以使用 [apply H in Q]，得到 [B]。
   这就是 "->-elimination" 规则，
-  也就是常说的 _分离规则 (modus ponens; MP)_。
+  也就是常说的 _分离规则_ (modus ponens; MP)。
 *)
 
 Theorem ABBC : forall A B C : Prop,
@@ -660,11 +661,13 @@ Proof.
   - (* <- *) intros H. rewrite H. intros H'.
     discriminate H'. (* 下面解释该行*)
 Qed.
+
 (**
   在上面证明的最后，我们使用了 [discriminate H'] 完成证明。
   此时，[H': false = true]。[false] 与 [true] 是 [bool] 类型的两个构造函数。
   在归纳定义中，不同的构造函数构造出的值一定是不同的。
-  如果上下文出现类似 [H'] 的假设，则可以立即使用 [discriminate] 完成证明。 
+  如果上下文出现类似 [H'] 的假设，则可以立即使用 [discriminate] 完成证明。
+  关于 [discriminate] 的详细介绍，我们留到 [Induction.v] 中。 
 *)
 
 (** **** 练习：1 星, standard, optional (iff_properties) *)
@@ -756,7 +759,7 @@ Qed.
 (**
   命题 [exists x : T, P] 表示存在类型为 [T] 的 [x]，
   使得性质 [P] 对 [x] 成立 (或说，[x] 满足性质 [P])。
-  [exists] 是 _'存在量词_。
+  [exists] 是 _'存在量词'_。
   (如果 Coq 能从上下文中推断出 [x] 的类型，那么 [: T] 也可以省略。
   但并不建议初学者这么做。)
 *)
@@ -805,7 +808,8 @@ Qed.
   "[P] 对所有 [x] 成立" 蕴含 "不存在 [x] 使得 [P x] 不成立"。
   
   另外，请思考如何证明另一个方向的蕴含关系?
-  在 "ConsLogic.v" 中，我们会给出答案。
+  在 "ConsLogic.v" 中，我们会给出答案
+  (TODO: (@ant-hengxin) 什么时候写这一节呢?)。
 *)
 
 Theorem dist_not_exists : forall (X : Type) (P : X -> Prop),

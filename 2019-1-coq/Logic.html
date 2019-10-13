@@ -36,7 +36,7 @@
 
 <div class="paragraph"> </div>
 
-  (TODO (to ant-hengxin): How to "Make"?)
+  (TODO (@ant-hengxin): How to "Make"?)
 
 </div>
 <div class="code">
@@ -57,7 +57,7 @@
 
   本节介绍一阶谓词逻辑 
   (说它是一阶谓词逻辑并不严格，我们以后讨论。) 
-  的 <i>'自然推理系统' (Natural Deduction System)_。
+  的 <i>'自然推理系统'</i> (Natural Deduction System)。
   系统，封闭之结构也;
   推理，证明之路径也;
   自然，“无他，但手熟尔”。
@@ -67,15 +67,15 @@
 
 <div class="paragraph"> </div>
 
-  在一阶谓词逻辑中，我们会考虑各种 <i>'命题' (Proposition)_，包括
-  <i>'合取' (Conjunctive?)_ 命题、<i>'析取' (Disjunctive)_ 命题、
-  <i>'否定' (Negative)_ 命题、<i>'蕴含 (Implication)'</i> 命题、
-  <i>'等价' (Equivalence)_ 命题、<i>'相等性' (Equality)_ 命题、
-  <i>'存在' (Existence)_ 命题 以及 <i>'全称' (Forall)_ 命题。 
+  在一阶谓词逻辑中，我们会考虑各种 <i>'命题'</i> (Proposition)，包括
+  <i>'合取'</i> (Conjunctive) 命题、<i>'析取'</i> (Disjunctive) 命题、
+  <i>'否定'</i> (Negative) 命题、<i>'蕴含_ (Implication)' 命题、
+  <i>'等价'</i> (Equivalence) 命题、<i>'相等性'</i> (Equality) 命题、
+  <i>'存在'</i> (Existence) 命题以及 <i>'全称'</i> (Forall) 命题。 
 
 <div class="paragraph"> </div>
 
-  关于逻辑，首先需要介绍的一个概念就是 <i>'命题' (Proposition)_。
+  关于逻辑，首先需要介绍的一个概念就是 <i>'命题'</i> (Proposition)。
   什么是命题? 命题就是可以判断真假的语句。
   什么是语句? 语句是不含自由变量的公式。
   什么是真? 什么是假? 这个问题就深了。我不敢妄言。
@@ -114,7 +114,7 @@
 
 <div class="paragraph"> </div>
 
-  <i>'是'</i>一个命题与该命题<i>'为真'</i> (或者说，<i>'可被证明' (Provable)_) 是两回事。
+  <i>'是'</i>一个命题与该命题<i>'为真'</i> (或者说，<i>'可被证明'</i> (Provable)) 是两回事。
   后者是计算机科学与数理逻辑的重要研究对象。 
 
 <div class="paragraph"> </div>
@@ -122,7 +122,7 @@
 
 <div class="paragraph"> </div>
 
-  在 Coq 中，命题是 <i>'一等对象（First-Class Object）'</i>，
+  在 Coq 中，命题是 <i>'一等对象'</i> (First-Class Object)'，
   我们可以像操作其它实体那样操作命题，比如:
 <ul class="doclist">
 <li> (1) 为命题命名，并在之后引用它的名字。
@@ -157,7 +157,7 @@
 <div class="paragraph"> </div>
 
   (2) 命题可以作为函数的返回值。这类函数接受某些类型的参数，返回一个命题。
-  实际上，这类函数定义了其参数的某种<i>'性质' (Property)_。 
+  实际上，这类函数定义了其参数的某种<i>'性质'</i> (Property)。 
 
 <div class="paragraph"> </div>
 
@@ -190,7 +190,7 @@
 
 <div class="paragraph"> </div>
 
-  函数 <span class="inlinecode"><span class="id" title="var">injective</span></span> 定义了一个函数是否是 <i>'单射函数' (Injective Functions)_。
+  函数 <span class="inlinecode"><span class="id" title="var">injective</span></span> 定义了一个函数是否是 <i>'单射函数'</i> (Injective Functions)。
   定义中的 "<span class="inlinecode">{<span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span>}</span>" 表示 <span class="inlinecode"><span class="id" title="var">A</span></span>、<span class="inlinecode"><span class="id" title="var">B</span></span> 是两个参数化类型，
   我们会在后续介绍，这里可以当作它们不存在。
 
@@ -209,7 +209,7 @@
 <div class="paragraph"> </div>
 
   相等关系运算符 <span class="inlinecode">=</span> 也是一个返回 <span class="inlinecode"><span class="id" title="keyword">Prop</span></span> 的函数。
-  表达式 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 只是 <span class="inlinecode"><span class="id" title="var">eq</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> 的 <i>'语法糖' (Syntax Sugar?)_。
+  表达式 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">m</span></span> 只是 <span class="inlinecode"><span class="id" title="var">eq</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode"><span class="id" title="var">m</span></span> 的 <i>'语法糖'</i> (Syntactic Sugar)。
 
 </div>
 <div class="code">
@@ -492,7 +492,7 @@
 
 <div class="paragraph"> </div>
 
-  命题 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 表示 <span class="inlinecode"><span class="id" title="var">A</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> 的 <i>'析取' (即 "逻辑或")_。
+  命题 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 表示 <span class="inlinecode"><span class="id" title="var">A</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> 的 <i>'析取'</i> (即 _逻辑或_)。
   <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 为真当且仅当 <span class="inlinecode"><span class="id" title="var">A</span></span> 与 <span class="inlinecode"><span class="id" title="var">B</span></span> 中至少有一个为真。
   <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">∨</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 是 <span class="inlinecode"><span class="id" title="var">or</span></span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode"><span class="id" title="var">B</span></span> 的语法糖。
 
@@ -746,7 +746,8 @@
   它将待证目标 <span class="inlinecode"><span class="id" title="var">False</span></span> 转化为 <span class="inlinecode"><span class="id" title="var">P</span></span>。
   背后的推理是: 要证明 <span class="inlinecode"><span class="id" title="var">False</span></span> 成立，根据前提 <span class="inlinecode"><span class="id" title="var">G</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>，
   只需证明 <span class="inlinecode"><span class="id" title="var">P</span></span> 成立。
-  这实际上是 <span class="inlinecode">-&gt;-<span class="id" title="var">elimination</span></span> 规则，也就是 <i>'modus ponens'</i> 规则。
+  这实际上是 <span class="inlinecode">-&gt;-<span class="id" title="var">elimination</span></span> 规则，也就是 <i>'modus ponens'</i> 规则，
+  后面会有介绍。
 
 </div>
 <div class="code">
@@ -767,7 +768,7 @@
   <span class="inlinecode"><span class="id" title="var">HNP</span></span> 是蕴含式 <span class="inlinecode"><span class="id" title="var">HNP</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span>。
   <span class="inlinecode"><span class="id" title="var">HP</span></span> 是 <span class="inlinecode"><span class="id" title="var">HP</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">P</span></span>。
   注意到 <span class="inlinecode"><span class="id" title="var">HP</span></span> 与 <span class="inlinecode"><span class="id" title="var">HNP</span></span> 的前件相同，
-  此时，<span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">HNP</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">HP</span></span> 是在正向应用 <i>'modus ponens'</i> 规则:
+  此时，<span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">HNP</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">HP</span></span> 是在正向应用 modus ponens 规则:
   已知 <span class="inlinecode"><span class="id" title="var">P</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">False</span></span> 与 <span class="inlinecode"><span class="id" title="var">P</span></span>，推导出 <span class="inlinecode"><span class="id" title="var">False</span></span>。
 
 <div class="paragraph"> </div>
@@ -965,7 +966,7 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
   如果当前证明上下文中存在形如 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">B</span></span> 的前提 <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">B</span></span>，
   并且存在前提 <span class="inlinecode"><span class="id" title="var">Q</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span>，那么我们可以使用 <span class="inlinecode"><span class="id" title="tactic">apply</span></span> <span class="inlinecode"><span class="id" title="var">H</span></span> <span class="inlinecode"><span class="id" title="tactic">in</span></span> <span class="inlinecode"><span class="id" title="var">Q</span></span>，得到 <span class="inlinecode"><span class="id" title="var">B</span></span>。
   这就是 "-&gt;-elimination" 规则，
-  也就是常说的 _分离规则 (modus ponens; MP)_。
+  也就是常说的 _分离规则_ (modus ponens; MP)。
 
 </div>
 <div class="code">
@@ -1074,13 +1075,16 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 &nbsp;&nbsp;-  <span class="id" title="tactic">apply</span> <span class="id" title="var">not_true_is_false</span>.<br/>
 &nbsp;&nbsp;-  <span class="id" title="tactic">intros</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">rewrite</span> <span class="id" title="var">H</span>. <span class="id" title="tactic">intros</span> <span class="id" title="var">H'</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="tactic">discriminate</span> <span class="id" title="var">H'</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
   在上面证明的最后，我们使用了 <span class="inlinecode"><span class="id" title="tactic">discriminate</span></span> <span class="inlinecode"><span class="id" title="var">H'</span></span> 完成证明。
   此时，<span class="inlinecode"><span class="id" title="var">H'</span>:</span> <span class="inlinecode"><span class="id" title="var">false</span></span> <span class="inlinecode">=</span> <span class="inlinecode"><span class="id" title="var">true</span></span>。<span class="inlinecode"><span class="id" title="var">false</span></span> 与 <span class="inlinecode"><span class="id" title="var">true</span></span> 是 <span class="inlinecode"><span class="id" title="var">bool</span></span> 类型的两个构造函数。
   在归纳定义中，不同的构造函数构造出的值一定是不同的。
-  如果上下文出现类似 <span class="inlinecode"><span class="id" title="var">H'</span></span> 的假设，则可以立即使用 <span class="inlinecode"><span class="id" title="tactic">discriminate</span></span> 完成证明。 
+  如果上下文出现类似 <span class="inlinecode"><span class="id" title="var">H'</span></span> 的假设，则可以立即使用 <span class="inlinecode"><span class="id" title="tactic">discriminate</span></span> 完成证明。
+  关于 <span class="inlinecode"><span class="id" title="tactic">discriminate</span></span> 的详细介绍，我们留到 <span class="inlinecode"><span class="id" title="var">Induction.v</span></span> 中。 
 
 <div class="paragraph"> </div>
 
@@ -1221,7 +1225,7 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 
   命题 <span class="inlinecode"><span class="id" title="tactic">∃</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span>,</span> <span class="inlinecode"><span class="id" title="var">P</span></span> 表示存在类型为 <span class="inlinecode"><span class="id" title="var">T</span></span> 的 <span class="inlinecode"><span class="id" title="var">x</span></span>，
   使得性质 <span class="inlinecode"><span class="id" title="var">P</span></span> 对 <span class="inlinecode"><span class="id" title="var">x</span></span> 成立 (或说，<span class="inlinecode"><span class="id" title="var">x</span></span> 满足性质 <span class="inlinecode"><span class="id" title="var">P</span></span>)。
-  <span class="inlinecode"><span class="id" title="tactic">∃</span></span> 是 <i>'存在量词_。
+  <span class="inlinecode"><span class="id" title="tactic">∃</span></span> 是 <i>'存在量词'</i>。
   (如果 Coq 能从上下文中推断出 <span class="inlinecode"><span class="id" title="var">x</span></span> 的类型，那么 <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">T</span></span> 也可以省略。
   但并不建议初学者这么做。)
 
@@ -1296,7 +1300,8 @@ Coq 为 <span class="inlinecode"><span class="id" title="var">ex_falso_quodlibet
 <div class="paragraph"> </div>
 
   另外，请思考如何证明另一个方向的蕴含关系?
-  在 "ConsLogic.v" 中，我们会给出答案。
+  在 "ConsLogic.v" 中，我们会给出答案
+  (TODO: (@ant-hengxin) 什么时候写这一节呢?)。
 
 </div>
 <div class="code">
