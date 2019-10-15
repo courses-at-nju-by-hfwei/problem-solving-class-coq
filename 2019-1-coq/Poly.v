@@ -1,95 +1,119 @@
 (** * Poly: 多态与高阶函数 *)
 
-(* 最后提醒：请勿将习题解答放在可以公开访问的地方，谢谢！ *)
-
 (* Suppress some annoying warnings from Coq: *)
 Set Warnings "-notation-overridden,-parsing".
 From LF Require Export Lists.
 
+(** 
+  上一节我们学习了函数式程序设计中的基础数据类型——列表。
+  本节，我们要正式进入优雅的函数式程序设计的世界。
+  
+  说起函数式程序设计，就不得不提起与它紧密相关的一系列概念:
+  不可变性 (Immutable)、纯函数 (Pure Functions)、
+  单子 (Monad)、持久性数据结构 (Persistent Data Structures)、
+  高阶函数 (High-Order Functions)、柯里化 (Currying)、
+  惰性求值 (Lazy Evaluation)、类型系统 (Type Systems)、
+  引用透明性 (Referential Transparency) 等等。
+  
+  要想真正掌握函数式程序设计，就需要深入了解这些概念。
+  其中一些概念至今仍是程序设计语言 (Programming Language; PL) 
+  领域的研究课题。
+  如果你学完本节之后，对函数式程序设计产生了兴趣，
+  甚至于对程序设计语言理论本身产生了兴趣，
+  那么本节的目的就达到了。
+   
+  我们不可能面面俱到地介绍上面的概念。
+  本节重点介绍 _'高阶函数'_ 的含义与应用。
+  它是函数式程序设计最典型的特征。
+  
+  在此之前，我们需要先介绍另外一个概念: _多态_ (Polymorphic)。
+  它与类型系统有关。
+*)
+    
 (* ################################################################# *)
 (** * 多态 *)
-
-(** 在本章中，我们会继续发展函数式编程的基本概念，其中最关键的新概念就是
-    _'多态'_（在所处理的数据类型上抽象出函数）和_'高阶函数'_（函数作为数据）。 *)
 
 (* ================================================================= *)
 (** ** 多态列表 *)
 
-(** 在前几章中，我们只是使用了数的列表。很明显，
-    有趣的程序还需要能够处理其它元素类型的列表，如字符串列表、布尔值列表、
-    列表的列表等等。我们_'可以'_分别为它们定义新的归纳数据类型，例如... *)
+(** 
+  在 [Lists.v] 中，我们定义了自然数列表 [natlist] 与作用于其上的函数。
+  依葫芦画瓢，我们还可以定义字符列表 (即，字符串)、布尔值列表、日期列表、
+  甚至自然数列表的列表，并且分别为它们定义一系列与列表相关的操作函数。
+  
+  但是，作为程序员，你根本无法忍受把同样的事情做三遍，
+  根本无法忍受把同样的事情做三遍，根本无法忍受把同样的事情做三遍。
+  
+  稍加思考，就会发现，这些定义大同小异，不同的仅是列表中元素的类型而已。
+  因此，我们可以考虑把类型抽象出来，作为一个参数。
+  于是就有了“多态”机制，它允许程序员定义一个可以适用于任意类型的类型或函数。
+  
+  比如，下面的 [list] 所定义的列表中的元素可以是任意类型 (用 X 表示)。
+*)
 
-Inductive boollist : Type :=
-  | bool_nil
-  | bool_cons (b : bool) (l : boollist).
-
-(** ...不过这样很快就会变得乏味。
-    部分原因在于我们必须为每种数据类型都定义不同的构造子，
-    然而主因还是我们必须为每种数据类型再重新定义一遍所有的列表处理函数
-    （如 [length]、[rev] 等）。 *)
-
-(** 为避免这些重复，Coq 支持定义_'多态'_归纳类型。
-    例如，以下就是_'多态列表'_数据类型。 *)
-
-Inductive list (X:Type) : Type :=
+Inductive list (X : Type) : Type :=
   | nil
   | cons (x : X) (l : list X).
 
-(** 这和上一章中 [natlist] 的定义基本一样，只是将 [cons] 构造子的
-    [nat] 参数换成了任意的类型 [X]，定义的头部添加了 [X] 的绑定，
-    而构造子类型中的 [natlist] 则换成了 [list X]。（我们可以重用构造子名
-    [nil] 和 [cons]，因为之前定义的 [natlist] 在当前作用之外的一个 [Module] 中。）
+(** 
+  与 [Lists.v] 中 [natlist] 的定义相比，[list] 有两处变化:
+  - 在定义的头部多了 [(X : Type)]。
+    [X] 称为类型参数。
+    在使用 [list] 时，我们可以把 [X] 替换成任何具体的类型。
+    比如，[list nat] 表示自然数列表，[list bool] 表示布尔值列表，等等。
+  - 在构造函数 [cons] 中，我们使用 [x : X] 代替了 [natlist] 中
+    具体的 [n : nat]，并用 [(l : list X)] 代替了 [natlist]。
+*)
 
-    [list] 本身又是什么类型？一种不错的思路就是把 [list] 当做从 [Type]
-    类型到 [Inductive] 归纳定义的_'函数'_；或者换种思路，即 [list]
-    是个从 [Type] 类型到 [Type] 类型的函数。对于任何特定的类型 [X]，
-    类型 [list X] 是一个 [Inductive] 归纳定义的，元素类型为 [X] 的列表的集合。 *)
+(*
+  [list] 的类型是什么呢?
+  上面我们提到，[X] 是_类型_参数，
+  而 [list X] 表示元素类型为 [X] 的列表_类型_。
+  因此，我们可以将 [list] 看作一个函数，它接受一个类型 (X : Type)，
+  返回另一个类型 [list X]。
+*)
 
 Check list.
 (* ===> list : Type -> Type *)
 
-(** The parameter [X] in the definition of [list] automatically
-    becomes a parameter to the constructors [nil] and [cons] -- that
-    is, [nil] and [cons] are now polymorphic constructors; when we use
-    them, we must now provide a first argument that is the type of the
-    list they are building. For example, [nil nat] constructs the
-    empty list of type [nat]. *)
-
-Check (nil nat).
-(* ===> nil nat : list nat *)
-
-(** [cons nat] 与此类似，它将类型为 [nat] 的元素添加到类型为
-    [list nat] 的列表中。以下示例构造了一个只包含自然数 3 的列表： *)
-
-Check (cons nat 3 (nil nat)).
-(* ===> cons nat 3 (nil nat) : list nat *)
-
-(** [nil] 的类型可能是什么？我们可以从定义中看到 [list X] 的类型，
-    它忽略了 [list] 的形参 [X] 的绑定。[Type -> list X] 并没有解释
-    [X] 的含义，[(X : Type) -> list X] 则比较接近。Coq 对这种情况的记法为
-    [forall X : Type, list X]： *)
+(** 
+  构造函数 [nil] 的类型是什么呢?
+  你可以通过运行下面的 [Check nil] 来查看。
+  目前你不必完全理解它的含义，只要能意会即可:
+  对于任意类型 [X]，返回 [List X]。
+*)
 
 Check nil.
 (* ===> nil : forall X : Type, list X *)
 
-(** 类似地，定义中 [cons] 看起来像 [X -> list X -> list X]
-    然而以此约定来解释 [X] 的含义则是类型 [forall X, X -> list X -> list X]。 *)
+(** 
+  类似地，你可以查看 [cons] 的类型:
+  对于任意的类型 [X]，给定类型为 [X] 的元素与列表 [list X]，
+  返回另一个列表 [list X]。
+*)
 
 Check cons.
 (* ===> cons : forall X : Type, X -> list X -> list X *)
 
-(** （关于记法的附注：在 [.v] 文件中，量词“forall”会写成字母的形式，
-    而在生成的 HTML 和一些设置了显示控制的 IDE 中，[forall]
-    通常会渲染成一般的“倒 A”数学符号，虽然你偶尔还是会看到英文拼写的
-    “forall”。这只是排版上的效果，它们的含义没有任何区别。） *)
+(** 
+  定义 [list] 中的类型参数 [X] 自动成为构造函数 [nil] 与 [cons] 的类型参数。
+  也就是说，[nil] 与 [cons] 是多态构造函数。
+  在使用它们时，我们需要提供 [X] 对应的具体类型。
+  一个基本的使用规则是，[nil] 与 [cons] 不能独立出现，
+  它们的后面一定要跟着一个具体的类型。
+*)
+
+Check (nil nat).
+(* ===> nil nat : list nat *)
+
+Check (cons nat 3 (nil nat)).
+(* ===> cons nat 3 (nil nat) : list nat *)
+
+Check (cons nat 2 (cons nat 1 (nil nat))).
+(* ===> cons nat 2 (cons nat 1 (nil nat)) : list nat *)
 
 (** 如果在每次使用列表构造子时，都要为它提供类型参数，那样会很麻烦。
     不过我们很快就会看到如何省去这种麻烦。 *)
-
-Check (cons nat 2 (cons nat 1 (nil nat))).
-
-(** （这里显式地写出了 [nil] 和 [cons]，因为我们还没为新版本的列表定义
-    [ [] ] 和 [::] 记法。我们待会儿再干。) *)
 
 (** 现在我们可以回过头来定义之前写下的列表处理函数的多态版本了。
     例如 [repeat]：*)

@@ -41,6 +41,10 @@ Rock on Coq for the Problem Solving Class at Nanjing University
 - 学习相关 `.v` 文件并尽可能完成里面的练习
 - `.v` 文件相应的 `.html` 文件可以在本地浏览器中打开 (目前部分显示格式有误)
 
+Coq 官方文档:
+- [The Coq Standard Library](https://coq.inria.fr/distrib/current/stdlib/)
+- [The Coq Reference Manual](https://coq.inria.fr/distrib/current/refman/)
+
 ## 如何学好 Coq?
 - 练习，练习，再练习
 - 由于章节之间有依赖性，所以如果想做与 Coq 相关的 OT 报告，练习不能中断。

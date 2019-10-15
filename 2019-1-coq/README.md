@@ -1,8 +1,13 @@
 # 2019-1-coq
 
 ## 通知 (重要; 以日期倒序排列)
-- 2019年10月14日: 
-  - To Appear
+- 2019年10月22日: 
+  - 发布 [`Lists.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Lists.v):
+    列表与树数据结构。
+- 2019年10月15日: 
+  - 发布 
+    [`Induction.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Induction.v):
+    数学归纳法。与 1-3 的 Open Topics 相关。
 - 2019年10月07日: 
   - 发布 [`Basics.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Basics.v)
 	(`Basics.html`): 基础入门知识 

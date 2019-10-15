@@ -1,0 +1,1957 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Poly</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Poly</h1>
+
+<div class="code">
+</div>
+
+<div class="doc">
+<a name="lab1"></a><h1 class="section">Poly: 多态与高阶函数</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Set</span> <span class="id" title="var">Warnings</span> "-notation-overridden,-parsing".<br/>
+<span class="id" title="var">From</span> <span class="id" title="var">LF</span> <span class="id" title="keyword">Require</span> <span class="id" title="keyword">Export</span> <span class="id" title="var">Lists</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  上一节我们学习了函数式程序设计中的基础数据类型——列表。
+  本节，我们要正式进入优雅的函数式程序设计的世界。
+
+<div class="paragraph"> </div>
+
+  说起函数式程序设计，就不得不提起与它紧密相关的一系列概念:
+  不可变性 (Immutable)、纯函数 (Pure Functions)、
+  单子 (Monad)、持久性数据结构 (Persistent Data Structures)、
+  高阶函数 (High-Order Functions)、柯里化 (Currying)、
+  惰性求值 (Lazy Evaluation)、类型系统 (Type Systems)、
+  引用透明性 (Referential Transparency) 等等。
+
+<div class="paragraph"> </div>
+
+  要想真正掌握函数式程序设计，就需要深入了解这些概念。
+  其中一些概念至今仍是程序设计语言 (Programming Language; PL) 
+  领域的研究课题。
+  如果你学完本节之后，对函数式程序设计产生了兴趣，
+  甚至于对程序设计语言理论本身产生了兴趣，
+  那么本节的目的就达到了。
+
+<div class="paragraph"> </div>
+
+  我们不可能面面俱到地介绍上面的概念。
+  本节重点介绍 <i>'高阶函数'</i> 的含义与应用。
+  它是函数式程序设计最典型的特征。
+
+<div class="paragraph"> </div>
+
+  在此之前，我们需要先介绍另外一个概念: _多态_ (Polymorphic)。
+  它与类型系统有关。
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab2"></a><h1 class="section">多态</h1>
+
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab3"></a><h2 class="section">多态列表</h2>
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+  在 <span class="inlinecode"><span class="id" title="var">Lists.v</span></span> 中，我们定义了自然数列表 <span class="inlinecode"><span class="id" title="var">natlist</span></span> 与作用于其上的函数。
+  依葫芦画瓢，我们还可以定义字符列表 (即，字符串)、布尔值列表、日期列表、
+  甚至自然数列表的列表，并且分别为它们定义一系列与列表相关的操作函数。
+
+<div class="paragraph"> </div>
+
+  但是，作为程序员，你根本无法忍受把同样的事情做三遍，
+  根本无法忍受把同样的事情做三遍，根本无法忍受把同样的事情做三遍。
+
+<div class="paragraph"> </div>
+
+  稍加思考，就会发现，这些定义大同小异，不同的仅是列表中元素的类型而已。
+  因此，我们可以考虑把类型抽象出来，作为一个参数。
+  于是就有了“多态”机制，它允许程序员定义一个可以适用于任意类型的类型或函数。
+
+<div class="paragraph"> </div>
+
+  比如，下面的 <span class="inlinecode"><span class="id" title="var">list</span></span> 所定义的列表中的元素可以是任意类型 (用 X 表示)。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">list</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">nil</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">cons</span> (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  与 <span class="inlinecode"><span class="id" title="var">Lists.v</span></span> 中 <span class="inlinecode"><span class="id" title="var">natlist</span></span> 的定义相比，<span class="inlinecode"><span class="id" title="var">list</span></span> 有两处变化:
+<ul class="doclist">
+<li> 在定义的头部多了 <span class="inlinecode">(<span class="id" title="var">X</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="keyword">Type</span>)</span>。
+    <span class="inlinecode"><span class="id" title="var">X</span></span> 称为类型参数。
+    在使用 <span class="inlinecode"><span class="id" title="var">list</span></span> 时，我们可以把 <span class="inlinecode"><span class="id" title="var">X</span></span> 替换成任何具体的类型。
+    比如，<span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span> 表示自然数列表，<span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 表示布尔值列表，等等。
+
+</li>
+<li> 在构造函数 <span class="inlinecode"><span class="id" title="var">cons</span></span> 中，我们使用 <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">X</span></span> 代替了 <span class="inlinecode"><span class="id" title="var">natlist</span></span> 中
+    具体的 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">nat</span></span>，并用 <span class="inlinecode">(<span class="id" title="var">l</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span>)</span> 代替了 <span class="inlinecode"><span class="id" title="var">natlist</span></span>。
+
+</li>
+</ul>
+
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">list</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  构造函数 <span class="inlinecode"><span class="id" title="var">nil</span></span> 的类型是什么呢?
+  你可以通过运行下面的 <span class="inlinecode"><span class="id" title="keyword">Check</span></span> <span class="inlinecode"><span class="id" title="var">nil</span></span> 来查看。
+  目前你不必完全理解它的含义，只要能意会即可:
+  对于任意类型 <span class="inlinecode"><span class="id" title="var">X</span></span>，返回 <span class="inlinecode"><span class="id" title="var">List</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">nil</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  类似地，你可以查看 <span class="inlinecode"><span class="id" title="var">cons</span></span> 的类型:
+  对于任意的类型 <span class="inlinecode"><span class="id" title="var">X</span></span>，给定类型为 <span class="inlinecode"><span class="id" title="var">X</span></span> 的元素与列表 <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>，
+  返回另一个列表 <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">cons</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+
+<div class="paragraph"> </div>
+
+  定义 <span class="inlinecode"><span class="id" title="var">list</span></span> 中的类型参数 <span class="inlinecode"><span class="id" title="var">X</span></span> 自动成为构造函数 <span class="inlinecode"><span class="id" title="var">nil</span></span> 与 <span class="inlinecode"><span class="id" title="var">cons</span></span> 的类型参数。
+  也就是说，<span class="inlinecode"><span class="id" title="var">nil</span></span> 与 <span class="inlinecode"><span class="id" title="var">cons</span></span> 是多态构造函数。
+  在使用它们时，我们需要提供 <span class="inlinecode"><span class="id" title="var">X</span></span> 对应的具体类型。
+  一个基本的使用规则是，<span class="inlinecode"><span class="id" title="var">nil</span></span> 与 <span class="inlinecode"><span class="id" title="var">cons</span></span> 不能独立出现，
+  它们的后面一定要跟着一个具体的类型。
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="var">nil</span> <span class="id" title="var">nat</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="var">cons</span> <span class="id" title="var">nat</span> 3 (<span class="id" title="var">nil</span> <span class="id" title="var">nat</span>)).<br/>
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="var">cons</span> <span class="id" title="var">nat</span> 2 (<span class="id" title="var">cons</span> <span class="id" title="var">nat</span> 1 (<span class="id" title="var">nil</span> <span class="id" title="var">nat</span>))).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+如果在每次使用列表构造子时，都要为它提供类型参数，那样会很麻烦。
+    不过我们很快就会看到如何省去这种麻烦。 
+<div class="paragraph"> </div>
+
+ 现在我们可以回过头来定义之前写下的列表处理函数的多态版本了。
+    例如 <span class="inlinecode"><span class="id" title="tactic">repeat</span></span>：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="tactic">repeat</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">count</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">list</span> <span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">count</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0 ⇒ <span class="id" title="var">nil</span> <span class="id" title="var">X</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">count'</span> ⇒ <span class="id" title="var">cons</span> <span class="id" title="var">X</span> <span class="id" title="var">x</span> (<span class="id" title="tactic">repeat</span> <span class="id" title="var">X</span> <span class="id" title="var">x</span> <span class="id" title="var">count'</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+同 <span class="inlinecode"><span class="id" title="var">nil</span></span> 与 <span class="inlinecode"><span class="id" title="var">cons</span></span> 一样，我们可以通过将 <span class="inlinecode"><span class="id" title="tactic">repeat</span></span>
+    应用到一个类型、一个该类型的元素以及一个数字来使用它： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_repeat1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="var">nat</span> 4 2 = <span class="id" title="var">cons</span> <span class="id" title="var">nat</span> 4 (<span class="id" title="var">cons</span> <span class="id" title="var">nat</span> 4 (<span class="id" title="var">nil</span> <span class="id" title="var">nat</span>)).<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+要用 <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> 构造其它种类的列表，
+    我们只需通过对应类型的参数将它实例化即可： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_repeat2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">repeat</span> <span class="id" title="var">bool</span> <span class="id" title="var">false</span> 1 = <span class="id" title="var">cons</span> <span class="id" title="var">bool</span> <span class="id" title="var">false</span> (<span class="id" title="var">nil</span> <span class="id" title="var">bool</span>).<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab4"></a><h4 class="section">练习：2 星, standard (mumble_grumble)</h4>
+
+
+<div class="paragraph"> </div>
+
+    考虑以下两个归纳定义的类型： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">MumbleGrumble</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">mumble</span> : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">a</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">b</span> (<span class="id" title="var">x</span> : <span class="id" title="var">mumble</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">nat</span>)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">c</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">grumble</span> (<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">d</span> (<span class="id" title="var">m</span> : <span class="id" title="var">mumble</span>)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">e</span> (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+对于某个类型 <span class="inlinecode"><span class="id" title="var">X</span></span>，以下哪些是 <span class="inlinecode"><span class="id" title="var">grumble</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> 良定义的元素？
+    （在各选项后填“是”或“否”。）
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">d</span></span> <span class="inlinecode">(<span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">5)</span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">d</span></span> <span class="inlinecode"><span class="id" title="var">mumble</span></span> <span class="inlinecode">(<span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">5)</span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">d</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">(<span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="var">a</span></span> <span class="inlinecode">5)</span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">e</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode"><span class="id" title="var">true</span></span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">e</span></span> <span class="inlinecode"><span class="id" title="var">mumble</span></span> <span class="inlinecode">(<span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">0)</span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">e</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> <span class="inlinecode">(<span class="id" title="var">b</span></span> <span class="inlinecode"><span class="id" title="var">c</span></span> <span class="inlinecode">0)</span>
+
+</li>
+<li> <span class="inlinecode"><span class="id" title="var">c</span></span> 
+</li>
+</ul>
+
+</div>
+<div class="code">
+<span class="id" title="keyword">End</span> <span class="id" title="var">MumbleGrumble</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_mumble_grumble</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab5"></a><h3 class="section">类型标注的推断</h3>
+
+<div class="paragraph"> </div>
+
+ 我们再写一遍 <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> 的定义，不过这次不指定任何参数的类型。
+    Coq 还会接受它么？ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">repeat'</span> <span class="id" title="var">X</span> <span class="id" title="var">x</span> <span class="id" title="var">count</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">count</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0        ⇒ <span class="id" title="var">nil</span> <span class="id" title="var">X</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">count'</span> ⇒ <span class="id" title="var">cons</span> <span class="id" title="var">X</span> <span class="id" title="var">x</span> (<span class="id" title="var">repeat'</span> <span class="id" title="var">X</span> <span class="id" title="var">x</span> <span class="id" title="var">count'</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+当然会。我们来看看 Coq 赋予了 <span class="inlinecode"><span class="id" title="var">repeat'</span></span> 什么类型： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">repeat'</span>.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="tactic">repeat</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+它与 <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> 的类型完全一致。Coq 可以使用<i>'类型推断'</i>
+    基于它们的使用方式来推出 <span class="inlinecode"><span class="id" title="var">X</span></span>、<span class="inlinecode"><span class="id" title="var">x</span></span> 和 <span class="inlinecode"><span class="id" title="var">count</span></span> 一定是什么类型。例如，
+    由于 <span class="inlinecode"><span class="id" title="var">X</span></span> 是作为 <span class="inlinecode"><span class="id" title="var">cons</span></span> 的参数使用的，因此它必定是个 <span class="inlinecode"><span class="id" title="keyword">Type</span></span> 类型，
+    因为 <span class="inlinecode"><span class="id" title="var">cons</span></span> 期望一个 <span class="inlinecode"><span class="id" title="keyword">Type</span></span> 作为其第一个参数，而用 <span class="inlinecode">0</span> 和 <span class="inlinecode"><span class="id" title="var">S</span></span> 来匹配
+    <span class="inlinecode"><span class="id" title="var">count</span></span> 意味着它必须是个 <span class="inlinecode"><span class="id" title="var">nat</span></span>，诸如此类。
+
+<div class="paragraph"> </div>
+
+    这种强大的功能意味着我们不必总是在任何地方都显式地写出类型标注，
+    不过显式的类型标注对于文档和完整性检查来说仍然非常有用，
+    因此我们仍会继续使用它。你应当在代码中把握好使用类型标注的平衡点，
+    太多导致混乱并分散注意力，太少则会迫使读者为理解你的代码而在大脑中进行类型推断。 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab6"></a><h3 class="section">类型参数的推断</h3>
+
+<div class="paragraph"> </div>
+
+ 要使用多态函数，我们需要为其参数再额外传入一个或更多类型。
+    例如，前面 <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> 函数体中的递归调用必须传递类型 <span class="inlinecode"><span class="id" title="var">X</span></span>。不过由于
+    <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> 的第二个参数为 <span class="inlinecode"><span class="id" title="var">X</span></span> 类型的元素，第一个参数明显只能是 <span class="inlinecode"><span class="id" title="var">X</span></span>，
+    既然如此，我们何必显式地写出它呢？
+
+<div class="paragraph"> </div>
+
+    Fortunately, Coq permits us to avoid this kind of redundancy.  In
+    place of any type argument we can write a "hole" <span class="inlinecode"><span class="id" title="var">_</span></span>, which can be
+    read as "Please try to figure out for yourself what belongs here."
+    More precisely, when Coq encounters a <span class="inlinecode"><span class="id" title="var">_</span></span>, it will attempt to
+    <i>unify</i> all locally available information -- the type of the
+    function being applied, the types of the other arguments, and the
+    type expected by the context in which the application appears --
+    to determine what concrete type should replace the <span class="inlinecode"><span class="id" title="var">_</span></span>.
+
+<div class="paragraph"> </div>
+
+    这听起来很像类型标注推断。实际上，这两种个过程依赖于同样的底层机制。
+    除了简单地忽略函数中某些参数的类型：
+
+<div class="paragraph"> </div>
+
+      repeat' X x count : list X :=
+
+<div class="paragraph"> </div>
+
+    我们还可以将类型换成 <span class="inlinecode"><span class="id" title="var">_</span></span>：
+
+<div class="paragraph"> </div>
+
+      repeat' (X : _) (x : _) (count : _) : list X :=
+
+<div class="paragraph"> </div>
+
+    以此来告诉 Coq 要尝试推断出缺少的信息。
+
+<div class="paragraph"> </div>
+
+    Using holes, the <span class="inlinecode"><span class="id" title="tactic">repeat</span></span> function can be written like this: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">repeat''</span> <span class="id" title="var">X</span> <span class="id" title="var">x</span> <span class="id" title="var">count</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">count</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0        ⇒ <span class="id" title="var">nil</span> <span class="id" title="var">_</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">count'</span> ⇒ <span class="id" title="var">cons</span> <span class="id" title="var">_</span> <span class="id" title="var">x</span> (<span class="id" title="var">repeat''</span> <span class="id" title="var">_</span> <span class="id" title="var">x</span> <span class="id" title="var">count'</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+在此例中，我们写出 <span class="inlinecode"><span class="id" title="var">_</span></span> 并没有省略多少 <span class="inlinecode"><span class="id" title="var">X</span></span>。然而在很多情况下，
+    这对减少击键次数和提高可读性还是很有效的。例如，假设我们要写下一个包含数字
+    <span class="inlinecode">1</span>、<span class="inlinecode">2</span> 和 <span class="inlinecode">3</span> 的列表，此时不必写成这样： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">list123</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">cons</span> <span class="id" title="var">nat</span> 1 (<span class="id" title="var">cons</span> <span class="id" title="var">nat</span> 2 (<span class="id" title="var">cons</span> <span class="id" title="var">nat</span> 3 (<span class="id" title="var">nil</span> <span class="id" title="var">nat</span>))).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+...we can use holes to write this: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">list123'</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">cons</span> <span class="id" title="var">_</span> 1 (<span class="id" title="var">cons</span> <span class="id" title="var">_</span> 2 (<span class="id" title="var">cons</span> <span class="id" title="var">_</span> 3 (<span class="id" title="var">nil</span> <span class="id" title="var">_</span>))).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab7"></a><h3 class="section">隐式参数</h3>
+
+<div class="paragraph"> </div>
+
+ 我们甚至可以通过告诉 Coq <i>'总是'</i>推断给定函数的类型参数来避免 <span class="inlinecode"><span class="id" title="var">_</span></span>。
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">Arguments</span></span> 用于指令指定函数或构造子的名字并列出其参数名，
+    花括号中的任何参数都会被视作隐式参数。（如果定义中的某个参数没有名字，
+    那么它可以用通配模式 <span class="inlinecode"><span class="id" title="var">_</span></span> 来标记。这种情况常见于构造子中。） 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">nil</span> {<span class="id" title="var">X</span>}.<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">cons</span> {<span class="id" title="var">X</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="tactic">repeat</span> {<span class="id" title="var">X</span>} <span class="id" title="var">x</span> <span class="id" title="var">count</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+现在我们再也不必提供类型参数了： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">list123''</span> := <span class="id" title="var">cons</span> 1 (<span class="id" title="var">cons</span> 2 (<span class="id" title="var">cons</span> 3 <span class="id" title="var">nil</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+此外，我们还可以在定义函数时声明隐式参数，
+    只是需要将它放在花括号内而非圆括号中。例如： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">repeat'''</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">count</span> : <span class="id" title="var">nat</span>) : <span class="id" title="var">list</span> <span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">count</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| 0        ⇒ <span class="id" title="var">nil</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">S</span> <span class="id" title="var">count'</span> ⇒ <span class="id" title="var">cons</span> <span class="id" title="var">x</span> (<span class="id" title="var">repeat'''</span> <span class="id" title="var">x</span> <span class="id" title="var">count'</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+（注意我们现在甚至不必在 <span class="inlinecode"><span class="id" title="var">repeat'''</span></span> 的递归调用中提供类型参数了，
+      实际上提供了反而是无效的！）
+
+<div class="paragraph"> </div>
+
+    我们会尽可能使用最后一种风格，不过还会继续在 <span class="inlinecode"><span class="id" title="keyword">Inductive</span></span> 构造子中使用显式的
+    <span class="inlinecode"><span class="id" title="var">Argument</span></span> 声明。原因在于如果将归纳类型的形参标为隐式的话，
+    不仅构造子的类型会变成隐式的，类型本身也会变成隐式的。例如，
+    考虑以下 <span class="inlinecode"><span class="id" title="var">list</span></span> 类型的另一种定义： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">list'</span> {<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>} : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">nil'</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">cons'</span> (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list'</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+由于 <span class="inlinecode"><span class="id" title="var">X</span></span> 在包括 <span class="inlinecode"><span class="id" title="var">list'</span></span> 本身的<i>'整个'</i>归纳定义中都是隐式声明的，
+    因此当我们讨论数值、布尔值或其它任何类型的列表时，都只能写 <span class="inlinecode"><span class="id" title="var">list'</span></span>，
+    而写不了 <span class="inlinecode"><span class="id" title="var">list'</span></span> <span class="inlinecode"><span class="id" title="var">nat</span></span>、<span class="inlinecode"><span class="id" title="var">list'</span></span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 或其它的了，这样就跑得有点太远了。 
+<div class="paragraph"> </div>
+
+ 作为本节的收尾，我们为新的多态列表重新实现几个其它的标准列表函数... 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">app</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: (<span class="id" title="var">list</span> <span class="id" title="var">X</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l1</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">nil</span>      ⇒ <span class="id" title="var">l2</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> ⇒ <span class="id" title="var">cons</span> <span class="id" title="var">h</span> (<span class="id" title="var">app</span> <span class="id" title="var">t</span> <span class="id" title="var">l2</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">rev</span> {<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span>:<span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">list</span> <span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">nil</span>      ⇒ <span class="id" title="var">nil</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">t</span> ⇒ <span class="id" title="var">app</span> (<span class="id" title="var">rev</span> <span class="id" title="var">t</span>) (<span class="id" title="var">cons</span> <span class="id" title="var">h</span> <span class="id" title="var">nil</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">length</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">nil</span> ⇒ 0<br/>
+&nbsp;&nbsp;| <span class="id" title="var">cons</span> <span class="id" title="var">_</span> <span class="id" title="var">l'</span> ⇒ <span class="id" title="var">S</span> (<span class="id" title="var">length</span> <span class="id" title="var">l'</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_rev1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">cons</span> 1 (<span class="id" title="var">cons</span> 2 <span class="id" title="var">nil</span>)) = (<span class="id" title="var">cons</span> 2 (<span class="id" title="var">cons</span> 1 <span class="id" title="var">nil</span>)).<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_rev2</span>:<br/>
+&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">cons</span> <span class="id" title="var">true</span> <span class="id" title="var">nil</span>) = <span class="id" title="var">cons</span> <span class="id" title="var">true</span> <span class="id" title="var">nil</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_length1</span>: <span class="id" title="var">length</span> (<span class="id" title="var">cons</span> 1 (<span class="id" title="var">cons</span> 2 (<span class="id" title="var">cons</span> 3 <span class="id" title="var">nil</span>))) = 3.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab8"></a><h3 class="section">显式提供类型参数</h3>
+
+<div class="paragraph"> </div>
+
+ 用 <span class="inlinecode"><span class="id" title="keyword">Implicit</span></span> 将参数声明为隐式的会有个小问题：Coq
+    偶尔会没有足够的局部信息来确定类型参数。此时，我们需要告诉 Coq
+    这次我们会显示地给出参数。例如，假设我们写了如下定义： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="var">Fail</span> <span class="id" title="keyword">Definition</span> <span class="id" title="var">mynil</span> := <span class="id" title="var">nil</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+（<span class="inlinecode"><span class="id" title="keyword">Definition</span></span> 前面的 <span class="inlinecode"><span class="id" title="var">Fail</span></span> 限定符可用于<i>'任何'</i>指令，
+    它的作用是确保该指令在执行时确实会失败。如果该指令失败了，Coq
+    就会打印出相应的错误信息，不过之后会继续处理文件中剩下的部分。）
+
+<div class="paragraph"> </div>
+
+    在这里，Coq 给出了一条错误信息，因为它不知道应该为 <span class="inlinecode"><span class="id" title="var">nil</span></span> 提供何种类型。
+    我们可以为它提供个显式的类型声明来帮助它，这样 Coq 在“应用”<span class="inlinecode"><span class="id" title="var">nil</span></span>
+    时就有更多可用的信息了： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">mynil</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span> := <span class="id" title="var">nil</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+此外，我们还可以在函数名前加上前缀 <span class="inlinecode">@</span> 来强制将隐式参数变成显式的： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> @<span class="id" title="var">nil</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">mynil'</span> := @<span class="id" title="var">nil</span> <span class="id" title="var">nat</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+使用参数推断和隐式参数，我们可以为列表定义和前面一样的简便记法。
+    由于我们让构造子的的类型参数变成了隐式的，因此 Coq
+    就知道在我们使用该记法时自动推断它们了。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;x :: y" := (<span class="id" title="var">cons</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60, <span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>).<br/>
+<span class="id" title="keyword">Notation</span> &quot;[ ]" := <span class="id" title="var">nil</span>.<br/>
+<span class="id" title="keyword">Notation</span> &quot;[ x ; .. ; y ]" := (<span class="id" title="var">cons</span> <span class="id" title="var">x</span> .. (<span class="id" title="var">cons</span> <span class="id" title="var">y</span> []) ..).<br/>
+<span class="id" title="keyword">Notation</span> &quot;x ++ y" := (<span class="id" title="var">app</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="tactic">at</span> <span class="id" title="keyword">level</span> 60, <span class="id" title="tactic">right</span> <span class="id" title="keyword">associativity</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+现在列表就能写成我们希望的方式了： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">list123'''</span> := [1; 2; 3].<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab9"></a><h3 class="section">练习</h3>
+
+<div class="paragraph"> </div>
+
+<a name="lab10"></a><h4 class="section">练习：2 星, standard, optional (poly_exercises)</h4>
+
+
+<div class="paragraph"> </div>
+
+    下面是一些简单的练习，和 <span class="inlinecode"><span class="id" title="var">Lists</span></span> 一章中的一样。
+    为了实践多态，请完成下面的证明。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_nil_r</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>), <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span>:<span class="id" title="var">list</span> <span class="id" title="var">X</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">l</span> ++ [] = <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">app_assoc</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">A</span> (<span class="id" title="var">l</span> <span class="id" title="var">m</span> <span class="id" title="var">n</span>:<span class="id" title="var">list</span> <span class="id" title="var">A</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="var">l</span> ++ <span class="id" title="var">m</span> ++ <span class="id" title="var">n</span> = (<span class="id" title="var">l</span> ++ <span class="id" title="var">m</span>) ++ <span class="id" title="var">n</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">app_length</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>) (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">length</span> <span class="id" title="var">l1</span> + <span class="id" title="var">length</span> <span class="id" title="var">l2</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab11"></a><h4 class="section">练习：2 星, standard, optional (more_poly_exercises)</h4>
+
+
+<div class="paragraph"> </div>
+
+    这儿有些更有趣的东西... 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">rev_app_distr</span>: <span class="id" title="keyword">∀</span> <span class="id" title="var">X</span> (<span class="id" title="var">l1</span> <span class="id" title="var">l2</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">l1</span> ++ <span class="id" title="var">l2</span>) = <span class="id" title="var">rev</span> <span class="id" title="var">l2</span> ++ <span class="id" title="var">rev</span> <span class="id" title="var">l1</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">rev_involutive</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>, <span class="id" title="keyword">∀</span> <span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">rev</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab12"></a><h2 class="section">多态序对</h2>
+
+<div class="paragraph"> </div>
+
+ 按照相同的模式，我们在上一章中给出的数值序对的定义可被推广为
+    <i>'多态序对（Polymorphic Pairs）'</i>，它通常叫做<i>'积（Products）'</i>： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">prod</span> (<span class="id" title="var">X</span> <span class="id" title="var">Y</span> : <span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+| <span class="id" title="var">pair</span> (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">Y</span>).<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">pair</span> {<span class="id" title="var">X</span>} {<span class="id" title="var">Y</span>} <span class="id" title="var">_</span> <span class="id" title="var">_</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+和列表一样，我们也可以将类型参数定义成隐式的，
+    并以此定义类似的具体记法： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;( x , y )" := (<span class="id" title="var">pair</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+我们也可以使用 <span class="inlinecode"><span class="id" title="keyword">Notation</span></span> 来定义标准的<i>'积类型（Product Types）'</i>记法： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Notation</span> &quot;X * Y" := (<span class="id" title="var">prod</span> <span class="id" title="var">X</span> <span class="id" title="var">Y</span>) : <span class="id" title="var">type_scope</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+（标注 <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">type_scope</span></span> 会告诉 Coq 该缩写只能在解析类型时使用。
+      这避免了与乘法符号的冲突。) 
+<div class="paragraph"> </div>
+
+ 一开始会很容易混淆 <span class="inlinecode">(<span class="id" title="var">x</span>,<span class="id" title="var">y</span>)</span> 和 <span class="inlinecode"><span class="id" title="var">X</span>×<span class="id" title="var">Y</span></span>。不过要记住 <span class="inlinecode">(<span class="id" title="var">x</span>,<span class="id" title="var">y</span>)</span>
+    是一个<i>'值'</i>，它由两个其它的值构造得来；而 <span class="inlinecode"><span class="id" title="var">X</span>×<span class="id" title="var">Y</span></span> 是一个<i>'类型'</i>，
+    它由两个其它的类型构造得来。如果 <span class="inlinecode"><span class="id" title="var">x</span></span> 的类型为 <span class="inlinecode"><span class="id" title="var">X</span></span> 而 <span class="inlinecode"><span class="id" title="var">y</span></span> 的类型为 <span class="inlinecode"><span class="id" title="var">Y</span></span>，
+    那么 <span class="inlinecode">(<span class="id" title="var">x</span>,<span class="id" title="var">y</span>)</span> 的类型就是 <span class="inlinecode"><span class="id" title="var">X</span>×<span class="id" title="var">Y</span></span>。 
+<div class="paragraph"> </div>
+
+ 第一元（first）和第二元（second）的射影函数（Projection Functions）
+    现在看起来和其它函数式编程语言中的很像了： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">fst</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">X</span> × <span class="id" title="var">Y</span>) : <span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| (<span class="id" title="var">x</span>, <span class="id" title="var">y</span>) ⇒ <span class="id" title="var">x</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">snd</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">p</span> : <span class="id" title="var">X</span> × <span class="id" title="var">Y</span>) : <span class="id" title="var">Y</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">p</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| (<span class="id" title="var">x</span>, <span class="id" title="var">y</span>) ⇒ <span class="id" title="var">y</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+以下函数接受两个列表，并将它们结合成一个序对的列表。
+    在其它函数式语言中，它通常被称作 <span class="inlinecode"><span class="id" title="var">zip</span></span>。我们为了与 Coq 的标准库保持一致，
+    将它命名为 <span class="inlinecode"><span class="id" title="var">combine</span></span>。
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">combine</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">lx</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) (<span class="id" title="var">ly</span> : <span class="id" title="var">list</span> <span class="id" title="var">Y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">list</span> (<span class="id" title="var">X</span>×<span class="id" title="var">Y</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">lx</span>, <span class="id" title="var">ly</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [], <span class="id" title="var">_</span> ⇒ []<br/>
+&nbsp;&nbsp;| <span class="id" title="var">_</span>, [] ⇒ []<br/>
+&nbsp;&nbsp;| <span class="id" title="var">x</span> :: <span class="id" title="var">tx</span>, <span class="id" title="var">y</span> :: <span class="id" title="var">ty</span> ⇒ (<span class="id" title="var">x</span>, <span class="id" title="var">y</span>) :: (<span class="id" title="var">combine</span> <span class="id" title="var">tx</span> <span class="id" title="var">ty</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab13"></a><h4 class="section">练习：1 星, standard, optional (combine_checks)</h4>
+
+
+<div class="paragraph"> </div>
+
+    请尝试在纸上回答以下问题并在 Coq 中检验你的解答：
+<ul class="doclist">
+<li> <span class="inlinecode"><span class="id" title="var">combine</span></span> 的类型是什么？（即 <span class="inlinecode"><span class="id" title="keyword">Check</span></span> <span class="inlinecode">@<span class="id" title="var">combine</span></span> 会打印出什么？）
+
+</li>
+<li> 以下指令会打印出什么？
+
+<div class="paragraph"> </div>
+
+        Compute (combine <span class="inlinecode">1;2</span> <span class="inlinecode"><span class="id" title="var">false</span>;<span class="id" title="var">false</span>;<span class="id" title="var">true</span>;<span class="id" title="var">true</span></span>).
+
+</li>
+</ul>
+
+<div class="paragraph"> </div>
+
+    <font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab14"></a><h4 class="section">练习：2 星, standard, recommended (split)</h4>
+
+
+<div class="paragraph"> </div>
+
+    函数 <span class="inlinecode"><span class="id" title="tactic">split</span></span> 是 <span class="inlinecode"><span class="id" title="var">combine</span></span> 的右逆（right inverse）：
+    它接受一个序对的列表并返回一个列表的序对。
+    在很多函数式语言中，它被称作 <span class="inlinecode"><span class="id" title="var">unzip</span></span>。
+
+<div class="paragraph"> </div>
+
+    请在下面完成 <span class="inlinecode"><span class="id" title="tactic">split</span></span> 的定义，确保它能够通过给定的单元测试。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="tactic">split</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> (<span class="id" title="var">X</span>×<span class="id" title="var">Y</span>))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: (<span class="id" title="var">list</span> <span class="id" title="var">X</span>) × (<span class="id" title="var">list</span> <span class="id" title="var">Y</span>)<br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_split</span>:<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span> [(1,<span class="id" title="var">false</span>);(2,<span class="id" title="var">false</span>)] = ([1;2],[<span class="id" title="var">false</span>;<span class="id" title="var">false</span>]).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab15"></a><h2 class="section">多态候选</h2>
+
+<div class="paragraph"> </div>
+
+ 现在介绍最后一种多态类型：<i>'多态候选（Polymorphic Options）'</i>,
+    它推广了上一章中的 <span class="inlinecode"><span class="id" title="var">natoption</span></span>： 
+
+<div class="paragraph"> </div>
+
+    One last polymorphic type for now: <i>polymorphic options</i>,
+    which generalize <span class="inlinecode"><span class="id" title="var">natoption</span></span> from the previous chapter.  (We put
+    the definition inside a module because the standard library
+    already defines <span class="inlinecode"><span class="id" title="var">option</span></span> and it's this one that we want to use
+    below.) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">OptionPlayground</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">option</span> (<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>) : <span class="id" title="keyword">Type</span> :=<br/>
+&nbsp;&nbsp;| <span class="id" title="var">Some</span> (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>)<br/>
+&nbsp;&nbsp;| <span class="id" title="var">None</span>.<br/>
+
+<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">Some</span> {<span class="id" title="var">X</span>} <span class="id" title="var">_</span>.<br/>
+<span class="id" title="var">Arguments</span> <span class="id" title="var">None</span> {<span class="id" title="var">X</span>}.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">OptionPlayground</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+现在我们可以重写 <span class="inlinecode"><span class="id" title="var">nth_error</span></span> 函数来让它适用于任何类型的列表了。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">nth_error</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) (<span class="id" title="var">n</span> : <span class="id" title="var">nat</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">option</span> <span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| [] ⇒ <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">a</span> :: <span class="id" title="var">l'</span> ⇒ <span class="id" title="keyword">if</span> <span class="id" title="var">n</span> =? <span class="id" title="var">O</span> <span class="id" title="keyword">then</span> <span class="id" title="var">Some</span> <span class="id" title="var">a</span> <span class="id" title="keyword">else</span> <span class="id" title="var">nth_error</span> <span class="id" title="var">l'</span> (<span class="id" title="var">pred</span> <span class="id" title="var">n</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_nth_error1</span> : <span class="id" title="var">nth_error</span> [4;5;6;7] 0 = <span class="id" title="var">Some</span> 4.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_nth_error2</span> : <span class="id" title="var">nth_error</span> [[1];[2]] 1 = <span class="id" title="var">Some</span> [2].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_nth_error3</span> : <span class="id" title="var">nth_error</span> [<span class="id" title="var">true</span>] 2 = <span class="id" title="var">None</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab16"></a><h4 class="section">练习：1 星, standard, optional (hd_error_poly)</h4>
+
+
+<div class="paragraph"> </div>
+
+    请完成上一章中 <span class="inlinecode"><span class="id" title="var">hd_error</span></span> 的多态定义，确保它能通过下方的单元测试。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">hd_error</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">option</span> <span class="id" title="var">X</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+再说一遍，要强制将隐式参数转为显式参数，我们可以在函数名前使用 <span class="inlinecode">@</span>。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> @<span class="id" title="var">hd_error</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_hd_error1</span> : <span class="id" title="var">hd_error</span> [1;2] = <span class="id" title="var">Some</span> 1.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_hd_error2</span> : <span class="id" title="var">hd_error</span>  [[1];[2]]  = <span class="id" title="var">Some</span> [1].<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab17"></a><h1 class="section">函数作为数据</h1>
+
+<div class="paragraph"> </div>
+
+ 和其它现代编程语言，包括所有函数式语言（ML、Haskell、
+    Scheme、Scala、Clojure 等）一样，Coq 也将函数视作“一等公民（First-Class Citizens）”，
+    即允许将它们作为参数传入其它函数、作为结果返回、以及存储在数据结构中等等。 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab18"></a><h2 class="section">高阶函数</h2>
+
+<div class="paragraph"> </div>
+
+ 用于操作其它函数的函数通常叫做<i>'高阶函数'</i>。以下是简单的示例： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">doit3times</span> {<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span>:<span class="id" title="var">X</span>→<span class="id" title="var">X</span>) (<span class="id" title="var">n</span>:<span class="id" title="var">X</span>) : <span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">f</span> (<span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">n</span>)).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+这里的参数 <span class="inlinecode"><span class="id" title="var">f</span></span> 本身也是个（从 <span class="inlinecode"><span class="id" title="var">X</span></span> 到 <span class="inlinecode"><span class="id" title="var">X</span></span> 的）函数，
+    <span class="inlinecode"><span class="id" title="var">doit3times</span></span> 的函数体将 <span class="inlinecode"><span class="id" title="var">f</span></span> 对某个值 <span class="inlinecode"><span class="id" title="var">n</span></span> 应用三次。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> @<span class="id" title="var">doit3times</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_doit3times</span>: <span class="id" title="var">doit3times</span> <span class="id" title="var">minustwo</span> 9 = 3.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_doit3times'</span>: <span class="id" title="var">doit3times</span> <span class="id" title="var">negb</span> <span class="id" title="var">true</span> = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab19"></a><h2 class="section">过滤器</h2>
+
+<div class="paragraph"> </div>
+
+ 下面是个更有用的高阶函数，它接受一个元素类型为 <span class="inlinecode"><span class="id" title="var">X</span></span> 的列表和一个
+    <span class="inlinecode"><span class="id" title="var">X</span></span> 的谓词（即一个从 <span class="inlinecode"><span class="id" title="var">X</span></span> 到 <span class="inlinecode"><span class="id" title="var">bool</span></span> 的函数），然后“过滤”此列表并返回一个新列表，
+    其中仅包含对该谓词返回 <span class="inlinecode"><span class="id" title="var">true</span></span> 的元素。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">filter</span> {<span class="id" title="var">X</span>:<span class="id" title="keyword">Type</span>} (<span class="id" title="var">test</span>: <span class="id" title="var">X</span>→<span class="id" title="var">bool</span>) (<span class="id" title="var">l</span>:<span class="id" title="var">list</span> <span class="id" title="var">X</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: (<span class="id" title="var">list</span> <span class="id" title="var">X</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| []     ⇒ []<br/>
+&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> ⇒ <span class="id" title="keyword">if</span> <span class="id" title="var">test</span> <span class="id" title="var">h</span> <span class="id" title="keyword">then</span> <span class="id" title="var">h</span> :: (<span class="id" title="var">filter</span> <span class="id" title="var">test</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="keyword">else</span>       <span class="id" title="var">filter</span> <span class="id" title="var">test</span> <span class="id" title="var">t</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+例如，如果我们将 <span class="inlinecode"><span class="id" title="var">filter</span></span> 应用到谓词 <span class="inlinecode"><span class="id" title="var">evenb</span></span> 和一个数值列表 <span class="inlinecode"><span class="id" title="var">l</span></span>
+    上，那么它就会返回一个只包含 <span class="inlinecode"><span class="id" title="var">l</span></span> 中偶数的列表。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_filter1</span>: <span class="id" title="var">filter</span> <span class="id" title="var">evenb</span> [1;2;3;4] = [2;4].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">length_is_1</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">bool</span> :=<br/>
+&nbsp;&nbsp;(<span class="id" title="var">length</span> <span class="id" title="var">l</span>) =? 1.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_filter2</span>:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">filter</span> <span class="id" title="var">length_is_1</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ [1; 2]; [3]; [4]; [5;6;7]; []; [8] ]<br/>
+&nbsp;&nbsp;= [ [3]; [4]; [8] ].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+我们可以使用 <span class="inlinecode"><span class="id" title="var">filter</span></span> 给出 <span class="inlinecode"><span class="id" title="var">Lists</span></span> 中 <span class="inlinecode"><span class="id" title="var">countoddmembers</span></span>
+    函数的简洁的版本。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">countoddmembers'</span> (<span class="id" title="var">l</span>:<span class="id" title="var">list</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="var">length</span> (<span class="id" title="var">filter</span> <span class="id" title="var">oddb</span> <span class="id" title="var">l</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_countoddmembers'1</span>:   <span class="id" title="var">countoddmembers'</span> [1;0;3;1;4;5] = 4.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_countoddmembers'2</span>:   <span class="id" title="var">countoddmembers'</span> [0;2;4] = 0.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_countoddmembers'3</span>:   <span class="id" title="var">countoddmembers'</span> <span class="id" title="var">nil</span> = 0.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab20"></a><h2 class="section">匿名函数</h2>
+
+<div class="paragraph"> </div>
+
+ 在上面这个例子中，我们不得不定义一个名为 <span class="inlinecode"><span class="id" title="var">length_is_1</span></span> 的函数，
+    以便让它能够作为参数传入到 <span class="inlinecode"><span class="id" title="var">filter</span></span> 中，由于该函数可能再也用不到了，
+    这有点令人沮丧。我们经常需要传入“一次性”的函数作为参数，之后不会再用，
+    而为每个函数取名是十分无聊的。
+
+<div class="paragraph"> </div>
+
+    幸运的是，有一种更好的方法。我们可以按需随时构造函数而不必在顶层中声明它
+    或给它取名。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_anon_fun'</span>:<br/>
+&nbsp;&nbsp;<span class="id" title="var">doit3times</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> ⇒ <span class="id" title="var">n</span> × <span class="id" title="var">n</span>) 2 = 256.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+表达式 <span class="inlinecode">(<span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">⇒</span> <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">n</span>)</span> 可读作“一个给定 <span class="inlinecode"><span class="id" title="var">n</span></span> 并返回 <span class="inlinecode"><span class="id" title="var">n</span></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">n</span></span> 的函数。” 
+<div class="paragraph"> </div>
+
+ 以下为使用匿名函数重写的 <span class="inlinecode"><span class="id" title="var">filter</span></span> 示例：
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_filter2'</span>:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">filter</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">l</span> ⇒ (<span class="id" title="var">length</span> <span class="id" title="var">l</span>) =? 1)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ [1; 2]; [3]; [4]; [5;6;7]; []; [8] ]<br/>
+&nbsp;&nbsp;= [ [3]; [4]; [8] ].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab21"></a><h4 class="section">练习：2 星, standard (filter_even_gt7)</h4>
+
+
+<div class="paragraph"> </div>
+
+    使用 <span class="inlinecode"><span class="id" title="var">filter</span></span>（而非 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span>）来编写 Coq 函数 <span class="inlinecode"><span class="id" title="var">filter_even_gt7</span></span>，
+    它接受一个自然数列表作为输入，返回一个只包含大于 <span class="inlinecode">7</span> 的偶数的列表。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">filter_even_gt7</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">nat</span>) : <span class="id" title="var">list</span> <span class="id" title="var">nat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_filter_even_gt7_1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">filter_even_gt7</span> [1;2;6;9;10;3;12;8] = [10;12;8].<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_filter_even_gt7_2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">filter_even_gt7</span> [5;2;6;19;129] = [].<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab22"></a><h4 class="section">练习：3 星, standard (partition)</h4>
+
+
+<div class="paragraph"> </div>
+
+    使用 <span class="inlinecode"><span class="id" title="var">filter</span></span> 编写一个 Coq 函数 <span class="inlinecode"><span class="id" title="var">partition</span></span>：
+
+<div class="paragraph"> </div>
+
+      partition : forall X : Type,
+                  (X -&gt; bool) -&gt; list X -&gt; list X * list X
+
+<div class="paragraph"> </div>
+
+   给定一个集合 <span class="inlinecode"><span class="id" title="var">X</span></span>、一个类型为 <span class="inlinecode"><span class="id" title="var">X</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">bool</span></span> 的测试函数和一个 <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span>，
+   <span class="inlinecode"><span class="id" title="var">partition</span></span> 应当返回一个列表的序对。该序对的第一个成员为包含原始列表中
+   满足该测试的子列表，而第二个成员为包含不满足该测试的元素的子列表。
+   两个子列表中元素的顺序应当与它们在原始列表中的顺序相同。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">partition</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">test</span> : <span class="id" title="var">X</span> → <span class="id" title="var">bool</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">list</span> <span class="id" title="var">X</span> × <span class="id" title="var">list</span> <span class="id" title="var">X</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_partition1</span>: <span class="id" title="var">partition</span> <span class="id" title="var">oddb</span> [1;2;3;4;5] = ([1;3;5], [2;4]).<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_partition2</span>: <span class="id" title="var">partition</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">false</span>) [5;9;0] = ([], [5;9;0]).<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab23"></a><h2 class="section">映射</h2>
+
+<div class="paragraph"> </div>
+
+ 另一个方便的高阶函数叫做 <span class="inlinecode"><span class="id" title="var">map</span></span>。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">map</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span>: <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span>:<span class="id" title="var">X</span>→<span class="id" title="var">Y</span>) (<span class="id" title="var">l</span>:<span class="id" title="var">list</span> <span class="id" title="var">X</span>) : (<span class="id" title="var">list</span> <span class="id" title="var">Y</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| []     ⇒ []<br/>
+&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> ⇒ (<span class="id" title="var">f</span> <span class="id" title="var">h</span>) :: (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+它接受一个函数 <span class="inlinecode"><span class="id" title="var">f</span></span> 和一个列表 <span class="inlinecode"></span> <span class="inlinecode"><span class="id" title="var">l</span></span> <span class="inlinecode">=</span> <span class="inlinecode">[<span class="id" title="var">n1</span>,</span> <span class="inlinecode"><span class="id" title="var">n2</span>,</span> <span class="inlinecode"><span class="id" title="var">n3</span>,</span> <span class="inlinecode">...]</span> <span class="inlinecode"></span>
+    并返回列表 <span class="inlinecode"></span> <span class="inlinecode">[<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n1</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n2</span>,</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">n3</span>,...]</span> <span class="inlinecode"></span>，其中 <span class="inlinecode"><span class="id" title="var">f</span></span> 可分别应用于 <span class="inlinecode"><span class="id" title="var">l</span></span>
+    中的每一个元素。例如： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_map1</span>: <span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">plus</span> 3 <span class="id" title="var">x</span>) [2;0;2] = [5;3;5].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+输入列表和输出列表的元素类型不必相同，因为 <span class="inlinecode"><span class="id" title="var">map</span></span> 会接受<i>'两个'</i>类型参数
+    <span class="inlinecode"><span class="id" title="var">X</span></span> 和 <span class="inlinecode"><span class="id" title="var">Y</span></span>，因此它可以应用到一个数值的列表和一个从数值到布尔值的函数，
+    并产生一个布尔值列表： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_map2</span>:<br/>
+&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">oddb</span> [2;1;2;5] = [<span class="id" title="var">false</span>;<span class="id" title="var">true</span>;<span class="id" title="var">false</span>;<span class="id" title="var">true</span>].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+它甚至可以应用到一个数值的列表和一个从数值到布尔值列表的函数，
+    并产生一个布尔值的<i>'列表的列表'</i>： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_map3</span>:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> ⇒ [<span class="id" title="var">evenb</span> <span class="id" title="var">n</span>;<span class="id" title="var">oddb</span> <span class="id" title="var">n</span>]) [2;1;2;5]<br/>
+&nbsp;&nbsp;= [[<span class="id" title="var">true</span>;<span class="id" title="var">false</span>];[<span class="id" title="var">false</span>;<span class="id" title="var">true</span>];[<span class="id" title="var">true</span>;<span class="id" title="var">false</span>];[<span class="id" title="var">false</span>;<span class="id" title="var">true</span>]].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab24"></a><h3 class="section">习题</h3>
+
+<div class="paragraph"> </div>
+
+<a name="lab25"></a><h4 class="section">练习：3 星, standard (map_rev)</h4>
+
+
+<div class="paragraph"> </div>
+
+    请证明 <span class="inlinecode"><span class="id" title="var">map</span></span> 和 <span class="inlinecode"><span class="id" title="var">rev</span></span> 可交换。你可能需要定义一个辅助引理 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">map_rev</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span> <span class="id" title="var">Y</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">X</span> → <span class="id" title="var">Y</span>) (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="var">map</span> <span class="id" title="var">f</span> (<span class="id" title="var">rev</span> <span class="id" title="var">l</span>) = <span class="id" title="var">rev</span> (<span class="id" title="var">map</span> <span class="id" title="var">f</span> <span class="id" title="var">l</span>).<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab26"></a><h4 class="section">练习：2 星, standard, recommended (flat_map)</h4>
+
+
+<div class="paragraph"> </div>
+
+    函数 <span class="inlinecode"><span class="id" title="var">map</span></span> 通过一个类型为 <span class="inlinecode"><span class="id" title="var">X</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">Y</span></span> 的函数将 <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> 映射到 <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">Y</span></span>。
+    我们可以定义一个类似的函数 <span class="inlinecode"><span class="id" title="var">flat_map</span></span>，它通过一个类型为 <span class="inlinecode"><span class="id" title="var">X</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">Y</span></span>
+    的函数 <span class="inlinecode"><span class="id" title="var">f</span></span> 将 <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> 映射到 <span class="inlinecode"><span class="id" title="var">list</span></span> <span class="inlinecode"><span class="id" title="var">Y</span></span>。你的定义应当可以“压扁”<span class="inlinecode"><span class="id" title="var">f</span></span>
+    的结果，就像这样：
+
+<div class="paragraph"> </div>
+
+        flat_map (fun n =&gt; <span class="inlinecode"><span class="id" title="var">n</span>;<span class="id" title="var">n</span>+1;<span class="id" title="var">n</span>+2</span>) <span class="inlinecode">1;5;10</span>
+      = <span class="inlinecode">1;</span> <span class="inlinecode">2;</span> <span class="inlinecode">3;</span> <span class="inlinecode">5;</span> <span class="inlinecode">6;</span> <span class="inlinecode">7;</span> <span class="inlinecode">10;</span> <span class="inlinecode">11;</span> <span class="inlinecode">12</span>.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">flat_map</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span>: <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span>: <span class="id" title="var">X</span> → <span class="id" title="var">list</span> <span class="id" title="var">Y</span>) (<span class="id" title="var">l</span>: <span class="id" title="var">list</span> <span class="id" title="var">X</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: (<span class="id" title="var">list</span> <span class="id" title="var">Y</span>)<br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_flat_map1</span>:<br/>
+&nbsp;&nbsp;<span class="id" title="var">flat_map</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">n</span> ⇒ [<span class="id" title="var">n</span>;<span class="id" title="var">n</span>;<span class="id" title="var">n</span>]) [1;5;4]<br/>
+&nbsp;&nbsp;= [1; 1; 1; 5; 5; 5; 4; 4; 4].<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+ Lists are not the only inductive type for which <span class="inlinecode"><span class="id" title="var">map</span></span> makes sense.
+    Here is a <span class="inlinecode"><span class="id" title="var">map</span></span> for the <span class="inlinecode"><span class="id" title="var">option</span></span> type: 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">option_map</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span> : <span class="id" title="var">X</span> → <span class="id" title="var">Y</span>) (<span class="id" title="var">xo</span> : <span class="id" title="var">option</span> <span class="id" title="var">X</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">option</span> <span class="id" title="var">Y</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">xo</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">None</span> ⇒ <span class="id" title="var">None</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" title="var">Some</span> <span class="id" title="var">x</span> ⇒ <span class="id" title="var">Some</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab27"></a><h4 class="section">练习：2 星, standard, optional (implicit_args)</h4>
+
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" title="var">filter</span></span> 和 <span class="inlinecode"><span class="id" title="var">map</span></span> 的定义和应用在很多地方使用了隐式参数。
+    请将隐式参数外层的花括号替换为圆括号，然后在必要的地方补充显式类型形参并用
+    Coq 检查你做的是否正确。（本练习并不会打分，你可以在本文件的<i>'副本'</i>中做它，
+    之后丢掉即可。）
+
+<div class="paragraph"> </div>
+
+    <font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab28"></a><h2 class="section">折叠</h2>
+
+<div class="paragraph"> </div>
+
+ 一个更加强大的高阶函数叫做 <span class="inlinecode"><span class="id" title="tactic">fold</span></span>。本函数启发自“<span class="inlinecode"><span class="id" title="var">reduce</span></span> 归约”
+    操作，它是 Google 的 map/reduce 分布式编程框架的核心。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="tactic">fold</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span>: <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span>: <span class="id" title="var">X</span>→<span class="id" title="var">Y</span>→<span class="id" title="var">Y</span>) (<span class="id" title="var">l</span>: <span class="id" title="var">list</span> <span class="id" title="var">X</span>) (<span class="id" title="var">b</span>: <span class="id" title="var">Y</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span class="id" title="var">Y</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">l</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">nil</span> ⇒ <span class="id" title="var">b</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">h</span> :: <span class="id" title="var">t</span> ⇒ <span class="id" title="var">f</span> <span class="id" title="var">h</span> (<span class="id" title="tactic">fold</span> <span class="id" title="var">f</span> <span class="id" title="var">t</span> <span class="id" title="var">b</span>)<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+直观上来说，<span class="inlinecode"><span class="id" title="tactic">fold</span></span> 操作的行为就是将给定的二元操作符 <span class="inlinecode"><span class="id" title="var">f</span></span>
+    插入到给定列表的每一对元素之间。例如，<span class="inlinecode"></span> <span class="inlinecode"><span class="id" title="tactic">fold</span></span> <span class="inlinecode"><span class="id" title="var">plus</span></span> <span class="inlinecode">[1;2;3;4]</span> <span class="inlinecode"></span>
+    直观上的意思是 <span class="inlinecode">1+2+3+4</span>。为了让它更精确，我们还需要一个“起始元素”
+    作为 <span class="inlinecode"><span class="id" title="var">f</span></span> 初始的第二个输入。因此，例如
+
+<div class="paragraph"> </div>
+
+       fold plus <span class="inlinecode">1;2;3;4</span> 0
+
+<div class="paragraph"> </div>
+
+    就会产生
+
+<div class="paragraph"> </div>
+
+       1 + (2 + (3 + (4 + 0))).
+
+<div class="paragraph"> </div>
+
+    以下是更多例子： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> (<span class="id" title="tactic">fold</span> <span class="id" title="var">andb</span>).<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">fold_example1</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">fold</span> <span class="id" title="var">mult</span> [1;2;3;4] 1 = 24.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">fold_example2</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">fold</span> <span class="id" title="var">andb</span> [<span class="id" title="var">true</span>;<span class="id" title="var">true</span>;<span class="id" title="var">false</span>;<span class="id" title="var">true</span>] <span class="id" title="var">true</span> = <span class="id" title="var">false</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">fold_example3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">fold</span> <span class="id" title="var">app</span>  [[1];[];[2;3];[4]] [] = [1;2;3;4].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab29"></a><h4 class="section">练习：1 星, advanced (fold_types_different)</h4>
+
+
+<div class="paragraph"> </div>
+
+    我们观察到 <span class="inlinecode"><span class="id" title="tactic">fold</span></span> 由 <span class="inlinecode"><span class="id" title="var">X</span></span> 和 <span class="inlinecode"><span class="id" title="var">Y</span></span> 这<i>'两个'</i>类型变量参数化，形参 <span class="inlinecode"><span class="id" title="var">f</span></span>
+    则是个接受 <span class="inlinecode"><span class="id" title="var">X</span></span> 和 <span class="inlinecode"><span class="id" title="var">Y</span></span> 并返回 <span class="inlinecode"><span class="id" title="var">Y</span></span> 的二元操作符。你能想出一种 <span class="inlinecode"><span class="id" title="var">X</span></span> 和
+    <span class="inlinecode"><span class="id" title="var">Y</span></span> 不同时的应用情景吗？ 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_fold_types_different</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab30"></a><h2 class="section">用函数构造函数</h2>
+
+<div class="paragraph"> </div>
+
+ 目前我们讨论过的大部分高阶函数都是接受函数作为参数的。
+    现在我们来看一些将函数作为其它函数的结果<i>'返回'</i>的例子。
+    首先，下面是一个接受值 <span class="inlinecode"><span class="id" title="var">x</span></span>（由某个类型 <span class="inlinecode"><span class="id" title="var">X</span></span> 刻画）并返回一个从
+    <span class="inlinecode"><span class="id" title="var">nat</span></span> 到 <span class="inlinecode"><span class="id" title="var">X</span></span> 的函数，当它被调用时总是产生 <span class="inlinecode"><span class="id" title="var">x</span></span> 并忽略其 <span class="inlinecode"><span class="id" title="var">nat</span></span> 参数。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">constfun</span> {<span class="id" title="var">X</span>: <span class="id" title="keyword">Type</span>} (<span class="id" title="var">x</span>: <span class="id" title="var">X</span>) : <span class="id" title="var">nat</span>→<span class="id" title="var">X</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<span class="id" title="var">k</span>:<span class="id" title="var">nat</span>) ⇒ <span class="id" title="var">x</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">ftrue</span> := <span class="id" title="var">constfun</span> <span class="id" title="var">true</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">constfun_example1</span> : <span class="id" title="var">ftrue</span> 0 = <span class="id" title="var">true</span>.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">constfun_example2</span> : (<span class="id" title="var">constfun</span> 5) 99 = 5.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+实际上，我们已经见过的多参函数也是讲函数作为数据传入的例子。
+    为了理解为什么，请回想 <span class="inlinecode"><span class="id" title="var">plus</span></span> 的类型。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">plus</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+该表达式中的每个 <span class="inlinecode">→</span> 实际上都是一个类型上的<i>'二元'</i>操作符。
+    该操作符是<i>'右结合'</i>的，因此 <span class="inlinecode"><span class="id" title="var">plus</span></span> 的类型其实是 <span class="inlinecode"><span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode">(<span class="id" title="var">nat</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">nat</span>)</span>
+    的简写，即，它可以读作“<span class="inlinecode"><span class="id" title="var">plus</span></span> 是一个单参数函数，它接受一个 <span class="inlinecode"><span class="id" title="var">nat</span></span>
+    并返回另一个函数，该函数接受另一个 <span class="inlinecode"><span class="id" title="var">nat</span></span> 并返回一个 <span class="inlinecode"><span class="id" title="var">nat</span></span>”。
+    在上面的例子中，我们总是将 <span class="inlinecode"><span class="id" title="var">plus</span></span> 一次同时应用到两个参数上。
+    不过如果我们喜欢，也可以一次只提供一个参数，这叫做<i>'偏应用（Partial
+    Application）'</i>。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">plus3</span> := <span class="id" title="var">plus</span> 3.<br/>
+<span class="id" title="keyword">Check</span> <span class="id" title="var">plus3</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_plus3</span> :    <span class="id" title="var">plus3</span> 4 = 7.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_plus3'</span> :   <span class="id" title="var">doit3times</span> <span class="id" title="var">plus3</span> 0 = 9.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_plus3''</span> :  <span class="id" title="var">doit3times</span> (<span class="id" title="var">plus</span> 3) 0 = 9.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab31"></a><h1 class="section">附加练习</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Exercises</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab32"></a><h4 class="section">练习：2 星, standard (fold_length)</h4>
+
+
+<div class="paragraph"> </div>
+
+    列表的很多通用函数都可以通过 <span class="inlinecode"><span class="id" title="tactic">fold</span></span> 来实现。例如，下面是
+    <span class="inlinecode"><span class="id" title="var">length</span></span> 的另一种实现： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">fold_length</span> {<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>} (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">nat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">fold</span> (<span class="id" title="keyword">fun</span> <span class="id" title="var">_</span> <span class="id" title="var">n</span> ⇒ <span class="id" title="var">S</span> <span class="id" title="var">n</span>) <span class="id" title="var">l</span> 0.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_fold_length1</span> : <span class="id" title="var">fold_length</span> [4;7;0] = 3.<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+请证明 <span class="inlinecode"><span class="id" title="var">fold_length</span></span> 的正确性。（提示：知道 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 的化简力度比 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span>
+    更大或许会有所帮助。也就是说，你或许会遇到 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 无法解决但 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span>
+    可以解决的目标。） 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">fold_length_correct</span> : <span class="id" title="keyword">∀</span> <span class="id" title="var">X</span> (<span class="id" title="var">l</span> : <span class="id" title="var">list</span> <span class="id" title="var">X</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="var">fold_length</span> <span class="id" title="var">l</span> = <span class="id" title="var">length</span> <span class="id" title="var">l</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab33"></a><h4 class="section">练习：3 星, standard (fold_map)</h4>
+
+
+<div class="paragraph"> </div>
+
+    我们也可以用 <span class="inlinecode"><span class="id" title="tactic">fold</span></span> 来定义 <span class="inlinecode"><span class="id" title="var">map</span></span>。请完成下面的 <span class="inlinecode"><span class="id" title="var">fold_map</span></span>。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">fold_map</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span>: <span class="id" title="keyword">Type</span>} (<span class="id" title="var">f</span>: <span class="id" title="var">X</span> → <span class="id" title="var">Y</span>) (<span class="id" title="var">l</span>: <span class="id" title="var">list</span> <span class="id" title="var">X</span>) : <span class="id" title="var">list</span> <span class="id" title="var">Y</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+在 Coq 中写出 <span class="inlinecode"><span class="id" title="var">fold_map_correct</span></span> 来陈述 <span class="inlinecode"><span class="id" title="var">fold_map</span></span> 是正确的，然后证明它。
+    （提示：再次提醒，<span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 的化简力度比 <span class="inlinecode"><span class="id" title="tactic">simpl</span></span> 更强。） 
+</div>
+<div class="code">
+
+<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_fold_map</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab34"></a><h4 class="section">练习：2 星, advanced (currying)</h4>
+
+
+<div class="paragraph"> </div>
+
+    在 Coq 中，函数 <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">C</span></span> 的类型其实是 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode">(<span class="id" title="var">B</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">C</span>)</span>。
+    也就是说，如果给 <span class="inlinecode"><span class="id" title="var">f</span></span> 一个类型为 <span class="inlinecode"><span class="id" title="var">A</span></span> 的值，它就会给你函数 <span class="inlinecode"><span class="id" title="var">f'</span></span> <span class="inlinecode">:</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">C</span></span>。
+    如果再给 <span class="inlinecode"><span class="id" title="var">f'</span></span> 一个类型为 <span class="inlinecode"><span class="id" title="var">B</span></span> 的值，它就会返回一个类型为 <span class="inlinecode"><span class="id" title="var">C</span></span> 的值。
+    这为我们提供了 <span class="inlinecode"><span class="id" title="var">plus3</span></span> 中的那种偏应用能力。
+    用返回函数的函数处理参数列表的方式被称为<i>'柯里化（Currying）'</i>，
+    它是为了纪念逻辑学家 Haskell Curry。
+
+<div class="paragraph"> </div>
+
+    反正，我们也可以将 <span class="inlinecode"><span class="id" title="var">A</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">B</span></span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">C</span></span> 解释为 <span class="inlinecode">(<span class="id" title="var">A</span></span> <span class="inlinecode">×</span> <span class="inlinecode"><span class="id" title="var">B</span>)</span> <span class="inlinecode">→</span> <span class="inlinecode"><span class="id" title="var">C</span></span>。这叫做
+    <i>'反柯里化（Uncurrying）'</i>。对于反柯里化的二元函数，
+    两个参数必须作为序对一次给出，此时它不会偏应用。 
+<div class="paragraph"> </div>
+
+ 我们可以将柯里化定义如下： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">prod_curry</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<span class="id" title="var">f</span> : <span class="id" title="var">X</span> × <span class="id" title="var">Y</span> → <span class="id" title="var">Z</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) (<span class="id" title="var">y</span> : <span class="id" title="var">Y</span>) : <span class="id" title="var">Z</span> := <span class="id" title="var">f</span> (<span class="id" title="var">x</span>, <span class="id" title="var">y</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+作为练习，请定义它的反函数 <span class="inlinecode"><span class="id" title="var">prod_uncurry</span></span>，
+    然后在下面证明它们互为反函数的定理。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">prod_uncurry</span> {<span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>}<br/>
+&nbsp;&nbsp;(<span class="id" title="var">f</span> : <span class="id" title="var">X</span> → <span class="id" title="var">Y</span> → <span class="id" title="var">Z</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">X</span> × <span class="id" title="var">Y</span>) : <span class="id" title="var">Z</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+举一个柯里化用途的（平凡的）例子，我们可以用它来缩短之前看到的一个例子： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">test_map1'</span>: <span class="id" title="var">map</span> (<span class="id" title="var">plus</span> 3) [2;0;2] = [5;3;5].<br/>
+<span class="id" title="keyword">Proof</span>. <span class="id" title="tactic">reflexivity</span>. <span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+思考练习：在运行以下指令之前，你能计算出 <span class="inlinecode"><span class="id" title="var">prod_curry</span></span> 和 <span class="inlinecode"><span class="id" title="var">prod_uncurry</span></span> 的类型吗？ 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Check</span> @<span class="id" title="var">prod_curry</span>.<br/>
+<span class="id" title="keyword">Check</span> @<span class="id" title="var">prod_uncurry</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">uncurry_curry</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> : <span class="id" title="var">X</span> → <span class="id" title="var">Y</span> → <span class="id" title="var">Z</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">x</span> <span class="id" title="var">y</span>,<br/>
+&nbsp;&nbsp;<span class="id" title="var">prod_curry</span> (<span class="id" title="var">prod_uncurry</span> <span class="id" title="var">f</span>) <span class="id" title="var">x</span> <span class="id" title="var">y</span> = <span class="id" title="var">f</span> <span class="id" title="var">x</span> <span class="id" title="var">y</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Theorem</span> <span class="id" title="var">curry_uncurry</span> : <span class="id" title="keyword">∀</span> (<span class="id" title="var">X</span> <span class="id" title="var">Y</span> <span class="id" title="var">Z</span> : <span class="id" title="keyword">Type</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="id" title="var">f</span> : (<span class="id" title="var">X</span> × <span class="id" title="var">Y</span>) → <span class="id" title="var">Z</span>) (<span class="id" title="var">p</span> : <span class="id" title="var">X</span> × <span class="id" title="var">Y</span>),<br/>
+&nbsp;&nbsp;<span class="id" title="var">prod_uncurry</span> (<span class="id" title="var">prod_curry</span> <span class="id" title="var">f</span>) <span class="id" title="var">p</span> = <span class="id" title="var">f</span> <span class="id" title="var">p</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+ <span class="id" title="var">Admitted</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab35"></a><h4 class="section">练习：2 星, advanced (nth_error_informal)</h4>
+
+
+<div class="paragraph"> </div>
+
+    回想 <span class="inlinecode"><span class="id" title="var">nth_error</span></span> 函数的定义：
+
+<div class="paragraph"> </div>
+
+   Fixpoint nth_error {X : Type} (l : list X) (n : nat) : option X :=
+     match l with
+     | <font size=-2>&#9744;</font> =&gt; None
+     | a :: l' =&gt; if n =? O then Some a else nth_error l' (pred n)
+     end.
+
+<div class="paragraph"> </div>
+
+   请写出以下定理的非形式化证明：
+
+<div class="paragraph"> </div>
+
+   forall X n l, length l = n -&gt; @nth_error X l n = None
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">manual_grade_for_informal_proof</span> : <span class="id" title="var">option</span> (<span class="id" title="var">nat</span>×<span class="id" title="var">string</span>) := <span class="id" title="var">None</span>.<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+ The following exercises explore an alternative way of defining
+    natural numbers, using the so-called <i>Church numerals</i>, named
+    after mathematician Alonzo Church.  We can represent a natural
+    number <span class="inlinecode"><span class="id" title="var">n</span></span> as a function that takes a function <span class="inlinecode"><span class="id" title="var">f</span></span> as a parameter
+    and returns <span class="inlinecode"><span class="id" title="var">f</span></span> iterated <span class="inlinecode"><span class="id" title="var">n</span></span> times. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Module</span> <span class="id" title="var">Church</span>.<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">cnat</span> := <span class="id" title="keyword">∀</span> <span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>, (<span class="id" title="var">X</span> → <span class="id" title="var">X</span>) → <span class="id" title="var">X</span> → <span class="id" title="var">X</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+我们来看看如何用这种记法写数。将函数迭代一次应当与将它应用一次相同。
+    因此： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">one</span> : <span class="id" title="var">cnat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">X</span> → <span class="id" title="var">X</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) ⇒ <span class="id" title="var">f</span> <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+与此类似，<span class="inlinecode"><span class="id" title="var">two</span></span> 应当对其参数应用两次 <span class="inlinecode"><span class="id" title="var">f</span></span>： 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">two</span> : <span class="id" title="var">cnat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">X</span> → <span class="id" title="var">X</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) ⇒ <span class="id" title="var">f</span> (<span class="id" title="var">f</span> <span class="id" title="var">x</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+定义 <span class="inlinecode"><span class="id" title="var">zero</span></span> 有点刁钻：我们如何“将函数应用零次”？答案很简单：
+    把参数原样返回就好。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">zero</span> : <span class="id" title="var">cnat</span> :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">fun</span> (<span class="id" title="var">X</span> : <span class="id" title="keyword">Type</span>) (<span class="id" title="var">f</span> : <span class="id" title="var">X</span> → <span class="id" title="var">X</span>) (<span class="id" title="var">x</span> : <span class="id" title="var">X</span>) ⇒ <span class="id" title="var">x</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+更一般地说，数 <span class="inlinecode"><span class="id" title="var">n</span></span> 可以写作 <span class="inlinecode"><span class="id" title="keyword">fun</span></span> <span class="inlinecode"><span class="id" title="var">X</span></span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span></span> <span class="inlinecode">⇒</span> <span class="inlinecode"><span class="id" title="var">f</span></span> <span class="inlinecode">(<span class="id" title="var">f</span></span>
+    <span class="inlinecode">...</span> <span class="inlinecode">(<span class="id" title="var">f</span></span> <span class="inlinecode"><span class="id" title="var">x</span>)</span> <span class="inlinecode">...)</span>，其中 <span class="inlinecode"><span class="id" title="var">f</span></span> 出现了 <span class="inlinecode"><span class="id" title="var">n</span></span> 次。要特别注意我们之前定义
+    <span class="inlinecode"><span class="id" title="var">doit3times</span></span> 函数的方式就是 <span class="inlinecode">3</span> 的邱奇数表示。 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">three</span> : <span class="id" title="var">cnat</span> := @<span class="id" title="var">doit3times</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+完成以下函数的定义。请用 <span class="inlinecode"><span class="id" title="tactic">reflexivity</span></span> 证明来确认它们能够通过对应的单元测试。 
+<div class="paragraph"> </div>
+
+<a name="lab36"></a><h4 class="section">练习：1 星, advanced (church_succ)</h4>
+
+<div class="paragraph"> </div>
+
+ Successor of a natural number: given a Church numeral <span class="inlinecode"><span class="id" title="var">n</span></span>,
+    the successor <span class="inlinecode"><span class="id" title="var">succ</span></span> <span class="inlinecode"><span class="id" title="var">n</span></span> is a function that iterates its
+    argument once more than <span class="inlinecode"><span class="id" title="var">n</span></span>. 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">succ</span> (<span class="id" title="var">n</span> : <span class="id" title="var">cnat</span>) : <span class="id" title="var">cnat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">succ_1</span> : <span class="id" title="var">succ</span> <span class="id" title="var">zero</span> = <span class="id" title="var">one</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">succ_2</span> : <span class="id" title="var">succ</span> <span class="id" title="var">one</span> = <span class="id" title="var">two</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">succ_3</span> : <span class="id" title="var">succ</span> <span class="id" title="var">two</span> = <span class="id" title="var">three</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab37"></a><h4 class="section">练习：1 星, advanced (church_plus)</h4>
+
+<div class="paragraph"> </div>
+
+ Addition of two natural numbers: 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">plus</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">cnat</span>) : <span class="id" title="var">cnat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">plus_1</span> : <span class="id" title="var">plus</span> <span class="id" title="var">zero</span> <span class="id" title="var">one</span> = <span class="id" title="var">one</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">plus_2</span> : <span class="id" title="var">plus</span> <span class="id" title="var">two</span> <span class="id" title="var">three</span> = <span class="id" title="var">plus</span> <span class="id" title="var">three</span> <span class="id" title="var">two</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">plus_3</span> :<br/>
+&nbsp;&nbsp;<span class="id" title="var">plus</span> (<span class="id" title="var">plus</span> <span class="id" title="var">two</span> <span class="id" title="var">two</span>) <span class="id" title="var">three</span> = <span class="id" title="var">plus</span> <span class="id" title="var">one</span> (<span class="id" title="var">plus</span> <span class="id" title="var">three</span> <span class="id" title="var">three</span>).<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab38"></a><h4 class="section">练习：2 星, advanced (church_mult)</h4>
+
+<div class="paragraph"> </div>
+
+ Multiplication: 
+</div>
+<div class="code">
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">mult</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">cnat</span>) : <span class="id" title="var">cnat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">mult_1</span> : <span class="id" title="var">mult</span> <span class="id" title="var">one</span> <span class="id" title="var">one</span> = <span class="id" title="var">one</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">mult_2</span> : <span class="id" title="var">mult</span> <span class="id" title="var">zero</span> (<span class="id" title="var">plus</span> <span class="id" title="var">three</span> <span class="id" title="var">three</span>) = <span class="id" title="var">zero</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">mult_3</span> : <span class="id" title="var">mult</span> <span class="id" title="var">two</span> <span class="id" title="var">three</span> = <span class="id" title="var">plus</span> <span class="id" title="var">three</span> <span class="id" title="var">three</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+<div class="paragraph"> </div>
+
+<a name="lab39"></a><h4 class="section">练习：2 星, advanced (church_exp)</h4>
+
+<div class="paragraph"> </div>
+
+ Exponentiation: 
+<div class="paragraph"> </div>
+
+ (<i>Hint</i>: Polymorphism plays a crucial role here.  However,
+    choosing the right type to iterate over can be tricky.  If you hit
+    a "Universe inconsistency" error, try iterating over a different
+    type.  Iterating over <span class="inlinecode"><span class="id" title="var">cnat</span></span> itself is usually problematic.) 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">exp</span> (<span class="id" title="var">n</span> <span class="id" title="var">m</span> : <span class="id" title="var">cnat</span>) : <span class="id" title="var">cnat</span><br/>
+&nbsp;&nbsp;. <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">exp_1</span> : <span class="id" title="var">exp</span> <span class="id" title="var">two</span> <span class="id" title="var">two</span> = <span class="id" title="var">plus</span> <span class="id" title="var">two</span> <span class="id" title="var">two</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">exp_2</span> : <span class="id" title="var">exp</span> <span class="id" title="var">three</span> <span class="id" title="var">zero</span> = <span class="id" title="var">one</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Example</span> <span class="id" title="var">exp_3</span> : <span class="id" title="var">exp</span> <span class="id" title="var">three</span> <span class="id" title="var">two</span> = <span class="id" title="var">plus</span> (<span class="id" title="var">mult</span> <span class="id" title="var">two</span> (<span class="id" title="var">mult</span> <span class="id" title="var">two</span> <span class="id" title="var">two</span>)) <span class="id" title="var">one</span>.<br/>
+<span class="id" title="keyword">Proof</span>.  <span class="id" title="var">Admitted</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<font size=-2>&#9744;</font> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Church</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">End</span> <span class="id" title="var">Exercises</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
