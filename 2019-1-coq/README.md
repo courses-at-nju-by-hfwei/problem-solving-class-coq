@@ -46,9 +46,11 @@
     - [x] 需要用到 Poly, 放在后面
   - [x] "Partial Map" in `Lists.v`??? (暂时删去)
   - [x] Binary Tree
-- [ ] Functional Programming
-  - [ ] Poly
-  - [ ] Functions as Data
+- [ ] Poly
+  - [ ] Implicit Type
+  - [ ] Poly Product
+  - [ ] Poly Option
+- [ ] High-order Functions
 - [ ] Induction (II): 
 - [ ] (Optional) Program vs. Proof 
 - [ ] Set Theory

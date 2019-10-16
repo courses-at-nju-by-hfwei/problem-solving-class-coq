@@ -187,7 +187,9 @@ Qed.
   关于 [apply] 的其余用法，我们在后续介绍。
 *)
 
-(** **** 练习：2 星, standard (and_exercise)  *)
+(** **** 练习：2 星, standard (and_exercise) *)
+(** TODO: (@ant-hengxin) 用到了后面才介绍的 [discriminate] 策略。*)
+
 Example and_exercise :
   forall n m : nat, n + m = 0 -> n = 0 /\ m = 0.
 Proof.

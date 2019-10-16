@@ -112,194 +112,134 @@ Check (cons nat 3 (nil nat)).
 Check (cons nat 2 (cons nat 1 (nil nat))).
 (* ===> cons nat 2 (cons nat 1 (nil nat)) : list nat *)
 
-(** 如果在每次使用列表构造子时，都要为它提供类型参数，那样会很麻烦。
-    不过我们很快就会看到如何省去这种麻烦。 *)
-
-(** 现在我们可以回过头来定义之前写下的列表处理函数的多态版本了。
-    例如 [repeat]：*)
-
-Fixpoint repeat (X : Type) (x : X) (count : nat) : list X :=
-  match count with
-  | 0 => nil X
-  | S count' => cons X x (repeat X x count')
-  end.
-
-(** 同 [nil] 与 [cons] 一样，我们可以通过将 [repeat]
-    应用到一个类型、一个该类型的元素以及一个数字来使用它： *)
-
-Example test_repeat1 :
-  repeat nat 4 2 = cons nat 4 (cons nat 4 (nil nat)).
-Proof. reflexivity.  Qed.
-
-(** 要用 [repeat] 构造其它种类的列表，
-    我们只需通过对应类型的参数将它实例化即可： *)
-
-Example test_repeat2 :
-  repeat bool false 1 = cons bool false (nil bool).
-Proof. reflexivity.  Qed.
-
-
-(** **** 练习：2 星, standard (mumble_grumble)  
-
-    考虑以下两个归纳定义的类型： *)
-
-Module MumbleGrumble.
-
-Inductive mumble : Type :=
-  | a
-  | b (x : mumble) (y : nat)
-  | c.
-
-Inductive grumble (X:Type) : Type :=
-  | d (m : mumble)
-  | e (x : X).
-
-(** 对于某个类型 [X]，以下哪些是 [grumble X] 良定义的元素？
-    （在各选项后填“是”或“否”。）
-      - [d (b a 5)]
-      - [d mumble (b a 5)]
-      - [d bool (b a 5)]
-      - [e bool true]
-      - [e mumble (b c 0)]
-      - [e bool (b c 0)]
-      - [c] *)
-(* 请在此处解答 *)
-End MumbleGrumble.
-
-(* 请勿修改下面这一行： *)
-Definition manual_grade_for_mumble_grumble : option (nat*string) := None.
-(** [] *)
-
-(* ----------------------------------------------------------------- *)
-(** *** 类型标注的推断 *)
-
-(** 我们再写一遍 [repeat] 的定义，不过这次不指定任何参数的类型。
-    Coq 还会接受它么？ *)
-
-Fixpoint repeat' X x count : list X :=
-  match count with
-  | 0        => nil X
-  | S count' => cons X x (repeat' X x count')
-  end.
-
-(** 当然会。我们来看看 Coq 赋予了 [repeat'] 什么类型： *)
-
-Check repeat'.
-(* ===> forall X : Type, X -> nat -> list X *)
-Check repeat.
-(* ===> forall X : Type, X -> nat -> list X *)
-
-(** 它与 [repeat] 的类型完全一致。Coq 可以使用_'类型推断'_
-    基于它们的使用方式来推出 [X]、[x] 和 [count] 一定是什么类型。例如，
-    由于 [X] 是作为 [cons] 的参数使用的，因此它必定是个 [Type] 类型，
-    因为 [cons] 期望一个 [Type] 作为其第一个参数，而用 [0] 和 [S] 来匹配
-    [count] 意味着它必须是个 [nat]，诸如此类。
-
-    这种强大的功能意味着我们不必总是在任何地方都显式地写出类型标注，
-    不过显式的类型标注对于文档和完整性检查来说仍然非常有用，
-    因此我们仍会继续使用它。你应当在代码中把握好使用类型标注的平衡点，
-    太多导致混乱并分散注意力，太少则会迫使读者为理解你的代码而在大脑中进行类型推断。 *)
-
-(* ----------------------------------------------------------------- *)
-(** *** 类型参数的推断 *)
-
-(** 要使用多态函数，我们需要为其参数再额外传入一个或更多类型。
-    例如，前面 [repeat] 函数体中的递归调用必须传递类型 [X]。不过由于
-    [repeat] 的第二个参数为 [X] 类型的元素，第一个参数明显只能是 [X]，
-    既然如此，我们何必显式地写出它呢？
-
-    Fortunately, Coq permits us to avoid this kind of redundancy.  In
-    place of any type argument we can write a "hole" [_], which can be
-    read as "Please try to figure out for yourself what belongs here."
-    More precisely, when Coq encounters a [_], it will attempt to
-    _unify_ all locally available information -- the type of the
-    function being applied, the types of the other arguments, and the
-    type expected by the context in which the application appears --
-    to determine what concrete type should replace the [_].
-
-    这听起来很像类型标注推断。实际上，这两种个过程依赖于同样的底层机制。
-    除了简单地忽略函数中某些参数的类型：
-
-      repeat' X x count : list X :=
-
-    我们还可以将类型换成 [_]：
-
-      repeat' (X : _) (x : _) (count : _) : list X :=
-
-    以此来告诉 Coq 要尝试推断出缺少的信息。
-
-    Using holes, the [repeat] function can be written like this: *)
-
-Fixpoint repeat'' X x count : list X :=
-  match count with
-  | 0        => nil _
-  | S count' => cons _ x (repeat'' _ x count')
-  end.
-
-(** 在此例中，我们写出 [_] 并没有省略多少 [X]。然而在很多情况下，
-    这对减少击键次数和提高可读性还是很有效的。例如，假设我们要写下一个包含数字
-    [1]、[2] 和 [3] 的列表，此时不必写成这样： *)
-
-Definition list123 :=
-  cons nat 1 (cons nat 2 (cons nat 3 (nil nat))).
-
-(** ...we can use holes to write this: *)
-
-Definition list123' :=
-  cons _ 1 (cons _ 2 (cons _ 3 (nil _))).
-
 (* ----------------------------------------------------------------- *)
 (** *** 隐式参数 *)
 
-(** 我们甚至可以通过告诉 Coq _'总是'_推断给定函数的类型参数来避免 [_]。
-
-    [Arguments] 用于指令指定函数或构造子的名字并列出其参数名，
-    花括号中的任何参数都会被视作隐式参数。（如果定义中的某个参数没有名字，
-    那么它可以用通配模式 [_] 来标记。这种情况常见于构造子中。） *)
+(** 
+  作为程序员，在 [cons] 或 [nil] 之后总是要写个 [X] (如 [nat])
+  是不可忍受的。
+  当我写 [cons nat 3 (nil nat)] 时，难道 Coq 就不能聪明一点，
+  根据这里的 [3] 推断出我是在构造一个 [list nat] 类型的列表吗?
+  
+  当然可以。这就是 Coq 的 _类型推断_ (Type Inference) 系统。
+  你只需要用 [Arguments] 指令"授权" Coq 可以自行推断就可以了。
+  
+  [Arguments] 后跟构造函数的名字以及它的参数名，
+  其中放在花括号的参数称为 _隐式参数_ (Implicit Arguments)。
+  当你在后面使用构造函数的时候，就可以不用显式地写明这些隐式参数了，
+  Coq 会自行推断出来。
+  
+  TODO: (@ant-hengxin) 通配符在 [Arguments] 中的使用。  
+*)
 
 Arguments nil {X}.
-Arguments cons {X} _ _.
-Arguments repeat {X} x count.
+Arguments cons {X} x l.
 
-(** 现在我们再也不必提供类型参数了： *)
+(** 现在我们不必再提供繁琐的类型参数了。*)
 
-Definition list123'' := cons 1 (cons 2 (cons 3 nil)).
+Check (cons 1 (cons 2 (cons 3 nil))).
 
-(** 此外，我们还可以在定义函数时声明隐式参数，
-    只是需要将它放在花括号内而非圆括号中。例如： *)
+(**
+  [Arguments] 机制同样适用于普通函数 (即，不限于构造函数)。
+  比如, [Arguments repeat {X} x count.] 告诉 Coq 在函数 [repeat]
+  中，[X] 是隐式参数。
+  不过，对于普通函数，我们通常使用另一种更简洁的写法:
+  在定义多态函数时，我们将类型参数 [X : Type] 放在花括号里即可。
+  
+  下面的 [repeat] 是 [Lists.v] 中 [repeat] 的多态版本。
+  请仔细阅读该函数的定义，确保你理解其中的每一部分。
+*)
 
-Fixpoint repeat''' {X : Type} (x : X) (count : nat) : list X :=
+Fixpoint repeat {X : Type} (x : X) (count : nat) : list X :=
   match count with
-  | 0        => nil
-  | S count' => cons x (repeat''' x count')
+  | 0 => nil
+  | S count' => cons x (repeat x count')
   end.
 
-(** （注意我们现在甚至不必在 [repeat'''] 的递归调用中提供类型参数了，
-      实际上提供了反而是无效的！）
+Example test_repeat1 :
+  repeat 4 2 = cons 4 (cons 4 nil).
+Proof. reflexivity. Qed.
 
-    我们会尽可能使用最后一种风格，不过还会继续在 [Inductive] 构造子中使用显式的
-    [Argument] 声明。原因在于如果将归纳类型的形参标为隐式的话，
-    不仅构造子的类型会变成隐式的，类型本身也会变成隐式的。例如，
-    考虑以下 [list] 类型的另一种定义： *)
+Example test_repeat2 :
+  repeat false 1 = cons false nil.
+Proof. reflexivity. Qed.
 
-Inductive list' {X:Type} : Type :=
-  | nil'
-  | cons' (x : X) (l : list').
+(**
+  注意: 在上面的两个例子中，我们不需要写成 [repeat nat 4 2] 
+  或 [repeat bool false 1]。
+  Coq 可以推断出 [nat] 与 [bool] 类型。
+  
+  实际上，在声明了隐式参数的情况下，
+  写 [repeat nat 4 2] 或 [repeat bool false 1] 是错误的
+  (你不妨试一试，查看并理解 CoqIDE 右下方 [Messages] 窗口的错误信息)。
+*)
 
-(** 由于 [X] 在包括 [list'] 本身的_'整个'_归纳定义中都是隐式声明的，
-    因此当我们讨论数值、布尔值或其它任何类型的列表时，都只能写 [list']，
-    而写不了 [list' nat]、[list' bool] 或其它的了，这样就跑得有点太远了。 *)
+(** 
+  隐式参数配合类型推断为我们省去很多繁琐的工作。
+  不过，有些时候信息不足，导致 Coq 无法推断类型。
+*)
 
-(** 作为本节的收尾，我们为新的多态列表重新实现几个其它的标准列表函数... *)
+Fail Definition mynil := nil. (* [Fail] 确保该指令会失败。*)
 
-Fixpoint app {X : Type} (l1 l2 : list X)
-             : (list X) :=
+(*
+  显然，Coq 无法单凭一个 [nil] 推断出列表中的元素类型。
+  这种情况下，我们需要显式地提供具体类型，比如下面的 [: list nat]。
+*)
+
+Definition mynil : list nat := nil.
+
+(** 我们还可以在函数名前加上前缀 [@] 来强制将隐式参数变成显式的。*)
+
+Check @nil.
+(** ===> @nil: forall X : Type, list X *)
+
+Definition mynil' := @nil nat.
+
+(** 与 [Check nil] 比较: *)
+Check nil.
+(** ===> nil : list ?X where ?X : [ |- Type]) 不理解? 没关系。*)
+
+Check @cons.
+(** ===> @cons : forall X : Type, X -> list X -> list X *)
+Check @repeat.
+(** ===> @repeat : forall X : Type, X -> nat -> list X *)
+
+(** 隐式参数与类型推断也适用于 [Notation]。*)
+
+Notation "x :: y" := (cons x y)
+                     (at level 60, right associativity).
+Notation "[ ]" := nil.
+Notation "[ x ; .. ; y ]" := (cons x .. (cons y []) ..).
+Notation "x ++ y" := (app x y)
+                     (at level 60, right associativity).
+
+Definition list123''' := [1; 2; 3].
+
+(**
+  借助于 Coq 强大的类型推断系统，我们还可以更激进一些:
+  省掉所有参数的类型标注。
+  不过，我们并不推荐这么做，因为这会降低代码的可读性。
+*)
+
+Fixpoint repeat' {X} x count : list X :=
+  match count with
+  | 0        => nil
+  | S count' => cons x (repeat' x count')
+  end.
+
+Check @repeat'. (* 返回结果与 [Check @repeat] 相同。*)
+(** ===> forall X : Type, X -> nat -> list X *)
+
+(* ----------------------------------------------------------------- *)
+(** 下面给出多态列表的一些标准多态函数的定义。*)
+
+Fixpoint app {X : Type} (l1 l2 : list X) : (list X) :=
   match l1 with
   | nil      => l2
   | cons h t => cons h (app t l2)
   end.
 
-Fixpoint rev {X:Type} (l:list X) : list X :=
+Fixpoint rev {X : Type} (l : list X) : list X :=
   match l with
   | nil      => nil
   | cons h t => app (rev t) (cons h nil)
@@ -313,92 +253,53 @@ Fixpoint length {X : Type} (l : list X) : nat :=
 
 Example test_rev1 :
   rev (cons 1 (cons 2 nil)) = (cons 2 (cons 1 nil)).
-Proof. reflexivity.  Qed.
+Proof. reflexivity. Qed.
 
 Example test_rev2:
   rev (cons true nil) = cons true nil.
-Proof. reflexivity.  Qed.
+Proof. reflexivity. Qed.
 
 Example test_length1: length (cons 1 (cons 2 (cons 3 nil))) = 3.
-Proof. reflexivity.  Qed.
-
-(* ----------------------------------------------------------------- *)
-(** *** 显式提供类型参数 *)
-
-(** 用 [Implicit] 将参数声明为隐式的会有个小问题：Coq
-    偶尔会没有足够的局部信息来确定类型参数。此时，我们需要告诉 Coq
-    这次我们会显示地给出参数。例如，假设我们写了如下定义： *)
-
-Fail Definition mynil := nil.
-
-(** （[Definition] 前面的 [Fail] 限定符可用于_'任何'_指令，
-    它的作用是确保该指令在执行时确实会失败。如果该指令失败了，Coq
-    就会打印出相应的错误信息，不过之后会继续处理文件中剩下的部分。）
-
-    在这里，Coq 给出了一条错误信息，因为它不知道应该为 [nil] 提供何种类型。
-    我们可以为它提供个显式的类型声明来帮助它，这样 Coq 在“应用”[nil]
-    时就有更多可用的信息了： *)
-
-Definition mynil : list nat := nil.
-
-(** 此外，我们还可以在函数名前加上前缀 [@] 来强制将隐式参数变成显式的： *)
-
-Check @nil.
-
-Definition mynil' := @nil nat.
-
-(** 使用参数推断和隐式参数，我们可以为列表定义和前面一样的简便记法。
-    由于我们让构造子的的类型参数变成了隐式的，因此 Coq
-    就知道在我们使用该记法时自动推断它们了。 *)
-
-Notation "x :: y" := (cons x y)
-                     (at level 60, right associativity).
-Notation "[ ]" := nil.
-Notation "[ x ; .. ; y ]" := (cons x .. (cons y []) ..).
-Notation "x ++ y" := (app x y)
-                     (at level 60, right associativity).
-
-(** 现在列表就能写成我们希望的方式了： *)
-
-Definition list123''' := [1; 2; 3].
+Proof. reflexivity. Qed.
 
 (* ----------------------------------------------------------------- *)
 (** *** 练习 *)
 
-(** **** 练习：2 星, standard, optional (poly_exercises)  
+(** **** 练习：2 星, standard (poly_exercises) *)
+(** 
+  在我们享受多态带来的便捷的时候，我们并不需要为多态单独发展出一套证明理论。
+  请完成下面的证明，体会这一点。 
+*)
 
-    下面是一些简单的练习，和 [Lists] 一章中的一样。
-    为了实践多态，请完成下面的证明。 *)
-
-Theorem app_nil_r : forall (X:Type), forall l:list X,
+Theorem app_nil_r : forall (X : Type), forall l : list X,
   l ++ [] = l.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
-Theorem app_assoc : forall A (l m n:list A),
+Theorem app_assoc : forall A (l m n : list A),
   l ++ m ++ n = (l ++ m) ++ n.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
-Lemma app_length : forall (X:Type) (l1 l2 : list X),
+Lemma app_length : forall (X : Type) (l1 l2 : list X),
   length (l1 ++ l2) = length l1 + length l2.
 Proof.
-  (* 请在此处解答 *) Admitted.
-(** [] *)
-
-(** **** 练习：2 星, standard, optional (more_poly_exercises)  
-
-    这儿有些更有趣的东西... *)
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem rev_app_distr: forall X (l1 l2 : list X),
   rev (l1 ++ l2) = rev l2 ++ rev l1.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 
 Theorem rev_involutive : forall X : Type, forall l : list X,
   rev (rev l) = l.
 Proof.
-  (* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
 (* ================================================================= *)
