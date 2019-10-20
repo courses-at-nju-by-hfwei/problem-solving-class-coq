@@ -2,7 +2,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="coqdoc.css" rel="stylesheet" type="text/css" />
 <title>Table of contents</title>
 </head>
@@ -17,29 +17,21 @@
 <div id="main">
 
 <div id="toc">
-<a href="Basics.html"><h2>Library Basics</h2></a>
+<a href="Poly.html"><h2>Library Poly</h2></a>
 <ul class="doclist">
-<li><a href="Basics.html#lab1">数据类型与自然数 (Data Types and Naturals)</a>
+<li><a href="Poly.html#lab1">Poly: 多态与高阶函数</a>
 
 </li>
-<li><a href="Basics.html#lab2">引言</a>
+<li><a href="Poly.html#lab2">多态</a>
+<ul class="doclist">
+<li><a href="Poly.html#lab3">多态列表</a>
+<ul class="doclist">
+<li><a href="Poly.html#lab4">隐式参数</a>
 
 </li>
-<li><a href="Basics.html#lab3">数据与函数</a>
+<li><a href="Poly.html#lab5">练习</a>
 <ul class="doclist">
-<li><a href="Basics.html#lab4">枚举类型</a>
-<ul class="doclist">
-<li><a href="Basics.html#lab5">一周七日</a>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Basics.html#lab6">作业提交指南</a>
-<ul class="doclist">
-<li><a href="Basics.html#lab7">布尔类型</a>
-<ul class="doclist">
-<li><a href="Basics.html#lab8">练习：1 星, standard (nandb)</a>
+<li><a href="Poly.html#lab6">练习：2 星, standard (poly_exercises)</a>
 
 </li>
 </ul>
@@ -48,31 +40,10 @@
 </ul>
 
 </li>
-<li><a href="Basics.html#lab9">类型</a>
-
-</li>
-<li><a href="Basics.html#lab10">由旧类型构造新类型</a>
-
-</li>
-<li><a href="Basics.html#lab11">模块</a>
-
-</li>
-<li><a href="Basics.html#lab12">自然数 (Naturals)</a>
+<li><a href="Poly.html#lab7">多态序对</a>
 <ul class="doclist">
 <li><ul class="doclist">
-<li><a href="Basics.html#lab13">练习：1 星, standard (exp)</a>
-
-</li>
-<li><a href="Basics.html#lab14">练习：1 星, standard (exp)</a>
-
-</li>
-<li><a href="Basics.html#lab15">练习：1 星, standard (factorial)</a>
-
-</li>
-<li><a href="Basics.html#lab16">练习：1 星, standard (eqb1)</a>
-
-</li>
-<li><a href="Basics.html#lab17">练习：1 星, standard (ltb)</a>
+<li><a href="Poly.html#lab8">练习：2 星, standard, recommended (split)</a>
 
 </li>
 </ul>
@@ -81,20 +52,10 @@
 </ul>
 
 </li>
-</ul>
-
-</li>
-<li><a href="Basics.html#lab18">基于化简的证明</a>
-
-</li>
-<li><a href="Basics.html#lab19">基于改写 (Rewriting) 的证明</a>
+<li><a href="Poly.html#lab9">多态候选</a>
 <ul class="doclist">
 <li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Basics.html#lab20">练习：1 星, standard (plus_id_exercise)</a>
-
-</li>
-<li><a href="Basics.html#lab21">练习：2 星, standard (mult_S_1)</a>
+<li><a href="Poly.html#lab10">练习：1 星, standard, optional (hd_error_poly)</a>
 
 </li>
 </ul>
@@ -106,17 +67,21 @@
 </ul>
 
 </li>
-<li><a href="Basics.html#lab22">利用情况分析来证明</a>
+<li><a href="Poly.html#lab11">函数作为数据</a>
+<ul class="doclist">
+<li><a href="Poly.html#lab12">高阶函数</a>
+
+</li>
+<li><a href="Poly.html#lab13">过滤器</a>
+
+</li>
+<li><a href="Poly.html#lab14">匿名函数</a>
 <ul class="doclist">
 <li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Basics.html#lab23">练习：2 星, standard (andb_true_elim2)</a>
+<li><a href="Poly.html#lab15">练习：2 星, standard (filter_even_gt7)</a>
 
 </li>
-<li><a href="Basics.html#lab24">练习：1 星, standard (zero_nbeq_plus_1)</a>
-
-</li>
-</ul>
+<li><a href="Poly.html#lab16">练习：3 星, standard (partition)</a>
 
 </li>
 </ul>
@@ -125,11 +90,29 @@
 </ul>
 
 </li>
-<li><a href="Basics.html#lab25">不动点 <span class="inlinecode"><span class="id" title="keyword">Fixpoint</span></span> 和结构化递归 (可选)</a>
+<li><a href="Poly.html#lab17">映射</a>
+<ul class="doclist">
+<li><a href="Poly.html#lab18">习题</a>
+<ul class="doclist">
+<li><a href="Poly.html#lab19">练习：3 星, standard (map_rev)</a>
+
+</li>
+<li><a href="Poly.html#lab20">练习：2 星, standard, recommended (flat_map)</a>
+
+</li>
+<li><a href="Poly.html#lab21">练习：2 星, standard, optional (implicit_args)</a>
+
+</li>
+</ul>
+
+</li>
+</ul>
+
+</li>
+<li><a href="Poly.html#lab22">折叠</a>
 <ul class="doclist">
 <li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Basics.html#lab26">练习：2 星, standard, optional (decreasing)</a>
+<li><a href="Poly.html#lab23">练习：1 星, advanced (fold_types_different)</a>
 
 </li>
 </ul>
@@ -138,23 +121,38 @@
 </ul>
 
 </li>
+<li><a href="Poly.html#lab24">用函数构造函数</a>
+
+</li>
 </ul>
 
 </li>
-<li><a href="Basics.html#lab27">更多练习</a>
+<li><a href="Poly.html#lab25">附加练习</a>
 <ul class="doclist">
 <li><ul class="doclist">
 <li><ul class="doclist">
-<li><a href="Basics.html#lab28">练习：1 星, standard (indentity_fn_applied_twice)</a>
+<li><a href="Poly.html#lab26">练习：2 星, standard (fold_length)</a>
 
 </li>
-<li><a href="Basics.html#lab29">练习：1 星, standard (negation_fn_applied_twice)</a>
+<li><a href="Poly.html#lab27">练习：3 星, standard (fold_map)</a>
 
 </li>
-<li><a href="Basics.html#lab30">练习：3 星, standard, optional (andb_eq_orb)</a>
+<li><a href="Poly.html#lab28">练习：2 星, advanced (currying)</a>
 
 </li>
-<li><a href="Basics.html#lab31">练习：3 星, standard (binary)</a>
+<li><a href="Poly.html#lab29">练习：2 星, advanced (nth_error_informal)</a>
+
+</li>
+<li><a href="Poly.html#lab30">练习：1 星, advanced (church_succ)</a>
+
+</li>
+<li><a href="Poly.html#lab31">练习：1 星, advanced (church_plus)</a>
+
+</li>
+<li><a href="Poly.html#lab32">练习：2 星, advanced (church_mult)</a>
+
+</li>
+<li><a href="Poly.html#lab33">练习：2 星, advanced (church_exp)</a>
 
 </li>
 </ul>

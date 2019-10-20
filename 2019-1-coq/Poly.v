@@ -65,7 +65,7 @@ Inductive list (X : Type) : Type :=
     具体的 [n : nat]，并用 [(l : list X)] 代替了 [natlist]。
 *)
 
-(*
+(**
   [list] 的类型是什么呢?
   上面我们提到，[X] 是_类型_参数，
   而 [list X] 表示元素类型为 [X] 的列表_类型_。
@@ -181,7 +181,7 @@ Proof. reflexivity. Qed.
 
 Fail Definition mynil := nil. (* [Fail] 确保该指令会失败。*)
 
-(*
+(**
   显然，Coq 无法单凭一个 [nil] 推断出列表中的元素类型。
   这种情况下，我们需要显式地提供具体类型，比如下面的 [: list nat]。
 *)
@@ -203,17 +203,6 @@ Check @cons.
 (** ===> @cons : forall X : Type, X -> list X -> list X *)
 Check @repeat.
 (** ===> @repeat : forall X : Type, X -> nat -> list X *)
-
-(** 隐式参数与类型推断也适用于 [Notation]。*)
-
-Notation "x :: y" := (cons x y)
-                     (at level 60, right associativity).
-Notation "[ ]" := nil.
-Notation "[ x ; .. ; y ]" := (cons x .. (cons y []) ..).
-Notation "x ++ y" := (app x y)
-                     (at level 60, right associativity).
-
-Definition list123''' := [1; 2; 3].
 
 (**
   借助于 Coq 强大的类型推断系统，我们还可以更激进一些:
@@ -262,16 +251,27 @@ Proof. reflexivity. Qed.
 Example test_length1: length (cons 1 (cons 2 (cons 3 nil))) = 3.
 Proof. reflexivity. Qed.
 
+(** 隐式参数与类型推断也适用于 [Notation]。*)
+
+Notation "x :: y" := (cons x y)
+                     (at level 60, right associativity).
+Notation "[ ]" := nil.
+Notation "[ x ; .. ; y ]" := (cons x .. (cons y []) ..).
+Notation "x ++ y" := (app x y)
+                     (at level 60, right associativity).
+
+Definition list123''' := [1; 2; 3].
+
 (* ----------------------------------------------------------------- *)
 (** *** 练习 *)
 
 (** **** 练习：2 星, standard (poly_exercises) *)
 (** 
   在我们享受多态带来的便捷的时候，我们并不需要为多态单独发展出一套证明理论。
-  请完成下面的证明，体会这一点。 
+  请完成下面的证明，体会这一点 (你之前在 [Lists.v] 中所做的证明在这里同样适用)。 
 *)
 
-Theorem app_nil_r : forall (X : Type), forall l : list X,
+Theorem app_nil_r : forall (X : Type) (l : list X),
   l ++ [] = l.
 Proof.
   (* 请在此处解答 *)
@@ -305,33 +305,46 @@ Admitted.
 (* ================================================================= *)
 (** ** 多态序对 *)
 
-(** 按照相同的模式，我们在上一章中给出的数值序对的定义可被推广为
-    _'多态序对（Polymorphic Pairs）'_，它通常叫做_'积（Products）'_： *)
+(** 
+  类似地，我们可以定义自然数序对 [natprod] 的多态版本:
+  _'多态序对'_ (Polymorphic Pairs)，也称为 _'积'_ (Products)'。
+*)
 
 Inductive prod (X Y : Type) : Type :=
-| pair (x : X) (y : Y).
+  | pair (x : X) (y : Y).
 
 Arguments pair {X} {Y} _ _.
 
-(** 和列表一样，我们也可以将类型参数定义成隐式的，
-    并以此定义类似的具体记法： *)
-
 Notation "( x , y )" := (pair x y).
 
-(** 我们也可以使用 [Notation] 来定义标准的_'积类型（Product Types）'_记法： *)
+(** 
+  我们可以使用 [Notation] 定义标准的 _'积类型'_ (Product Types)。
+  Product Types 是类型理论中的概念，类似的还有 Sum Types。
+  听上去有些唬人，其实概念上很简单:
+  就是将两种类型组成在一起，构成一个复合类型。
+  类似于 C 语言中的 'Struct' (仅含两个域)。
+  从逻辑的角度讲，它对应于逻辑联结词 "and"。
+  
+  现在，你猜一下，Sum Types 是什么含义?
+  它类似于 C 语言中的什么类型? 对应于哪个逻辑联结词?
+  
+  参考资料: https://en.wikipedia.org/wiki/Product_type 。
+*)
 
 Notation "X * Y" := (prod X Y) : type_scope.
 
-(** （标注 [: type_scope] 会告诉 Coq 该缩写只能在解析类型时使用。
-      这避免了与乘法符号的冲突。) *)
+(**
+  标注 [: type_scope] 告诉 Coq 记法 [X * Y] 只在解析"类型"时使用，
+  从而避免与乘法符号冲突。
+*)
 
-(** 一开始会很容易混淆 [(x,y)] 和 [X*Y]。不过要记住 [(x,y)]
-    是一个_'值'_，它由两个其它的值构造得来；而 [X*Y] 是一个_'类型'_，
-    它由两个其它的类型构造得来。如果 [x] 的类型为 [X] 而 [y] 的类型为 [Y]，
-    那么 [(x,y)] 的类型就是 [X*Y]。 *)
+(** 
+  注意: 不过要记住 [(x,y)] 是一个值, [X * Y] 是一个类型。
+  如果 [x] 的类型为 [X], [y] 的类型为 [Y],
+  那么 [(x,y)] 的类型就是 [X * Y]。
+*)
 
-(** 第一元（first）和第二元（second）的射影函数（Projection Functions）
-    现在看起来和其它函数式编程语言中的很像了： *)
+(** 下面是 [fst] 与 [snd] 的多态版本。*)
 
 Definition fst {X Y : Type} (p : X * Y) : X :=
   match p with
@@ -343,44 +356,50 @@ Definition snd {X Y : Type} (p : X * Y) : Y :=
   | (x, y) => y
   end.
 
-(** 以下函数接受两个列表，并将它们结合成一个序对的列表。
-    在其它函数式语言中，它通常被称作 [zip]。我们为了与 Coq 的标准库保持一致，
-    将它命名为 [combine]。*)
+(** 
+  函数 [combine] 将两个列表 [lx : list X] 与 [ly : list Y]
+  合并成一个序对 [list (X * Y)] 的列表。
+  该函数通常被称为 [zip]。
+*)
 
 Fixpoint combine {X Y : Type} (lx : list X) (ly : list Y)
-           : list (X*Y) :=
+           : list (X * Y) :=
   match lx, ly with
   | [], _ => []
   | _, [] => []
   | x :: tx, y :: ty => (x, y) :: (combine tx ty)
   end.
 
-(** **** 练习：1 星, standard, optional (combine_checks)  
+(** [combine] 的类型是什么? *)
+Check @combine.
 
-    请尝试在纸上回答以下问题并在 Coq 中检验你的解答：
-    - [combine] 的类型是什么？（即 [Check @combine] 会打印出什么？）
-    - 以下指令会打印出什么？
-
-        Compute (combine [1;2] [false;false;true;true]).
-
-    [] *)
+Compute (combine [1; 2] [false; false; true; true]).
 
 (** **** 练习：2 星, standard, recommended (split)  
 
-    函数 [split] 是 [combine] 的右逆（right inverse）：
-    它接受一个序对的列表并返回一个列表的序对。
-    在很多函数式语言中，它被称作 [unzip]。
+  函数 [split] 是 [combine] 的右逆 (right inverse),
+  即满足 combine (fst (split l)) (snd (split l)) = l。
+  该函数通常被称为 [unzip]。
 
-    请在下面完成 [split] 的定义，确保它能够通过给定的单元测试。 *)
+  请完成 [split] 的定义，确保它能够通过给定的单元测试。
+*)
 
-Fixpoint split {X Y : Type} (l : list (X*Y))
+Fixpoint split {X Y : Type} (l : list (X * Y))
                : (list X) * (list Y)
   (* 将本行替换成 ":= _你的_定义_ ." *). Admitted.
 
 Example test_split:
-  split [(1,false);(2,false)] = ([1;2],[false;false]).
+  split [(1,false); (2,false)] = ([1; 2], [false; false]).
 Proof.
-(* 请在此处解答 *) Admitted.
+  (* 请在此处解答 *)
+Admitted.
+
+(** TODO: (@ant-hengxin) Prove it first. *)
+Theorem combine_split: forall (X Y : Type) (l : list (X * Y)),
+  combine (fst (split l)) (snd (split l)) = l.
+Proof.
+  (* 请在此处解答 *)
+Admitted.
 (** [] *)
 
 (* ================================================================= *)
