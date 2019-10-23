@@ -1,6 +1,6 @@
 (** * Logic: Coq 中的逻辑系统 *)
 
-(** 
+(**
   本节依赖于 [Basics.v] (你需要先阅读它)。
   你需要先编译 [Basics.v] 得到 [Basics.vo]。
   编译方法：在 CoqIDE 中打开 [Basics.v]，

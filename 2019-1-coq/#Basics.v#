@@ -370,6 +370,8 @@ Module NatPlayground.
 Inductive nat : Type :=
   | O
   | S (n : nat).
+  
+Print nat_ind.
 
 (**
   So Easy! 我们来解读一下。
@@ -899,7 +901,7 @@ Theorem plus_1_neq_0 : forall n : nat,
   (n + 1) =? 0 = false.
 Proof.
   intros n. destruct n as [| n'] eqn:E.
-  - (* n = O *) reflexivity.
+  - (* n = O *) simpl. reflexivity.
   - (* n = S n' *) simpl. reflexivity.
 Qed.
 
@@ -1023,7 +1025,7 @@ Theorem andb_true_elim2 : forall b c : bool,
   andb b c = true -> c = true.
 Proof.
   (* 请在此处解答 *)
-Admitted.
+Admitted.	
 (** [] *)
 
 (** **** 练习：1 星, standard (zero_nbeq_plus_1)  *)
