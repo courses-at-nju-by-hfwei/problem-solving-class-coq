@@ -21,6 +21,7 @@
 *.sty
 *.tex
 *.conf
+\#*\#
 makefile*
 .coq-native/
 .csdp.cache
