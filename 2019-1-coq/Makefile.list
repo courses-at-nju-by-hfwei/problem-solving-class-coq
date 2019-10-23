@@ -1,0 +1,12 @@
+NOT_LISTED := $(shell files="$(SRC_FILES)"; for i in *.v; do test "$${files\#*$$i}" = "$$files" && echo $$i; done)
+ifneq ($(NOT_LISTED),)
+$(info Not listed in SRC_FILES: $(NOT_LISTED))
+endif
+
+SRC_FILES := \
+    Preface.v \
+    Basics.v \
+    Induction.v \
+    Lists.v \
+    Poly.v \
+    Logic.v

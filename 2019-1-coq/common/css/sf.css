@@ -511,6 +511,7 @@ div#sec1.hide { display: none; }
 
 #toc ul {
     padding-top: 8px;
+    padding-bottom: 8px;
     margin-bottom: -8px;
     font-size: 14px;
     padding-left: 0;
