@@ -1,9 +1,11 @@
 # 2019-1-coq
 
 ## 通知 (重要; 以日期倒序排列)
-- 2019年10月22日: 
+- 2019年10月29日: 
   - 发布 [`Lists.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Lists.v):
     列表与树数据结构。
+  - 发布 [`Poly.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Poly.v):
+    多态类型与多态函数
 - 2019年10月15日: 
   - 发布 
     [`Induction.v`](https://github.com/hengxin/problem-solving-class-coq/blob/master/2019-1-coq/Induction.v):
