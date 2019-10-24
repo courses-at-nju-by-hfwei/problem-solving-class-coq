@@ -18,14 +18,14 @@
   (在本教材中，我们使用数据类型的说法，而不是数据结构)。
   
   数据类型包含两部分含义： 
-  - 数据 (也称 _值_) 构成的集合； 
+  - 数据 (也称 _'值'_) 构成的集合； 
   - 定义在这些数据上的操作。
   
   比如自然数是一种数据类型，它的数据集合是 {0, 1, 2, ...}，
   它允许的操作包括前驱、后继、加法、减法 (受限的减法)、乘法、幂运算等。
   
-  同样重要的是，自然数作为一种数据类型，它 _不包括_ -1、0.5、2/3、e 等数据，
-  也_不支持_除法、拼接、旋转等操作。
+  同样重要的是，自然数作为一种数据类型，它 _'不包括'_ -1、0.5、2/3、e 等数据，
+  也_'不支持'_除法、拼接、旋转等操作。
   
   在程序设计语言里， _'类型检查'_ (Type Checking) 的工作就是检查：
   - 是否使用了无效的 (invalid) 数据； 
@@ -72,8 +72,8 @@ Inductive day : Type :=
 
 (**
   下面，我们定义一个名为 [next_day] 的操作，也称为函数。
-  该操作接受一个类型为 [day] 的数据 [d] (称为_参数_ (parameter))，
-  返回一个类型为 [day] 的数据 (称为_返回值_ (return value))。 
+  该操作接受一个类型为 [day] 的数据 [d] (称为_'参数'_ (parameter))，
+  返回一个类型为 [day] 的数据 (称为_'返回值'_ (return value))。 
 *)
 
 Definition next_day (d:day) : day :=
@@ -110,7 +110,7 @@ Example time_flies:
   (next_day (next_day saturday)) = monday.
 
 (**
-  我们需要 _证明_ 该断言是真的。
+  我们需要 _'证明'_ 该断言是真的。
   证明很简单，分为两步：
   
   证明：
@@ -121,8 +121,8 @@ Example time_flies:
 Proof. simpl. reflexivity. Qed.
 
 (**
-  Coq 是 _交互式定理证明_ (Interactive Theorem Proving; ITP) 工具，
-  也称为 _证明助手_ (Proof Assistant)。
+  Coq 是 _'交互式定理证明'_ (Interactive Theorem Proving; ITP) 工具，
+  也称为 _'证明助手'_ (Proof Assistant)。
   
   要想使用 Coq 证明某个定理，你需要：
   - 清楚该定理的证明过程
@@ -286,7 +286,7 @@ Inductive color : Type :=
   这里，我们需要介绍一点理论知识。(很简单，不要害怕。)
   
   [Inductive color : Type] 告诉 Coq：
-  _归纳_ (Inductively) 地定义 (也称 _'构造'_) 名为 [color] 的数据类型。
+  _'归纳'_ (Inductively) 地定义 (也称 _'构造'_) 名为 [color] 的数据类型。
   
   在归纳定义中，我们需要给出构造 [color] 类型的数据的方法 (也称 _'构造函数'_)：
   - [black] 是一个构造函数。它表示 [black] 是类型为 [color] 的值。
@@ -298,7 +298,7 @@ Inductive color : Type :=
     都是类型为 [color] 的值。
   
   同样重要的是，[Inductive color : Type] 还告诉 Coq：
-  类型为 [color] 的值有且 _仅有_ 以上三种构造方式。
+  类型为 [color] 的值有且 _'仅有'_ 以上三种构造方式。
   例如，[sunday]、[primary saturday]、[primary false] 
   都不是类型为 [color] 的值。
 *)
@@ -374,7 +374,7 @@ Inductive nat : Type :=
 (**
   So Easy! 我们来解读一下。
   
-  这个归纳定义告诉我们，自然数 [nat] _有且仅有_ 两种构造方式：
+  这个归纳定义告诉我们，自然数 [nat] _'有且仅有'_ 两种构造方式：
   - [O] 是一个构造函数。
   它告诉我们，[O] 是自然数。(注意：这里是大写字母 [O]，不是数字 [0]。
   本质上讲，我们现在仅仅是在定义一些符号。这些符号毫无意义。
@@ -715,7 +715,7 @@ Example test_ltb3:             (ltb 4 2) = false.
 *)
 
 (**
-  本节从三个最基本的 _'证明策略' (Proof Tactics)_ 开始：
+  本节从三个最基本的 _'证明策略'_ (Proof Tactics) 开始：
   [intros] [simpl] 与 [reflexivity]。
   - [intros] 用于引入变量。
   - [simpl] 用于化简。
