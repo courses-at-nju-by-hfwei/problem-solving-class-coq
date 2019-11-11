@@ -3,660 +3,494 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="common/css/sf.css" rel="stylesheet" type="text/css" />
-<title>Table of contents</title>
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>Index</title>
 </head>
-<link href="common/jquery-ui/jquery-ui.css" rel="stylesheet">
-<script src="common/jquery-ui/external/jquery/jquery.js"></script>
-<script src="common/jquery-ui/jquery-ui.js"></script>
-<script src="common/toggleproofs.js"></script>
-<link href="common/css/lf.css" rel="stylesheet" type="text/css"/>
 
-<script>
-
-$(document).ready(function() {
-
-    $("#accordion").show().accordion({
-        autoHeight: false
-    });
-
-    $("#accordion div").css({ "height": "auto" });
-});      
-
-
-$( function() {
-    var icons = {
-      header: "ui-icon-circle-arrow-e",
-      activeHeader: "ui-icon-circle-arrow-s"
-    };
-    
-    $( "#accordion" ).accordion({
-      icons: icons
-    });
-    $("#accordion").accordion({collapsible : true, active : "none"});
-
-    $( "#toggle" ).button().on( "click", function() {
-      if ( $( "#accordion" ).accordion( "option", "icons" ) ) {
-        $( "#accordion" ).accordion( "option", "icons", null );
-      } else {
-        $( "#accordion" ).accordion( "option", "icons", icons );
-      }
-    });
-  } );
-</script>
 <body>
-
 
 <div id="page">
 
 <div id="header">
-<a href="https://github.com/hengxin/problem-solving-class-coq">
-<img src="common/media/image/sf_logo_sm.png"></a>
-<br><span class="booktitleinheader">Volume 1: 逻辑基础</span><br><br>
-<ul id="menu">
-   <a href="toc.html"><li class="section_name">目录</li></a>
-   <a href="deps.html"><li class="section_name">路线</li></a>
-</ul>
 </div>
-
 
 <div id="main">
 
-<div id="toc">
-<div id="accordion">
-<a href="Preface.html"><h2>Library Preface</h2></a>
-<div>
-<ul class="doclist">
-<li><a href="Preface.html#lab1">Preface: 前言</a>
-
-</li>
-<li><a href="Preface.html#lab2">欢迎</a>
-
-</li>
-<li><a href="Preface.html#lab3">概览</a>
-<ul class="doclist">
-<li><a href="Preface.html#lab4">逻辑学</a>
-
-</li>
-<li><a href="Preface.html#lab5">证明助理</a>
-
-</li>
-<li><a href="Preface.html#lab6">函数式编程</a>
-
-</li>
-<li><a href="Preface.html#lab7">扩展阅读</a>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Preface.html#lab8">实践指南</a>
-<ul class="doclist">
-<li><a href="Preface.html#lab9">章节依赖</a>
-
-</li>
-<li><a href="Preface.html#lab10">系统要求</a>
-
-</li>
-<li><a href="Preface.html#lab11">练习</a>
-
-</li>
-<li><a href="Preface.html#lab12">下载 Coq 文件</a>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Preface.html#lab13">资源</a>
-<ul class="doclist">
-<li><a href="Preface.html#lab14">模拟题</a>
-
-</li>
-<li><a href="Preface.html#lab15">课程视频</a>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Preface.html#lab16">对授课员的要求</a>
-
-</li>
-<li><a href="Preface.html#lab17">译本</a>
-
-</li>
-<li><a href="Preface.html#lab18">鸣谢</a>
-
-</li>
-</ul>
-</div>
-<a href="Basics.html"><h2>Library Basics</h2></a>
-<div>
-<ul class="doclist">
-<li><a href="Basics.html#lab19">数据类型与自然数 (Data Types and Naturals)</a>
-
-</li>
-<li><a href="Basics.html#lab20">引言</a>
-
-</li>
-<li><a href="Basics.html#lab21">数据与函数</a>
-<ul class="doclist">
-<li><a href="Basics.html#lab22">枚举类型</a>
-<ul class="doclist">
-<li><a href="Basics.html#lab23">一周七日</a>
-
-</li>
-<li><a href="Basics.html#lab24">布尔类型</a>
-<ul class="doclist">
-<li><a href="Basics.html#lab25">练习：1 星, standard (nandb)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Basics.html#lab26">类型</a>
-
-</li>
-<li><a href="Basics.html#lab27">由旧类型构造新类型</a>
-
-</li>
-<li><a href="Basics.html#lab28">模块</a>
-
-</li>
-<li><a href="Basics.html#lab29">自然数 (Naturals)</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Basics.html#lab30">练习：1 星, standard (exp)</a>
-
-</li>
-<li><a href="Basics.html#lab31">练习：1 星, standard (exp)</a>
-
-</li>
-<li><a href="Basics.html#lab32">练习：1 星, standard (factorial)</a>
-
-</li>
-<li><a href="Basics.html#lab33">练习：2 星, standard (double_plus)</a>
-
-</li>
-<li><a href="Basics.html#lab34">练习：2 星, standard (sum_to)</a>
-
-</li>
-<li><a href="Basics.html#lab35">练习：1 星, standard (eqb1)</a>
-
-</li>
-<li><a href="Basics.html#lab36">练习：1 星, standard (ltb)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Basics.html#lab37">基于化简的证明</a>
-
-</li>
-<li><a href="Basics.html#lab38">基于改写 (Rewriting) 的证明</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Basics.html#lab39">练习：1 星, standard (plus_id_exercise)</a>
-
-</li>
-<li><a href="Basics.html#lab40">练习：2 星, standard (mult_S_1)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Basics.html#lab41">分情形分析 (Case Analysis) 证明法</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Basics.html#lab42">练习：2 星, standard (andb_true_elim2)</a>
-
-</li>
-<li><a href="Basics.html#lab43">练习：1 星, standard (zero_nbeq_plus_1)</a>
-
-</li>
-<li><a href="Basics.html#lab44">练习：3 星, standard, optional (andb_eq_orb)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-</div>
-<a href="Induction.html"><h2>Library Induction</h2></a>
-<div>
-<ul class="doclist">
-<li><a href="Induction.html#lab45">Induction: 归纳证明</a>
-
-</li>
-<li><a href="Induction.html#lab46">归纳法证明</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Induction.html#lab47">练习：2 星, standard, recommended (basic_induction)</a>
-
-</li>
-<li><a href="Induction.html#lab48">练习：2 星, standard (double_plus)</a>
-
-</li>
-<li><a href="Induction.html#lab49">练习：2 星, standard, optional (evenb_S)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Induction.html#lab50">证明里的证明</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Induction.html#lab51">练习：2 星, standard, optional (plus_swap')</a>
-
-</li>
-<li><a href="Induction.html#lab52">练习：2 星, standard, optional (sum_to_equation)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Induction.html#lab53">更多练习</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Induction.html#lab54">练习：3 星, standard, recommended (mult_comm)</a>
-
-</li>
-<li><a href="Induction.html#lab55">练习：3 星, standard, optional (more_exercises)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Induction.html#lab56">归纳变量与其余变量</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Induction.html#lab57">练习：2 星, standard (eqb_true)</a>
-
-</li>
-<li><a href="Induction.html#lab58">练习：3 星, standard (binary)</a>
-
-</li>
-<li><a href="Induction.html#lab59">练习：3 星, standard, recommended (binary_commute)</a>
-
-</li>
-<li><a href="Induction.html#lab60">练习：5 星, advanced (binary_inverse)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-</div>
-<a href="Lists.html"><h2>Library Lists</h2></a>
-<div>
-<ul class="doclist">
-<li><a href="Lists.html#lab61">Lists: 基本数据类型</a>
-
-</li>
-<li><a href="Lists.html#lab62">自然数序对</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Lists.html#lab63">练习：1 星, standard (snd_fst_is_swap)</a>
-
-</li>
-<li><a href="Lists.html#lab64">练习：1 星, standard, optional (fst_swap_is_snd)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Lists.html#lab65">自然数列表</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Lists.html#lab66">Head（带默认值）与 Tail</a>
-
-</li>
-<li><a href="Lists.html#lab67">Repeat</a>
-
-</li>
-<li><a href="Lists.html#lab68">Length</a>
-
-</li>
-<li><a href="Lists.html#lab69">Append</a>
-
-</li>
-<li><a href="Lists.html#lab70">练习</a>
-<ul class="doclist">
-<li><a href="Lists.html#lab71">练习：2 星, standard, recommended (list_funs)</a>
-
-</li>
-<li><a href="Lists.html#lab72">练习：3 星, advanced (alternate)</a>
-
-</li>
-<li><a href="Lists.html#lab73">练习：3 星, standard, recommended (more list functions)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Lists.html#lab74">有关列表的论证</a>
-<ul class="doclist">
-<li><a href="Lists.html#lab75">对列表进行归纳</a>
-<ul class="doclist">
-<li><a href="Lists.html#lab76">反转列表</a>
-<ul class="doclist">
-<li><a href="Lists.html#lab77">练习：3 星, standard, recommended (more list functions)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Lists.html#lab78">列表练习，第一部分</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Lists.html#lab79">练习：3 星, standard (list_exercises)</a>
-
-</li>
-<li><a href="Lists.html#lab80">练习：2 星, standard (eqblist)</a>
-
-</li>
-<li><a href="Lists.html#lab81">练习：1 星, standard (count_member_nonzero)</a>
-
-</li>
-<li><a href="Lists.html#lab82">练习：3 星, advanced (remove_does_not_increase_count)</a>
-
-</li>
-<li><a href="Lists.html#lab83">练习：4 星, advanced (rev_injective)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Lists.html#lab84">Options 可选类型</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Lists.html#lab85">练习：2 星, standard (hd_error)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Lists.html#lab86">Trees: 基础数据类型</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Lists.html#lab87">练习：2 星, standard (functions on <span class="inlinecode"><span class="id" type="var">nat_bin_tree</span></span>)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-</div>
-<a href="Poly.html"><h2>Library Poly</h2></a>
-<div>
-<ul class="doclist">
-<li><a href="Poly.html#lab88">Poly: 多态</a>
-
-</li>
-<li><a href="Poly.html#lab89">多态</a>
-<ul class="doclist">
-<li><a href="Poly.html#lab90">多态列表</a>
-<ul class="doclist">
-<li><a href="Poly.html#lab91">隐式参数</a>
-
-</li>
-<li><a href="Poly.html#lab92">练习</a>
-<ul class="doclist">
-<li><a href="Poly.html#lab93">练习：2 星, standard (poly_exercises)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Poly.html#lab94">多态序对</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Poly.html#lab95">练习：2 星, standard, recommended (split)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Poly.html#lab96">多态可选类型</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Poly.html#lab97">练习：1 星, standard, optional (hd_error_poly)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-</div>
-<a href="Logic.html"><h2>Library Logic</h2></a>
-<div>
-<ul class="doclist">
-<li><a href="Logic.html#lab98">Logic: Coq 中的逻辑系统</a>
-
-</li>
-<li><a href="Logic.html#lab99">逻辑联结词</a>
-<ul class="doclist">
-<li><a href="Logic.html#lab100">合取</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Logic.html#lab101">练习：2 星, standard (and_exercise)</a>
-
-</li>
-<li><a href="Logic.html#lab102">练习：2 星, standard (and_example3)</a>
-
-</li>
-<li><a href="Logic.html#lab103">练习：1 星, standard, optional (proj2)</a>
-
-</li>
-<li><a href="Logic.html#lab104">练习：2 星, standard (and_assoc)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Logic.html#lab105">析取</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Logic.html#lab106">练习：1 星, standard (or_intro_right)</a>
-
-</li>
-<li><a href="Logic.html#lab107">练习：1 星, standard (mult_eq_0)</a>
-
-</li>
-<li><a href="Logic.html#lab108">练习：1 星, standard (or_commut)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Logic.html#lab109">假命题与否定</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Logic.html#lab110">练习：2 星, standard, optional (not_implies_our_not)</a>
-
-</li>
-<li><a href="Logic.html#lab111">练习：2 星, standard, recommended (contrapositive)</a>
-
-</li>
-<li><a href="Logic.html#lab112">练习：1 星, standard (not_both_true_and_false)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Logic.html#lab113">真值</a>
-
-</li>
-<li><a href="Logic.html#lab114">蕴含</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Logic.html#lab115">练习：1 星, standard, recommended (implies)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Logic.html#lab116">逻辑等价</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Logic.html#lab117">练习：1 星, standard, optional (iff_properties)</a>
-
-</li>
-<li><a href="Logic.html#lab118">练习：3 星, standard (or_distributes_over_and)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Logic.html#lab119">存在量词</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Logic.html#lab120">练习：1 星, standard, recommended (dist_not_exists)</a>
-
-</li>
-<li><a href="Logic.html#lab121">练习：2 星, standard (dist_exists_or)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-<li><a href="Logic.html#lab122">全称量词</a>
-<ul class="doclist">
-<li><ul class="doclist">
-<li><a href="Logic.html#lab123">练习：3 星, standard (combine_odd_even)</a>
-
-</li>
-<li><a href="Logic.html#lab124">练习：2 星, standard (logical_connectives)</a>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-
-</li>
-</ul>
-</div>
-</div>
+<table>
+<tr>
+<td>Global Index</td>
+<td>A</td>
+<td>B</td>
+<td><a href="index.html#global_C">C</a></td>
+<td><a href="index.html#global_D">D</a></td>
+<td>E</td>
+<td><a href="index.html#global_F">F</a></td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td><a href="index.html#global_L">L</a></td>
+<td><a href="index.html#global_M">M</a></td>
+<td>N</td>
+<td><a href="index.html#global_O">O</a></td>
+<td><a href="index.html#global_P">P</a></td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td><a href="index.html#global_T">T</a></td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(60 entries)</td>
+</tr>
+<tr>
+<td>Module Index</td>
+<td>A</td>
+<td>B</td>
+<td><a href="index.html#module_C">C</a></td>
+<td>D</td>
+<td>E</td>
+<td>F</td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td>L</td>
+<td>M</td>
+<td>N</td>
+<td>O</td>
+<td>P</td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td>T</td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(1 entry)</td>
+</tr>
+<tr>
+<td>Library Index</td>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>D</td>
+<td>E</td>
+<td><a href="index.html#library_F">F</a></td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td>L</td>
+<td>M</td>
+<td>N</td>
+<td>O</td>
+<td>P</td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td>T</td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(1 entry)</td>
+</tr>
+<tr>
+<td>Lemma Index</td>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>D</td>
+<td>E</td>
+<td><a href="index.html#lemma_F">F</a></td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td>L</td>
+<td><a href="index.html#lemma_M">M</a></td>
+<td>N</td>
+<td>O</td>
+<td>P</td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td>T</td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(4 entries)</td>
+</tr>
+<tr>
+<td>Definition Index</td>
+<td>A</td>
+<td>B</td>
+<td><a href="index.html#definition_C">C</a></td>
+<td><a href="index.html#definition_D">D</a></td>
+<td>E</td>
+<td><a href="index.html#definition_F">F</a></td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td><a href="index.html#definition_L">L</a></td>
+<td><a href="index.html#definition_M">M</a></td>
+<td>N</td>
+<td><a href="index.html#definition_O">O</a></td>
+<td><a href="index.html#definition_P">P</a></td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td><a href="index.html#definition_T">T</a></td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(54 entries)</td>
+</tr>
+</table>
+<hr/>
+<h1>Global Index</h1>
+<a name="global_C"></a><h2>C </h2>
+<a href="LF.FP.html#Church">Church</a> [module, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.cnat">Church.cnat</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp">Church.exp</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp_3">Church.exp_3</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp_2">Church.exp_2</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp_1">Church.exp_1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp_0">Church.exp_0</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.mult">Church.mult</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.mult_3">Church.mult_3</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.mult_2">Church.mult_2</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.mult_1">Church.mult_1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.one">Church.one</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.plus">Church.plus</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.plus_1_1_1">Church.plus_1_1_1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.plus_1">Church.plus_1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.succ">Church.succ</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.succ_2">Church.succ_2</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.succ_1">Church.succ_1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.three">Church.three</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.two">Church.two</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.zero">Church.zero</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="global_D"></a><h2>D </h2>
+<a href="LF.FP.html#doit3times">doit3times</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="global_F"></a><h2>F </h2>
+<a href="LF.FP.html#filter">filter</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#filter_even_gt7">filter_even_gt7</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#flat_map">flat_map</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold">fold</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_filter_correct">fold_filter_correct</a> [lemma, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_filter">fold_filter</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_map_correct">fold_map_correct</a> [lemma, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_map">fold_map</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_length_correct">fold_length_correct</a> [lemma, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_length">fold_length</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_example3">fold_example3</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_example2">fold_example2</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_example1">fold_example1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_example0">fold_example0</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="FP.html">FP</a> [library]<br/>
+<br/><br/><a name="global_L"></a><h2>L </h2>
+<a href="LF.FP.html#length_is_1">length_is_1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="global_M"></a><h2>M </h2>
+<a href="LF.FP.html#map">map</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#map_rev">map_rev</a> [lemma, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="global_O"></a><h2>O </h2>
+<a href="LF.FP.html#option_map">option_map</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="global_P"></a><h2>P </h2>
+<a href="LF.FP.html#partition">partition</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#plus3">plus3</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="global_T"></a><h2>T </h2>
+<a href="LF.FP.html#test_plus3''">test_plus3''</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_plus3'">test_plus3'</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_plus3">test_plus3</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_fold_length1">test_fold_length1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_flat_map1">test_flat_map1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_map3">test_map3</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_map2">test_map2</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_map1">test_map1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_partition2">test_partition2</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_partition1">test_partition1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter_even_gt7_2">test_filter_even_gt7_2</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter_even_gt7_1">test_filter_even_gt7_1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter2'">test_filter2'</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_anon_fun'">test_anon_fun'</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter2">test_filter2</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter1">test_filter1</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_doit3times'">test_doit3times'</a> [definition, in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><hr/>
+<h1>Module Index</h1>
+<a name="module_C"></a><h2>C </h2>
+<a href="LF.FP.html#Church">Church</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><hr/>
+<h1>Library Index</h1>
+<a name="library_F"></a><h2>F </h2>
+<a href="FP.html">FP</a> <br/>
+<br/><br/><hr/>
+<h1>Lemma Index</h1>
+<a name="lemma_F"></a><h2>F </h2>
+<a href="LF.FP.html#fold_filter_correct">fold_filter_correct</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_map_correct">fold_map_correct</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_length_correct">fold_length_correct</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="lemma_M"></a><h2>M </h2>
+<a href="LF.FP.html#map_rev">map_rev</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><hr/>
+<h1>Definition Index</h1>
+<a name="definition_C"></a><h2>C </h2>
+<a href="LF.FP.html#Church.cnat">Church.cnat</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp">Church.exp</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp_3">Church.exp_3</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp_2">Church.exp_2</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp_1">Church.exp_1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.exp_0">Church.exp_0</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.mult">Church.mult</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.mult_3">Church.mult_3</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.mult_2">Church.mult_2</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.mult_1">Church.mult_1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.one">Church.one</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.plus">Church.plus</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.plus_1_1_1">Church.plus_1_1_1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.plus_1">Church.plus_1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.succ">Church.succ</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.succ_2">Church.succ_2</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.succ_1">Church.succ_1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.three">Church.three</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.two">Church.two</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#Church.zero">Church.zero</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="definition_D"></a><h2>D </h2>
+<a href="LF.FP.html#doit3times">doit3times</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="definition_F"></a><h2>F </h2>
+<a href="LF.FP.html#filter">filter</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#filter_even_gt7">filter_even_gt7</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#flat_map">flat_map</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold">fold</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_filter">fold_filter</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_map">fold_map</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_length">fold_length</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_example3">fold_example3</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_example2">fold_example2</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_example1">fold_example1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#fold_example0">fold_example0</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="definition_L"></a><h2>L </h2>
+<a href="LF.FP.html#length_is_1">length_is_1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="definition_M"></a><h2>M </h2>
+<a href="LF.FP.html#map">map</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="definition_O"></a><h2>O </h2>
+<a href="LF.FP.html#option_map">option_map</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="definition_P"></a><h2>P </h2>
+<a href="LF.FP.html#partition">partition</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#plus3">plus3</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><a name="definition_T"></a><h2>T </h2>
+<a href="LF.FP.html#test_plus3''">test_plus3''</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_plus3'">test_plus3'</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_plus3">test_plus3</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_fold_length1">test_fold_length1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_flat_map1">test_flat_map1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_map3">test_map3</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_map2">test_map2</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_map1">test_map1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_partition2">test_partition2</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_partition1">test_partition1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter_even_gt7_2">test_filter_even_gt7_2</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter_even_gt7_1">test_filter_even_gt7_1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter2'">test_filter2'</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_anon_fun'">test_anon_fun'</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter2">test_filter2</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_filter1">test_filter1</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<a href="LF.FP.html#test_doit3times'">test_doit3times'</a> [in <a href="LF.FP.html">LF.FP</a>]<br/>
+<br/><br/><hr/><table>
+<tr>
+<td>Global Index</td>
+<td>A</td>
+<td>B</td>
+<td><a href="index.html#global_C">C</a></td>
+<td><a href="index.html#global_D">D</a></td>
+<td>E</td>
+<td><a href="index.html#global_F">F</a></td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td><a href="index.html#global_L">L</a></td>
+<td><a href="index.html#global_M">M</a></td>
+<td>N</td>
+<td><a href="index.html#global_O">O</a></td>
+<td><a href="index.html#global_P">P</a></td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td><a href="index.html#global_T">T</a></td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(60 entries)</td>
+</tr>
+<tr>
+<td>Module Index</td>
+<td>A</td>
+<td>B</td>
+<td><a href="index.html#module_C">C</a></td>
+<td>D</td>
+<td>E</td>
+<td>F</td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td>L</td>
+<td>M</td>
+<td>N</td>
+<td>O</td>
+<td>P</td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td>T</td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(1 entry)</td>
+</tr>
+<tr>
+<td>Library Index</td>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>D</td>
+<td>E</td>
+<td><a href="index.html#library_F">F</a></td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td>L</td>
+<td>M</td>
+<td>N</td>
+<td>O</td>
+<td>P</td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td>T</td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(1 entry)</td>
+</tr>
+<tr>
+<td>Lemma Index</td>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>D</td>
+<td>E</td>
+<td><a href="index.html#lemma_F">F</a></td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td>L</td>
+<td><a href="index.html#lemma_M">M</a></td>
+<td>N</td>
+<td>O</td>
+<td>P</td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td>T</td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(4 entries)</td>
+</tr>
+<tr>
+<td>Definition Index</td>
+<td>A</td>
+<td>B</td>
+<td><a href="index.html#definition_C">C</a></td>
+<td><a href="index.html#definition_D">D</a></td>
+<td>E</td>
+<td><a href="index.html#definition_F">F</a></td>
+<td>G</td>
+<td>H</td>
+<td>I</td>
+<td>J</td>
+<td>K</td>
+<td><a href="index.html#definition_L">L</a></td>
+<td><a href="index.html#definition_M">M</a></td>
+<td>N</td>
+<td><a href="index.html#definition_O">O</a></td>
+<td><a href="index.html#definition_P">P</a></td>
+<td>Q</td>
+<td>R</td>
+<td>S</td>
+<td><a href="index.html#definition_T">T</a></td>
+<td>U</td>
+<td>V</td>
+<td>W</td>
+<td>X</td>
+<td>Y</td>
+<td>Z</td>
+<td>_</td>
+<td>other</td>
+<td>(54 entries)</td>
+</tr>
+</table>
+<hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
 </div>
 
 </div>

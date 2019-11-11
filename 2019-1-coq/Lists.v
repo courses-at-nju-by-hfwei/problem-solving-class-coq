@@ -2,7 +2,7 @@
 
 (**
   本节介绍 _'列表'_ (List) 数据类型。
-  下一节介绍 _'函数式程序设计'_ (Functional Programming; FP) 范型。
+  下面两节介绍 _'函数式程序设计'_ (Functional Programming; FP) 范型。
   
   为什么要先介绍列表呢?
   因为列表是函数式程序设计中最基本的数据类型。

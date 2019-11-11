@@ -11,30 +11,9 @@
 Set Warnings "-notation-overridden,-parsing".
 From LF Require Export Lists.
 
-(** 
-  上一节我们学习了函数式程序设计中的基础数据类型——列表。
-  本节，我们要正式进入优雅的函数式程序设计的世界。
-  
-  说起函数式程序设计，就不得不提起与它紧密相关的一系列概念:
-  不可变性 (Immutable)、纯函数 (Pure Functions)、
-  单子 (Monad)、持久性数据结构 (Persistent Data Structures)、
-  高阶函数 (High-Order Functions)、柯里化 (Currying)、
-  惰性求值 (Lazy Evaluation)、类型系统 (Type Systems)、
-  引用透明性 (Referential Transparency) 等等。
-  
-  要想真正掌握函数式程序设计，就需要深入了解这些概念。
-  其中一些概念至今仍是程序设计语言 (Programming Language; PL) 
-  领域的研究课题。
-  如果你学完本节之后，对函数式程序设计产生了兴趣，
-  甚至于对程序设计语言理论本身产生了兴趣，
-  那么本节的目的就达到了。
-   
-  我们不可能面面俱到地介绍上面的概念。
-  本节重点介绍 _'高阶函数'_ 的含义与应用。
-  它是函数式程序设计最典型的特征。
-  
-  在此之前，我们需要先介绍另外一个概念: _多态_ (Polymorphic)。
-  它与类型系统有关。
+(**
+  在介绍函数式程序设计之前，我们需要先介绍另外一个概念: _多态_ (Polymorphic)。
+  它与程序设计语言的类型系统有关。
 *)
     
 (* ################################################################# *)
