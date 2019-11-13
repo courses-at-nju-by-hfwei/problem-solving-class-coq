@@ -4,4 +4,5 @@ SRC_FILES := \
     Induction.v \
     Lists.v \
     Poly.v \
-    Logic.v
+    Logic.v \
+    FP.v
